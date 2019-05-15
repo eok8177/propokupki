@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/cutup-login', function () {
+    return view('cutup.login');
+});
+Route::get('/cutup-register', function () {
+    return view('cutup.register');
+});
