@@ -26,3 +26,7 @@ Route::get('/cutup-register', function () {
 Route::get('/cutup-admin-profile', function () {
     return view('cutup.admin.profile');
 });
+
+Route::get('/cutup-admin-shops', function () {
+    return view('cutup.admin.shops');
+});

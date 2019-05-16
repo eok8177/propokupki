@@ -1,4 +1,4 @@
-@extends('cutups.admin.layout')
+@extends('cutup.admin.layout')
 
 @section('content')
 
