@@ -14,3 +14,19 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/cutup-login', function () {
+    return view('cutup.login');
+});
+Route::get('/cutup-register', function () {
+    return view('cutup.register');
+});
+
+Route::get('/cutup-admin-profile', function () {
+    return view('cutup.admin.profile');
+});
+
+Route::get('/cutup-admin-shops', function () {
+    return view('cutup.admin.shops');
+});
