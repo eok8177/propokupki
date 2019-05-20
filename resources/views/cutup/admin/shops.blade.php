@@ -24,7 +24,7 @@
     <div class="items">
       <div class="row">
         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-          <div class="item add">
+          <div class="shop-item add">
             <span class="ico ico-plus"></span>
             <span class="title">Новый<br>магазин</span>
             <hr>
@@ -33,7 +33,7 @@
         </div>
         @for ($i = 0; $i <= 10; $i++)
         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-          <div class="item">
+          <div class="shop-item">
             <button class="btn-delete"></button>
             <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
             <span class="title">Вэлыка кышеня</span>
