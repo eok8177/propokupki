@@ -30,3 +30,7 @@ Route::get('/cutup-admin-profile', function () {
 Route::get('/cutup-admin-shops', function () {
     return view('cutup.admin.shops');
 });
+
+Route::get('/cutup-admin-shopadd', function () {
+    return view('cutup.admin.shopadd');
+});
