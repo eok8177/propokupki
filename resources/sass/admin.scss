@@ -21,6 +21,11 @@ hr {border-top: 1px solid #EBF1F5;}
     vertical-align: top;
     margin-right: 15px;
     margin-left: 8px;
+    &.ico-big {
+        width: 48px;
+        height: 48px;
+        vertical-align: middle;
+    }
 }
 .ico-user {background-image: url('../img/admin/ico-user.svg');}
 .ico-logout {background-image: url('../img/admin/ico-logout.svg');}
@@ -51,6 +56,13 @@ hr {border-top: 1px solid #EBF1F5;}
 .btn-white {
     color: #F44E4E;
     border-color: #F44E4E;
+}
+
+.btn-noborder {
+    display: inline-block;
+    margin-left: 80px;
+    color: #000;
+    font-size: 18px;
 }
 
 input {
@@ -258,6 +270,7 @@ input {
     font-size: 24px;
     color: #242729;
     margin: 20px 0;
+    display: inline-block;
     .badge {
         font-size: 12px;
         vertical-align: middle;
@@ -273,6 +286,7 @@ input {
     margin-top: 20px;
     .pagination {
         margin-bottom: 20px;
+        flex-wrap: wrap;
         .page-item {
             margin-right: 14px;
             .page-link {
@@ -349,32 +363,26 @@ input {
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.shops {
-    .select {max-width: 288px;}
-    .search {
-        position: relative;
+.search {
+    position: relative;
+    width: 100%;
+    margin: 16px 0 24px;
+    input {
+        border-radius: 3px;
+        border: 1px solid #EBF1F5;
+        height: 48px;
+        color: #677075;
+        font-size: 14px;
+        padding: 16px;
         width: 100%;
-        margin: 16px 0 24px;
-        input {
-            border-radius: 3px;
-            border: 1px solid #EBF1F5;
-            height: 48px;
-            color: #677075;
-            font-size: 14px;
-            padding: 16px;
-            width: 100%;
-            &:focus {
-              border-color: #000;
-            }
-        }
-        .btn-search {
-            position: absolute;
-            top: 14px;
-            right: 18px;
+        &:focus {
+          border-color: #000;
         }
     }
-    .items {
-
+    .btn-search {
+        position: absolute;
+        top: 14px;
+        right: 18px;
     }
 }
 
@@ -447,6 +455,112 @@ input {
         }
     }
 }
+
+
+.filtered {
+    .item {
+        background: #FFFFFF;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        position: relative;
+        display: inline-block;
+        margin-right: 20px;
+        margin-bottom: 20px;
+        padding: 8px 24px 8px 10px;
+        .btn-delete {
+            display: none;
+            position: absolute;
+            right: 8px;
+            top: 8px;
+        }
+        img {
+            width: 120px;
+            height: 40px;
+            object-fit: cover;
+            object-position: center;
+        }
+        &:hover {
+            border-color: #EBF1F5;
+            box-shadow: 0px 4px 12px rgba(235, 241, 245, 0.85);
+            .btn-delete {display: block;}
+        }
+    }
+}
+
+.action-item {
+    .btn-delete {
+        display: none;
+        position: absolute;
+        right: 8px;
+        top: 8px;
+    }
+    border: 1px solid #EBF1F5;
+    background: #fff;
+    border-radius: 3px;
+    margin-bottom: 26px;
+    padding: 8px;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    &:hover {
+        box-shadow: 0px 4px 12px rgba(235, 241, 245, 0.85);
+        .btn-delete {display: block;}
+    }
+    .image {
+        float: left;
+        max-width: 120px;
+        width: 100%;
+        height: 100%;
+        img {max-width: 100%;}
+    }
+    .block {
+        float: left;
+        padding-left: 30px;
+        padding-top: 20px;
+        min-width: 200px;
+    }
+    .title {
+        color: #242729;
+        font-size: 18px;
+        line-height: 24px;
+        display: block;
+    }
+    .date {
+        color: #677075;
+        font-size: 18px;
+        line-height: 21px;
+        display: block;
+    }
+    .status {
+        display: flex;
+        justify-content: space-between;
+        max-width: 190px;
+        width: 100%;
+        padding: 12px 0 14px 30px;
+        border-left: 1px solid #EBF1F5;
+        margin-top: 10px;
+        margin-left: 10px;
+        float: left;
+        height: 50px;
+        label {
+            margin: 0;
+            input[type=checkbox] {
+                padding: 0;
+                height: 0;
+                margin: 0;
+            }
+        }
+    }
+
+}
+
+
+.shops, .actions {
+    .select {max-width: 288px;}
+}
+
+
 
 .shop-edit {
     .shop-item {max-width: 184px;}
