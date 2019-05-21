@@ -222,9 +222,105 @@ input {
 }
 
 
+.select-dates {
+    .date {
+        max-width: 289px;
+        width: 100%;
+        margin-right: 28px;
+        margin-bottom: 20px;
+        position: relative;
+        &:before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0; bottom: 0;
+            border-left: 1px solid #C4C9CC;
+            background-image: url('../img/admin/ico-calendar.svg');
+            background-size: 20px 20px;
+            background-position: 18px center;
+            width: 80px;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            cursor: pointer;
+        }
+        &:after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0; bottom: 0;
+            width: 42px;
+            background-image: url('../img/admin/ico-down.svg');
+            background-size: 10px 6px;
+            background-repeat: no-repeat;
+            background-position: center;
+            pointer-events: none;
+            cursor: pointer;
+        }
+        input {margin: 0;}
+    }
+}
 
+// Datepicker
+.datepicker .datepicker-days table tr td, .datepicker .datepicker-days table tr th {
+    width: 40px;
+    height: 40px;
+}
+.datepicker.datepicker-dropdown table {
+    .prev, .next {
+        color: #F44E4E;
+    }
+}
+.datepicker.datepicker-dropdown table tr .active.active {
+    background-color: #F44E4E;
+    border-color: #F44E4E;
+    border-radius: 50%;
+    &:hover {
+        background-color: #F44E4E;
+        border-color: #F44E4E;
+    }
+}
 
+.units-select {
+    .fields {
+        display: flex;
+        border: 1px solid #C4C9CC;
+        border-radius: 3px;
+        margin-bottom: 20px;
+        input {
+            border:none;
+            margin: 0;
+        }
+        .select {
+            border-left: 1px solid #C4C9CC;
+            width: 80px;
+            select {
+                border:none;
+                margin: 0;
+            }
+        }
+    }
+}
 
+.price-input {
+    .fields {
+        @media (min-width: 768px) {display: flex;}
+        input, span.new-price {
+            width: 184px;
+            margin-right: 24px;
+        }
+        .new-price {
+            display: inline-block;
+            height: 40px;
+            background: #EBF1F5;
+            border: 1px solid #C4C9CC;
+            border-radius: 3px;
+            font-size: 14px;
+            line-height: 16px;
+            color: #242729;
+            padding: 11px 15px;
+        }
+    }
+}
 
 
 .navbar {

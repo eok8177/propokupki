@@ -38,3 +38,7 @@ Route::get('/cutup-admin-shopadd', function () {
 Route::get('/cutup-admin-actions', function () {
     return view('cutup.admin.actions');
 });
+
+Route::get('/cutup-admin-actionadd', function () {
+    return view('cutup.admin.actionadd');
+});
