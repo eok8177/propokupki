@@ -35,8 +35,9 @@
           <div class="form-group">
             <label>Логотип</label>
             <p>Загрузите логотип магазина</p>
-            <div class="files-input">
-              <input type="file" class="form-control" multiple="">
+            <div class="files-input uploader">
+              <img src=""/>
+              <input type="file" class="form-control" multiple="" id="fotoInput">
               <span class="btn-red">Добавить фото</span>
               <span class="text">Или перетащите его сюда</span>
             </div>
@@ -52,7 +53,7 @@
             
 
             <div class="shop-item">
-              <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
+              <div class="image"><img src="/images/shop-1.jpg" class="preview-img" alt=""></div>
               <span class="title">Вэлыка кышеня</span>
               <span class="desc">Электроника и быто…</span>
               <hr>
@@ -106,3 +107,12 @@
 
 
 @endsection
+
+@push('scripts')
+<script>
+  $(function() {
+    document.getElementById('fotoInput')
+        .addEventListener('change', handleImage, false);
+  });
+</script>
+@endpush

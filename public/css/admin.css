@@ -9945,6 +9945,7 @@ input:focus {
   margin: 0;
   width: 100%;
   height: 100%;
+  opacity: 0;
 }
 .files-input .btn-red {
   pointer-events: none;
@@ -9970,6 +9971,14 @@ input:focus {
   line-height: 16px;
   text-align: center;
   color: #677075;
+}
+.files-input img {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 40px;
+  margin: auto;
+  max-width: 100px;
 }
 
 .select-dates .date {
