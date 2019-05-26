@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 
 Route::get('/cutup-login', function () {
@@ -42,3 +42,8 @@ Route::get('/cutup-admin-actions', function () {
 Route::get('/cutup-admin-actionadd', function () {
     return view('cutup.admin.actionadd');
 });
+
+
+Route::get('/{any}', function () {
+    return view('spa');
+})->where('any', '.*');

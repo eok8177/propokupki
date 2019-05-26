@@ -1,14 +1,204 @@
 
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
-// Variables
-@import 'variables';
+$grid-gutter-width: 24px !default;
 
 // Bootstrap
-@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap-grid';
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+@media (min-width: 1240px) {
+  .container {max-width: 1224px;}
+}
+
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 14px;
+}
+h1, h2, h3, h4, h5, h6 {font-weight: normal;}
+a {
+  color: #242729;
+  display: inline-block;
+  &:hover {
+    color: #242729;
+  }
+}
+input {padding: 8px;}
+button {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+}
+.btn {
+  border: 1px solid #000;
+  color: #000;
+  background: transparent;
+  border-radius: 3px;
+  padding: 8px 16px;
+  text-align: center;
+}
+.btn-red {
+  background: #F44E4E;
+  border-color: #F44E4E;
+  color: #fff;
+}
+.btn-delete {
+  background-image: url('../img/ico-delete.svg');
+  width: 24px;
+  height: 24px;
+  background-size: 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  border-radius: 50%;
+  outline: none;
+  border: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ico {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  vertical-align: middle;
+}
+.ico-login {background-image: url('../img/ico-login.svg');}
+.ico-fb {background-image: url('../img/ico-fb.svg');}
+.ico-gp {background-image: url('../img/ico-gp.svg');}
+
+.search {
+  max-width: 392px;
+  width: 100%;
+  height: 40px;
+  border: 1px solid #C4C9CC;
+  border-radius: 3px;
+  position: relative;
+  input {
+    width: 100%;
+    border: none;
+    height: 38px;
+    background: transparent;
+  }
+  button {
+    position: absolute;
+    right: -1px;
+    top: -1px;
+    height: 40px;
+    border-radius: 0px 3px 3px 0px;
+  }
+}
+
+.header {
+  border-bottom: 1px solid #EBF1F5;
+  .container {
+    @media(min-width:768px) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    padding: 12px 0;
+  }
+  .logo {
+    display: inline-block;
+    width: 118px;
+    height: 40px;
+    background: url('../img/logo.svg') no-repeat center;
+    background-size: contain;
+  }
+  a, button {
+    font-size: 14px;
+  }
+  .logo, .city-select {
+    color: #242729;
+    line-height: 40px;
+    vertical-align: middle;
+    margin-right: 50px;
+  }
+  .login {
+    .ico {margin-bottom: 2px;}
+  }
+}
+
+
+.page-title {
+  margin: 31px 0;
+  text-align: center;
+  &.left {text-align: left;}
+  .title {
+    font-size: 24px;
+    font-weight: normal;
+    color: #242729;
+    margin: 0;
+  }
+  .sub-title {
+    color: #677075;
+    font-size: 14px;
+    margin: 14px 0 0;
+  }
+}
+
+.home-page {
+  .slider {
+    height: 440px;
+    background-color: #FFD447;
+    background-image: url('../img/dekor.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+}
+
+
+footer {
+  margin-top: 14px;
+  background: #FAF9F5;
+  box-shadow: 0px 0px 10px rgba(219, 217, 206, 0.35);
+  border-top: 1px solid #F0EFEB;
+  .container {
+    padding-top: 70px;
+    padding-bottom: 30px;
+  }
+  .first-line {
+    padding-bottom: 60px;
+    @media(min-width:768px) {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .left-menu {
+    max-width: 600px;
+    width: 100%;
+    @media(max-width:767px) {
+      padding-bottom: 40px;
+      a {
+        margin-bottom: 14px;
+        display: block;
+        text-align: center;
+      }
+    }
+    @media(min-width:768px) {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  .socials {
+    text-align: center;
+    p {
+      font-size: 12px;
+      color: #242729;
+      margin: 0 0 20px;
+    }
+    .ico {
+      width: 32px;
+      height: 32px;
+      margin: 0 12px;
+    }
+  }
+  .copyright {
+    font-size: 12px;
+    line-height: 14px;
+    color: #677075;
+  }
 }
