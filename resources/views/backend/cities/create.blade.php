@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="shops">
+    <div class="shop-edit">
         <div class="container">
             {!! Form::open(['route' => ['admin.cities.store'], 'method' => 'POST']) !!}
             @include('backend.cities.form')

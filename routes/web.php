@@ -79,3 +79,15 @@ Route::get('/cutup-admin-profile', function () {
 Route::get('/cutup-admin-shops', function () {
     return view('cutup.admin.shops');
 });
+
+Route::get('/cutup-admin-shopadd', function () {
+    return view('cutup.admin.shopadd');
+});
+
+Route::get('/cutup-admin-actions', function () {
+    return view('cutup.admin.actions');
+});
+
+Route::get('/cutup-admin-actionadd', function () {
+    return view('cutup.admin.actionadd');
+});

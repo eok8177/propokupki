@@ -2,12 +2,17 @@
 
 @section('content')
 
-    <div class="shops">
+    <div class="container">
+        <h1 class="title-page">Новый магазин</h1>
+    </div>
+    <hr>
+
+    <div class="shop-edit">
+        {!! Form::open(['route' => ['admin.shops.store'], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="container">
-            {!! Form::open(['route' => ['admin.shops.store'], 'method' => 'POST']) !!}
             @include('backend.shops.form')
-            {{ Form::close() }}
         </div>
+        {{ Form::close() }}
     </div>
 
 

@@ -21,6 +21,27 @@ class CitiesController extends Controller
      */
     public function index(Request $request)
     {
+
+//        $old_cities = DB::table('old_cities')->get();
+//        foreach ($old_cities as $old_city) {
+//            DB::table('cities')->insert([
+//                'id' => $old_city->id,
+//                'slug' => $old_city->slug,
+//                'code' => $old_city->id,
+//                'status' => 1,
+//                'created_at' => NOW(),
+//                'updated_at' => NOW(),
+//            ]);
+//            DB::table('cities_translations')->insert([
+//                'city_id' => $old_city->id,
+//                'locale' => 'ua',
+//                'title' => $old_city->nameuk,
+//                'created_at' => NOW(),
+//                'updated_at' => NOW(),
+//
+//            ]);
+//        }
+//        dd($old_cities);
         if ($request->get('search')) {
             $cities = City::where('code', 'like', '%'. $request->search . '%')
                 ->orderBy('id', 'asc');

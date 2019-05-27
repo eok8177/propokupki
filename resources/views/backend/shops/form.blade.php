@@ -12,10 +12,18 @@
                 @endforeach
             </div>
             <div class="form-group col-md-8 pl-0">
+                {{ Form::label('slug', 'Силка') }}
+                <p>Укажите силку магазина </p>
+                {{ Form::text('slug', $shop->slug, ['class' => $errors->has('slug') ? 'form-control is-invalid' : 'form-control']) }}
+                @if($errors->has('slug'))
+                    <span class="invalid-feedback">{{ $errors->first('slug') }}</span>
+                @endif
+            </div>
+            <div class="form-group col-md-8 pl-0">
                 {{ Form::label('category', 'Категория') }}
                 <p>Выберите подходящую категорию магазина</p>
                 <div class="select">
-                    {{ Form::select('category', [true => 'Yes', false => 'No'], $shop->category, ['class' => $errors->has('category') ? 'form-control is-invalid' : 'form-control']) }}
+                    {{ Form::select('category[]', $shop->categories_for_select, $shop->categories, ['class' => $errors->has('category') ? 'form-control is-invalid' : 'form-control']) }}
                     @if($errors->has('category'))
                         <span class="invalid-feedback">{{ $errors->first('category') }}</span>
                     @endif
@@ -30,12 +38,16 @@
                     <span class="text">Или перетащите его сюда</span>
                 </div>
             </div>
+
         </div>
+
 
         <div class="col-md-6">
             <div class="form-group">
                 <label>Превью</label>
                 <p>Вид добавляемой карточки магазина</p>
+
+
                 <div class="shop-item">
                     <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
                     <span class="title">Вэлыка кышеня</span>
@@ -44,12 +56,39 @@
                     <div class="status">
                         <span>Активный</span>
                         <label class="checkbox">
-                            <input type="checkbox" checked="checked">
+                            <input type="checkbox">
                             <span class="chk"></span>
                         </label>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="container">
+    <div class="form-group">
+        <label>Адреса</label>
+        <p>Импорт или экспорт адресов из csv файла</p>
+        <div class="addresses-input">
+            <input type="file" name="import_file" />
+            <div class="btn-group" role="group">
+                <button type="button" class="btn import">Импорт</button>
+                <button type="button" class="btn export">Экспорт</button>
+            </div>
+
+            <span class="message">
+            <span class="text">adresa-ashan-2019.csv</span>
+            <span class="red">Добавлен</span>
+          </span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="submit-btns">
+            <button class="btn btn-red" type="submit">Добавить магазин</button>
+            <button class="btn btn-white">Отмена</button>
         </div>
     </div>
 </div>

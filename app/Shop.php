@@ -42,6 +42,22 @@ class Shop extends Model
         return $this->hasOne(ShopTranslate::class)->where('locale', $locale);
     }
 
+    public function getCategoriesForSelectAttribute()
+    {
+//        dd(Category::pluck('slug', 'id')->toArray());
+        return Category::pluck('slug', 'id')->toArray();
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany('App\Category');
+    }
+
+    public function sities()
+    {
+        return $this->belongsToMany('App\City');
+    }
+
     public function searchShops ($search, $locale = null)
     {
         $locale = $locale ?? app()->getLocale();

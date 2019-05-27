@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Shop;
+use App\City;
 use App\Language;
+use App\Address;
 use App\ShopTranslate;
+use App\AddressTranslate;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,12 +69,17 @@ class ShopsController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
-            'slug' => 'required|unique:pages|max:255',
+//            'slug' => 'required|unique:pages|max:255',
+            'import_file' => 'required'
         ]);
 
         $shop = Shop::create($request->all());
+        $shop->status = 1;
+        $shop->save();
         $language = Language::where('status', '1')->get();
+        $shop->categories()->attach($request->category);
 
         foreach ($language as $lang) {
 
@@ -83,6 +91,38 @@ class ShopsController extends Controller
             $shop_translate->title = $request->$locale['title'];
             $shop_translate->save();
         }
+
+        $filename = fopen($_FILES['import_file']['tmp_name'], "r");
+
+        $i = 0;
+        $city_arr = array();
+        while (($data = fgetcsv($filename, 1000, ";")) !== FALSE) {
+            if($i != 0){
+                $addres = new Address();
+                if (!in_array($data[0], $city_arr)){
+                    DB::table('city_shop')->insert(['city_id' => $data[0], 'shop_id' => $shop->id]);
+                    array_push($city_arr, $data[0]);
+                }
+//                dd($data[3]);
+                $addres->city_id = $data[0];
+                $addres->latitude = $data[3];
+                $addres->longitude = $data[4];
+                $addres->save();
+                foreach ($language as $lang) {
+
+                    $locale = $lang->locale;
+
+                    $address_translate = new AddressTranslate();
+                    $address_translate->address_id = $addres->id;
+                    $address_translate->locale = $locale;
+                    $address_translate->title = $data[1];
+                    $shop_translate->save();
+
+                }
+            }
+            $i++;
+        }
+        fclose($filename);
 
 
         return redirect()
