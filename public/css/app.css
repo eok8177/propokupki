@@ -4391,12 +4391,21 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
 
+hr {
+  border-top: 0;
+  border-bottom: 1px solid #EBF1F5;
+  margin: 0;
+}
+
 a {
   color: #242729;
   display: inline-block;
 }
 a:hover {
   color: #242729;
+}
+a:focus {
+  outline: none;
 }
 
 input {
@@ -4407,6 +4416,9 @@ button {
   background: transparent;
   border: none;
   font-size: 14px;
+}
+button:focus {
+  outline: none;
 }
 
 .btn {
@@ -4458,6 +4470,10 @@ button {
 
 .ico-gp {
   background-image: url("../img/ico-gp.svg");
+}
+
+.ico-bag {
+  background-image: url("../img/ico-bag.svg");
 }
 
 .search {
@@ -4516,7 +4532,8 @@ button {
 }
 
 .page-title {
-  margin: 31px 0;
+  margin-top: 31px;
+  margin-bottom: 31px;
   text-align: center;
 }
 .page-title.left {
@@ -4541,6 +4558,92 @@ button {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  padding-top: 80px;
+}
+.home-page .slider .container {
+  overflow-x: auto;
+  padding: 0;
+}
+.home-page .slider .wrap {
+  width: 1224px;
+  display: flex;
+  justify-content: space-between;
+}
+.home-page .slider .shop {
+  width: 184px;
+  height: 280px;
+  background: #FFFFFF;
+  border-radius: 3px;
+  padding: 16px;
+}
+.home-page .slider .shop .image {
+  height: 120px;
+  margin-bottom: 20px;
+}
+.home-page .slider .shop .image img {
+  max-width: 100%;
+  width: 100%;
+}
+.home-page .slider .shop .count {
+  display: inline-block;
+  background: #EBF1F5;
+  border-radius: 3px;
+  min-width: 32px;
+  text-align: center;
+  padding: 2px;
+}
+.home-page .slider .shop p {
+  font-size: 14px;
+  color: #677075;
+  margin: 0 0 8px;
+}
+.home-page .slider .shop .discount {
+  font-size: 12px;
+  line-height: 14px;
+  color: #242729;
+  margin-top: 24px;
+}
+.home-page .slider .shop .discount .number {
+  display: inline-block;
+  font-size: 18px;
+  color: #242729;
+  margin-left: 10px;
+}
+.home-page .slider .shop .ico {
+  display: block;
+  width: 43px;
+  height: 48px;
+  margin: 24px auto 20px;
+}
+.home-page .slider .shop .title {
+  display: block;
+  text-align: center;
+  color: #242729;
+  font-size: 18px;
+  margin-bottom: 7px;
+}
+.home-page .slider .shop .gray {
+  display: block;
+  color: #677075;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 36px;
+}
+.home-page .slider .shop .btn {
+  width: 100%;
+  margin: 24px 0 0;
+}
+
+.products {
+  background: #FAF9F5;
+  padding-top: 30px;
+  padding-bottom: 40px;
+}
+.products .block-title {
+  text-align: center;
+  font-size: 24px;
+  color: #242729;
+  margin: 0;
 }
 
 footer {

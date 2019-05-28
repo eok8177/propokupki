@@ -1871,6 +1871,70 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Home',
   components: {}
@@ -3354,7 +3418,140 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "slider" }, [
         _c("div", { staticClass: "container" }, [
-          _c("h2", [_vm._v("Slider here")])
+          _c("div", { staticClass: "wrap" }, [
+            _c("div", { staticClass: "shop" }, [
+              _c("div", { staticClass: "image" }, [
+                _c("img", { attrs: { src: "images/shop-1.jpg", alt: "" } })
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("218")]),
+                _vm._v(" Магазинов")
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("147")]),
+                _vm._v(" Акций")
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "discount" }, [
+                _vm._v("Скидки до "),
+                _c("span", { staticClass: "number" }, [_vm._v("-50%")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "shop" }, [
+              _c("div", { staticClass: "image" }, [
+                _c("img", { attrs: { src: "images/shop-1.jpg", alt: "" } })
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("218")]),
+                _vm._v(" Магазинов")
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("147")]),
+                _vm._v(" Акций")
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "discount" }, [
+                _vm._v("Скидки до "),
+                _c("span", { staticClass: "number" }, [_vm._v("-50%")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "shop" }, [
+              _c("div", { staticClass: "image" }, [
+                _c("img", { attrs: { src: "images/shop-1.jpg", alt: "" } })
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("218")]),
+                _vm._v(" Магазинов")
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("147")]),
+                _vm._v(" Акций")
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "discount" }, [
+                _vm._v("Скидки до "),
+                _c("span", { staticClass: "number" }, [_vm._v("-50%")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "shop" }, [
+              _c("div", { staticClass: "image" }, [
+                _c("img", { attrs: { src: "images/shop-1.jpg", alt: "" } })
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("218")]),
+                _vm._v(" Магазинов")
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("147")]),
+                _vm._v(" Акций")
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "discount" }, [
+                _vm._v("Скидки до "),
+                _c("span", { staticClass: "number" }, [_vm._v("-50%")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "shop" }, [
+              _c("div", { staticClass: "image" }, [
+                _c("img", { attrs: { src: "images/shop-1.jpg", alt: "" } })
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("218")]),
+                _vm._v(" Магазинов")
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("span", { staticClass: "count" }, [_vm._v("147")]),
+                _vm._v(" Акций")
+              ]),
+              _vm._v(" "),
+              _c("p", { staticClass: "discount" }, [
+                _vm._v("Скидки до "),
+                _c("span", { staticClass: "number" }, [_vm._v("-50%")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "shop" }, [
+              _c("div", { staticClass: "ico ico-bag" }),
+              _vm._v(" "),
+              _c("p", { staticClass: "title" }, [_vm._v("Более 230")]),
+              _vm._v(" "),
+              _c("p", { staticClass: "gray" }, [_vm._v("Магазинов")]),
+              _vm._v(" "),
+              _c("hr"),
+              _vm._v(" "),
+              _c("button", { staticClass: "btn btn-red" }, [
+                _vm._v("Все магазины")
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "products" }, [
+        _c("div", { staticClass: "container" }, [
+          _c("h2", { staticClass: "block-title" }, [
+            _vm._v("Лучшие акции Киева")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-sm-6 col-md-3" }, [
+              _c("div", { staticClass: "item" })
+            ])
+          ])
         ])
       ])
     ])
