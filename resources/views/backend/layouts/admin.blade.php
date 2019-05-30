@@ -25,7 +25,20 @@
 @include('backend.layouts.footer')
 <!-- Scripts -->
 <script src="{{ asset('js/admin.js') }}"></script>
-<script src="{{ asset('/backend/js/custom.js') }}"></script>
+{{-- <script src="{{ asset('/backend/js/custom.js') }}"></script> --}}
+
+<script>
+  // Отображение картинки при выборе
+  function handleImage(e) {
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      $(e.target).parent().find('img').attr('src',event.target.result);
+      $('.preview-img').attr('src',event.target.result);
+    }
+    reader.readAsDataURL(e.target.files[0]);
+  };
+</script>
+
 @stack('scripts')
 </body>
 </html>
