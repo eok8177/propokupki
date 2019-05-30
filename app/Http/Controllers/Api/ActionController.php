@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class ActionController extends Controller
 {
@@ -123,6 +124,83 @@ class ActionController extends Controller
         ],
       ],
 
+    ];
+
+    return response()->json($res, 200);
+  }
+
+
+  public function search(Request $request)
+  {
+    $res = [
+      'data' => $request->input('data'),
+      'status' => true,
+      'count_actions' => 10,
+      'count_shops' => 4,
+      'actions' => [
+        0 => [
+          'title' => 'Молоко 2,5% ТМ Галичина 900 г',
+          'image' => 'images/action-1.jpg',
+          'url' => '/actions',
+        ],
+        1 => [
+          'title' => 'Молоко с сахаром сгущенное, 8,5% ТМ Ичня 300 г',
+          'image' => 'images/action-2.jpg',
+          'url' => '/actions',
+        ],
+        2 => [
+          'title' => 'Молоко пастеризованное 3.6% ТМ Молокия Доброй ночи 900 г',
+          'image' => 'images/action-3.jpg',
+          'url' => '/actions',
+        ],
+        3 => [
+          'title' => 'Молоко овсяное 1% ТМ Союзпищепром 1000 г',
+          'image' => 'images/action-4.jpg',
+          'url' => '/actions',
+        ],
+        4 => [
+          'title' => 'Молоко пастеризованное 3.6% ТМ Молокия Доброй ночи 900 г',
+          'image' => 'images/action-3.jpg',
+          'url' => '/actions',
+        ],
+        5 => [
+          'title' => 'Молоко овсяное 1% ТМ Союзпищепром 1000 г',
+          'image' => 'images/action-4.jpg',
+          'url' => '/actions',
+        ],
+        6 => [
+          'title' => 'Молоко пастеризованное 3.6% ТМ Молокия Доброй ночи 900 г',
+          'image' => 'images/action-3.jpg',
+          'url' => '/actions',
+        ],
+        7 => [
+          'title' => 'Молоко овсяное 1% ТМ Союзпищепром 1000 г',
+          'image' => 'images/action-4.jpg',
+          'url' => '/actions',
+        ],
+      ],
+      'shops' => [
+        0 => [
+          'title' => 'Молоко 2,5% ТМ Галичина 900 г',
+          'image' => 'images/shop-1.jpg',
+          'url' => '/actions',
+        ],
+        1 => [
+          'title' => 'Молоко с сахаром сгущенное, 8,5% ТМ Ичня 300 г',
+          'image' => 'images/shop-2.jpg',
+          'url' => '/actions',
+        ],
+        2 => [
+          'title' => 'Молоко пастеризованное 3.6% ТМ Молокия Доброй ночи 900 г',
+          'image' => 'images/shop-3.jpg',
+          'url' => '/actions',
+        ],
+        2 => [
+          'title' => 'Молоко овсяное 1% ТМ Союзпищепром 1000 г',
+          'image' => 'images/shop-4.jpg',
+          'url' => '/actions',
+        ],
+      ],
     ];
 
     return response()->json($res, 200);

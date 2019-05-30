@@ -98,6 +98,106 @@ button {
   }
 }
 
+.page-title {
+  margin-top: 31px;
+  margin-bottom: 31px;
+  text-align: center;
+  &.left {text-align: left;}
+  .title {
+    font-size: 24px;
+    font-weight: normal;
+    color: #242729;
+    margin: 0;
+  }
+  .sub-title {
+    color: #677075;
+    font-size: 14px;
+    margin: 14px 0 0;
+  }
+}
+.block-title {
+  background: #FAF9F5;
+  text-align: center;
+  font-size: 24px;
+  color: #242729;
+  padding: 24px 0 0;
+  margin: 0;
+}
+
+.search-result {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 1px;
+  background: #fff;
+  box-shadow: 0px 8px 12px rgba(178, 178, 178, 0.15);
+  border-radius: 0px 0px 3px 3px;
+  z-index: 2;
+  color: #242729;
+  padding-top: 16px;
+  padding-bottom: 20px;
+  .count {
+    display: inline-block;
+    background: #EBF1F5;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    width: 32px;
+    margin-left: 16px;
+    margin-right: 8px;
+  }
+  ul {
+    list-style: none;
+    padding: 16px;
+    a {
+      &:hover {
+        color: #F44E4E;
+        text-decoration: none;
+      }
+    }
+  }
+  .actions {
+    border-bottom: 1px solid #EBF1F5;
+    max-height: 306px;
+    overflow-y: auto;
+    li {display: block;}
+    .image {
+      margin-right: 20px;
+      margin-bottom: 8px;
+      padding: 5px;
+      display: inline-block;
+    }
+    img {
+      width: 46px;
+      height: 40px;
+      object-fit: cover;
+      object-position: center;
+    }
+    .title {
+      font-size: 14px;
+    }
+  }
+  .shops {
+    li {
+      display: inline-block;
+    }
+    .image {
+      display: block;
+      padding: 8px 16px;
+      margin-right: 50px;
+      &:hover {box-shadow: 0px 4px 12px rgba(204, 202, 192, 0.25);}
+    }
+    img {
+      width: 120px;
+      height: 40px;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+}
+
+/* -------------- Page blocks ---------------- */
 .header {
   border-bottom: 1px solid #EBF1F5;
   .container {
@@ -107,6 +207,7 @@ button {
       align-items: center;
     }
     padding: 12px 0;
+    position: relative;
   }
   .logo {
     display: inline-block;
@@ -129,24 +230,6 @@ button {
   }
 }
 
-
-.page-title {
-  margin-top: 31px;
-  margin-bottom: 31px;
-  text-align: center;
-  &.left {text-align: left;}
-  .title {
-    font-size: 24px;
-    font-weight: normal;
-    color: #242729;
-    margin: 0;
-  }
-  .sub-title {
-    color: #677075;
-    font-size: 14px;
-    margin: 14px 0 0;
-  }
-}
 
 .home-page {
   .slider {
@@ -248,12 +331,6 @@ button {
   background: #FAF9F5;
   padding-top: 30px;
   padding-bottom: 40px;
-  .block-title {
-    text-align: center;
-    font-size: 24px;
-    color: #242729;
-    margin: 0 0 24px 0;
-  }
   @media(min-width:768px) {
     .container {padding: 0;}
   }
