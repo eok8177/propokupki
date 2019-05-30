@@ -4,7 +4,7 @@
 
 <div class="block">
   <div class="header">
-    <a href="#"><img src="{{ asset('img/logo.svg') }}"></a>
+    <a href="/"><img src="{{ asset('img/logo.svg') }}"></a>
   </div>
   <div class="body">
     <h1 class="title">Авторизация</h1>
