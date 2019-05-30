@@ -24,7 +24,7 @@ class Address extends Model
             if ($trans) {
                 $addres['contents'][$item->locale] = $trans;
             } else {
-                $addres['contents'][$item->locale] = new ShopTranslate;
+                $addres['contents'][$item->locale] = new AddressTranslate;
             }
         }
         return $addres;
@@ -50,6 +50,11 @@ class Address extends Model
     public function sities()
     {
         return $this->belongsToMany('App\City');
+    }
+
+    public function shops()
+    {
+        return $this->belongsToMany('App\Shop');
     }
 
 }

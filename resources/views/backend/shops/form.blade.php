@@ -33,7 +33,7 @@
                 <label>Логотип</label>
                 <p>Загрузите логотип магазина</p>
                 <div class="files-input">
-                    <input type="file" class="form-control" multiple="">
+                    <input type="file" class="form-control" name="image" multiple="">
                     <span class="btn-red">Добавить фото</span>
                     <span class="text">Или перетащите его сюда</span>
                 </div>
@@ -49,14 +49,14 @@
 
 
                 <div class="shop-item">
-                    <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                    <span class="title">Вэлыка кышеня</span>
-                    <span class="desc">Электроника и быто…</span>
+                    <div class="image"><img src="{{ asset('/storage/'.$shop->image) }}" alt=""></div>
+                    <span class="title">{{ $contents[$lang->locale]->title }}</span>
+                    <span class="desc">{{ $contents[$lang->locale]->title }}</span>
                     <hr>
                     <div class="status">
                         <span>Активный</span>
                         <label class="checkbox">
-                            <input type="checkbox">
+                            <input type="checkbox" name="status" value="1" checked="checked">
                             <span class="chk"></span>
                         </label>
                     </div>
@@ -72,12 +72,14 @@
         <label>Адреса</label>
         <p>Импорт или экспорт адресов из csv файла</p>
         <div class="addresses-input">
-            <input type="file" name="import_file" />
-            <div class="btn-group" role="group">
-                <button type="button" class="btn import">Импорт</button>
-                <button type="button" class="btn export">Экспорт</button>
-            </div>
-
+            @if ($method = 'create')
+                <input type="file" name="import_file" />
+            @else
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn import">Импорт</button>
+                    <button type="button" class="btn export">Экспорт</button>
+                </div>
+            @endif
             <span class="message">
             <span class="text">adresa-ashan-2019.csv</span>
             <span class="red">Добавлен</span>
@@ -87,8 +89,8 @@
 
     <div class="form-group">
         <div class="submit-btns">
-            <button class="btn btn-red" type="submit">Добавить магазин</button>
-            <button class="btn btn-white">Отмена</button>
+            <button class="btn btn-red" type="submit">Сохранить магазин</button>
+            <a href="/admin/shops" class="btn btn-white">Отмена</a>
         </div>
     </div>
 </div>

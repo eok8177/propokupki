@@ -34,15 +34,15 @@
                     @forelse ($shops as $shop)
                         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
                             <div class="item">
-                                <button class="btn-delete"></button>
-                                <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                                <span class="title">{{ $shop->translate($app_locale)->first()['title'] }}</span>
+                                <button data-href="{{ route('admin.shops.destroy', $shop->id) }}" class="btn-delete"></button>
+                                <div class="image"><img src="{{ asset('/storage/'.$shop->image) }}" alt=""></div>
+                                <a href="{{ route('admin.shops.edit', $shop->id) }}"><span class="title">{{ $shop->translate($app_locale)->first()['title'] }}</span></a>
                                 <span class="desc"></span>
                                 <hr>
                                 <div class="status">
                                     <span>Активный</span>
                                     <label class="checkbox">
-                                        <input type="checkbox">
+                                        <input type="checkbox" {!! $shop->status ? 'checked="checked" ' : '' !!}>
                                         <span class="chk"></span>
                                     </label>
                                 </div>

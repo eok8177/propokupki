@@ -55,6 +55,7 @@ class ShopsController extends Controller
 //        dd(Language::where('status', '1')->get());
 
         return view('backend.shops.create', [
+            'method' => 'create',
             'shop'     => $shop->forAdmin()['shop'],
             'contents' => $shop->forAdmin()['contents'],
             'languages' => Language::where('status', '1')->get(),
@@ -69,19 +70,22 @@ class ShopsController extends Controller
      */
     public function store(Request $request)
     {
-
+//        dd($request->image);
         $request->validate([
-//            'slug' => 'required|unique:pages|max:255',
-            'import_file' => 'required'
+            'slug' => 'required|unique:pages|max:255',
+            'import_file' => 'required',
+            'image' => 'required'
         ]);
 
+
         $shop = Shop::create($request->all());
-        $shop->status = 1;
+        $image = $request->file('image')->store('uploads/'.$shop->id, 'public');
+        $shop->image = $image;
         $shop->save();
-        $language = Language::where('status', '1')->get();
+        $languages = Language::where('status', '1')->get();
         $shop->categories()->attach($request->category);
 
-        foreach ($language as $lang) {
+        foreach ($languages as $lang) {
 
             $locale = $lang->locale;
 
@@ -92,7 +96,7 @@ class ShopsController extends Controller
             $shop_translate->save();
         }
 
-        $filename = fopen($_FILES['import_file']['tmp_name'], "r");
+        $filename = fopen($request->file('import_file'), "r");
 
         $i = 0;
         $city_arr = array();
@@ -103,12 +107,14 @@ class ShopsController extends Controller
                     DB::table('city_shop')->insert(['city_id' => $data[0], 'shop_id' => $shop->id]);
                     array_push($city_arr, $data[0]);
                 }
-//                dd($data[3]);
+
                 $addres->city_id = $data[0];
                 $addres->latitude = $data[3];
                 $addres->longitude = $data[4];
                 $addres->save();
-                foreach ($language as $lang) {
+                $addres->shops()->attach($shop->id);
+
+                foreach ($languages as $lang) {
 
                     $locale = $lang->locale;
 
@@ -116,7 +122,7 @@ class ShopsController extends Controller
                     $address_translate->address_id = $addres->id;
                     $address_translate->locale = $locale;
                     $address_translate->title = $data[1];
-                    $shop_translate->save();
+                    $address_translate->save();
 
                 }
             }
@@ -175,11 +181,21 @@ class ShopsController extends Controller
 
         if ($shop) {
             $request->validate([
-                'slug' => Rule::unique('categories')->ignore($shop->id),
+                'slug' => Rule::unique('shops')->ignore($shop->id),
                 'slug' => 'required|max:255',
+//                'import_file' => 'required',
+//                'image' => 'required'
             ]);
 
             $shop->fill($request->all())->save();
+            $shop->categories()->sync($request->category);
+
+            if ($request->file('image')){
+                $image = $request->file('image')->store('uploads/'.$shop->id, 'public');
+                $shop->image = $image;
+                $shop->save();
+            }
+
 
             $languages = Language::where('status', '1')->get();
 
@@ -188,6 +204,7 @@ class ShopsController extends Controller
                 $locale = $lang->locale;
 
                 $shop_translate = ShopTranslate::where('shop_id', $shop->id)->where('locale', $lang->locale)->first();
+
                 if (!$shop_translate) {
                     $shop_translate = new ShopTranslate();
                     $shop_translate->shop_id = $shop->id;
@@ -195,6 +212,48 @@ class ShopsController extends Controller
                 $shop_translate->locale = $locale;
                 $shop_translate->title = $request->$locale['title'];
                 $shop_translate->save();
+            }
+            if ($request->file('import_file')) {
+
+                $old_addresses = DB::table('address_shop')->where('shop_id', $shop->id)->pluck('address_id');
+                DB::table('addresses')->whereIn('id', $old_addresses)->delete();
+                DB::table('addresses_translations')->whereIn('address_id', $old_addresses)->delete();
+                DB::table('city_shop')->where('shop_id', $shop->id)->delete();
+                DB::table('address_shop')->where('shop_id', $shop->id)->delete();
+
+
+                $filename = fopen($request->file('import_file'), "r");
+
+                $i = 0;
+                $city_arr = array();
+                while (($data = fgetcsv($filename, 1000, ",")) !== FALSE) {
+                    if($i != 0){
+                        $addres = new Address();
+                        if (!in_array($data[0], $city_arr)){
+                            DB::table('city_shop')->insert(['city_id' => $data[0], 'shop_id' => $shop->id]);
+                            array_push($city_arr, $data[0]);
+                        }
+
+                        $addres->city_id = $data[0];
+                        $addres->latitude = $data[3];
+                        $addres->longitude = $data[4];
+                        $addres->save();
+                        $addres->shops()->sync($shop->id);
+                        foreach ($languages as $lang) {
+
+                            $locale = $lang->locale;
+
+                            $address_translate = new AddressTranslate();
+                            $address_translate->address_id = $addres->id;
+                            $address_translate->locale = $locale;
+                            $address_translate->title = $data[1];
+                            $address_translate->save();
+
+                        }
+                    }
+                    $i++;
+                }
+                fclose($filename);
             }
 
             return redirect()
@@ -211,12 +270,17 @@ class ShopsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Shop $language)
+
+    public function destroy(Shop $shop)
     {
-        DB::table('page_translations')->where('locale', $language['locale'])->delete();
-        DB::table('post_translations')->where('locale', $language['locale'])->delete();
-        DB::table('shop_translations')->where('locale', $language['locale'])->delete();
-        $language->delete();
+        $old_addresses = DB::table('address_shop')->where('shop_id', $shop->id)->pluck('address_id');
+        DB::table('addresses')->whereIn('id', $old_addresses)->delete();
+        DB::table('addresses_translations')->whereIn('address_id', $old_addresses)->delete();
+        DB::table('city_shop')->where('shop_id', $shop->id)->delete();
+        DB::table('category_shop')->where('shop_id', $shop->id)->delete();
+        DB::table('address_shop')->where('shop_id', $shop->id)->delete();
+        DB::table('shops_translations')->where('shop_id', $shop->id)->delete();
+        $shop->delete();
         return response()->json('success', 200);
     }
 

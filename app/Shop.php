@@ -8,7 +8,7 @@ class Shop extends Model
 {
     protected $table = 'shops';
 
-    protected $fillable = ['slug','code','status'];
+    protected $fillable = ['slug','status'];
 
     public function langs($status = 1)
     {
@@ -56,6 +56,11 @@ class Shop extends Model
     public function sities()
     {
         return $this->belongsToMany('App\City');
+    }
+
+    public function addresses()
+    {
+        return $this->belongsToMany('App\Address');
     }
 
     public function searchShops ($search, $locale = null)

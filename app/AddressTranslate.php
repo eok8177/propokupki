@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AddressTranslate extends Model
 {
-    protected $table = 'address_translations';
+    protected $table = 'addresses_translations';
 
     protected $fillable = ['title','locale','status'];
 }
