@@ -1,0 +1,68 @@
+<template>
+  <div class="home-page">
+
+    <div class="container page-title">
+      <h1 class="title">Акции и скидки Киева</h1>
+      <p class="sub-title">230+ магазинов с лучшими предложениями</p>
+    </div>
+
+    <div class="slider">
+      <div class="container">
+        <div class="wrap">
+
+          <div class="shop" v-for="shop in shops">
+            <a href="#">
+              <div class="image">
+                <img :src="shop.image" :alt="shop.title">
+              </div>
+              <p><span class="count">{{shop.shops}}</span> Магазинов</p>
+              <p><span class="count">{{shop.actions}}</span> Акций</p>
+              <p class="discount">Скидки до <span class="number">{{shop.discount}}</span></p>
+            </a>
+          </div>
+
+          <div class="shop">
+            <div class="ico ico-bag"></div>
+            <p class="title">Более 230</p>
+            <p class="gray">Магазинов</p>
+            <hr>
+            <button class="btn btn-red">Все магазины</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <h2 class="block-title">Лучшие акции Киева</h2>
+    <products></products>
+
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import Products from '@/views/components/Products';
+
+export default {
+  name: 'Home',
+  components: {
+    Products
+  },
+  data() {
+    return {
+        shops: [],
+    }
+  },
+  created: function() {
+    axios.get('/api/shops')
+      .then(
+        (response) => {
+          this.shops = response.data;
+        }
+      )
+      .catch(
+        (error) => console.log(error)
+      );
+  },
+}
+</script>

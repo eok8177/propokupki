@@ -9945,6 +9945,7 @@ input:focus {
   margin: 0;
   width: 100%;
   height: 100%;
+  opacity: 0;
 }
 .files-input .btn-red {
   pointer-events: none;
@@ -9970,6 +9971,14 @@ input:focus {
   line-height: 16px;
   text-align: center;
   color: #677075;
+}
+.files-input img {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 40px;
+  margin: auto;
+  max-width: 100px;
 }
 
 .select-dates .date {
@@ -10056,7 +10065,8 @@ input:focus {
   }
 }
 .price-input .fields input, .price-input .fields span.new-price {
-  width: 184px;
+  max-width: 184px;
+  width: 100%;
   margin-right: 24px;
 }
 .price-input .fields .new-price {
@@ -10461,6 +10471,37 @@ input:focus {
   margin-left: 24px;
   max-width: 152px;
   width: 100%;
+}
+
+.actions .products .item {
+  padding-top: 20px;
+  position: relative;
+}
+.actions .products .item .btn-delete {
+  display: none;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.actions .products .item:hover {
+  box-shadow: 0px 4px 12px rgba(235, 241, 245, 0.85);
+}
+.actions .products .item:hover .btn-delete {
+  display: block;
+}
+.actions .products .item .form-group label {
+  margin-top: 18px;
+}
+.actions .products .item .gray-title {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  background: #EBF1F5;
+  border-radius: 3px;
+  margin-left: 12px;
+  padding: 3px 10px;
+  color: #242729;
+  font-size: 12px;
 }
 
 footer {

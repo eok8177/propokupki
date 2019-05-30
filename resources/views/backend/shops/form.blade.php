@@ -33,7 +33,8 @@
                 <label>Логотип</label>
                 <p>Загрузите логотип магазина</p>
                 <div class="files-input">
-                    <input type="file" class="form-control" name="image" multiple="">
+                    <img src=""/>
+                    <input type="file" class="form-control input-img" name="image" multiple="">
                     <span class="btn-red">Добавить фото</span>
                     <span class="text">Или перетащите его сюда</span>
                 </div>
@@ -49,7 +50,7 @@
 
 
                 <div class="shop-item">
-                    <div class="image"><img src="{{ asset('/storage/'.$shop->image) }}" alt=""></div>
+                    <div class="image"><img src="{{ asset('/storage/'.$shop->image) }}" alt="" class="preview-img"></div>
                     <span class="title">{{ $contents[$lang->locale]->title }}</span>
                     <span class="desc">{{ $contents[$lang->locale]->title }}</span>
                     <hr>
@@ -94,3 +95,15 @@
         </div>
     </div>
 </div>
+
+
+@push('scripts')
+<script>
+  $(function() {
+    $('body').on('change', '.input-img', function(e) {
+      handleImage(e);
+    });
+
+  });
+</script>
+@endpush

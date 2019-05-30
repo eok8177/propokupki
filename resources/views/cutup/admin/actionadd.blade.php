@@ -57,7 +57,58 @@
 {{-- Добавленые продукты, показывать при редактировании --}}
   <div class="container">
     <div class="products" id="products">
-      Добавленые продукты
+
+      @for ($i = 0; $i <= 3; $i++)
+      <div class="item row">
+        <span class="gray-title">Товар {{$i}}</span><button class="btn-delete"></button>
+        <div class="col-md-4 col-xl-6">
+          <div class="form-group">
+            <label>Фото</label>
+            <p>Загрузите фото товара</p>
+            <div class="files-input">
+              <img src=""/>
+              <input type="file" class="form-control input-img" multiple="">
+              <span class="btn-red">Добавить фото</span>
+              <span class="text">Или перетащите его сюда</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8 col-xl-6">
+          <div class="form-group col-xl-8 pl-0">
+            <label>Название</label>
+            <p>Укажите название товара</p>
+            <input type="text" class="form-control" placeholder="Название">
+          </div>
+
+          <div class="form-group col-xl-8 pl-0 units-select">
+            <label>Количество и вес</label>
+            <p>Укажите количество или вес продукта (шт, л, кг)</p>
+            <div class="fields">
+              <input type="text" class="form-control" placeholder="Количество или вес">
+              <div class="select">
+                <select class="custom-select" name="" id="">
+                  <option selected="selected">шт</option>
+                  <option >кг</option>
+                  <option >л</option>
+                  <option >уп</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group pl-0 price-input">
+            <label>Цена</label>
+            <p>Укажите старую цену и размер скидки, новая цена посчитается автоматически</p>
+            <div class="fields">
+              <input type="text" class="form-control price" placeholder="Старая цена грн">
+              <input type="text" class="form-control discount" placeholder="Размер скидки %">
+              <span class="new-price">Новая цена: <span class="result"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      @endfor
+
     </div>
   </div>
   <hr>
@@ -69,7 +120,8 @@
       <label>Фото</label>
       <p>Загрузите фото товара</p>
       <div class="files-input">
-        <input type="file" class="form-control" multiple="">
+        <img src=""/>
+        <input type="file" class="form-control input-img" multiple="">
         <span class="btn-red">Добавить фото</span>
         <span class="text">Или перетащите его сюда</span>
       </div>
@@ -145,6 +197,11 @@
       var discount = fields.find('.discount').val();
       fields.find('.result').text(price - price*discount/100);
     });
+
+    $('body').on('change', '.input-img', function(e) {
+      handleImage(e);
+    });
+
   });
 </script>
 @endpush
