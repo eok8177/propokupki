@@ -39,13 +39,19 @@
 
             <div class="items">
 
-                @for ($i = 0; $i <= 5; $i++)
+                @forelse ($discounts as $discount)
+
                     <div class="action-item">
-                        <button class="btn-delete"></button>
-                        <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
+                        <button data-href="{{ route('admin.discounts.destroy', $discount->id) }}" class="btn-delete"></button>
+                        <a href="{{ route('admin.discounts.edit', $discount->id) }}">
+                            <div class="image"><img src="{{ asset('/storage/'.$discount->image) }}" alt=""></div>
+                        </a>
+
                         <div class="block">
+                            <a href="{{ route('admin.discounts.edit', $discount->id) }}">
                             <span class="date">14–27 марта </span>
                             <span class="title">Вигідна пропозиція</span>
+                            </a>
                         </div>
                         <div class="status">
                             <span>Активный</span>
@@ -55,8 +61,9 @@
                             </label>
                         </div>
                     </div>
-                @endfor
+                @empty
 
+                @endforelse
             </div>
 
             <div class="pagination-row">

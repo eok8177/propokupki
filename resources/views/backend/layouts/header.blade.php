@@ -3,7 +3,7 @@
     <div class="container">
         <div class="left-nav">
             <a class="logo" href="#"><img src="{{ asset('img/admin/logo.svg') }}" alt=""></a>
-            <a href="/admin/shops" class="">Магазины <span class="badge badge-pill badge-warning">{{ count($shops) }}</span></a>
+            <a href="/admin/shops" class="">Магазины <span class="badge badge-pill badge-warning">{{-- {{ count($shops) }} --}}</span></a>
             <a href="/admin/discounts" class="">Акции <span class="badge badge-pill badge-warning">1703</span></a>
         </div>
 

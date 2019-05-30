@@ -28,7 +28,7 @@ Route::group([
     //      Shops
     Route::resource('/shops', 'ShopsController');
     //      Discounts
-    Route::resource('/shops', 'DiscountsController');
+    Route::resource('/discounts', 'DiscountsController');
 
 //      Categories
 //    Route::resource('/categories', 'CategoriesController');

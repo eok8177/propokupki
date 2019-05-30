@@ -24,7 +24,7 @@
             <div class="items">
                 <div class="row">
                     <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                        <div class="item add">
+                        <div class="shop-item add">
                             <span class="ico ico-plus"></span>
                             <span class="title">Новый<br>город</span>
                             <hr>
@@ -33,7 +33,7 @@
                     </div>
                     @forelse ($shops as $shop)
                         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                            <div class="item">
+                            <div class="shop-item">
                                 <button data-href="{{ route('admin.shops.destroy', $shop->id) }}" class="btn-delete"></button>
                                 <div class="image"><img src="{{ asset('/storage/'.$shop->image) }}" alt=""></div>
                                 <a href="{{ route('admin.shops.edit', $shop->id) }}"><span class="title">{{ $shop->translate($app_locale)->first()['title'] }}</span></a>
