@@ -21,12 +21,14 @@ Route::group([
     'namespace' => 'Admin',
     'prefix' => 'admin'], function() {
 
-//      Language
+    //      Language
     Route::resource('/language', 'LanguagesController');
-//      Cities
+    //      Cities
     Route::resource('/cities', 'CitiesController');
-//      Shops
+    //      Shops
     Route::resource('/shops', 'ShopsController');
+    //      Discounts
+    Route::resource('/shops', 'DiscountsController');
 
 //      Categories
 //    Route::resource('/categories', 'CategoriesController');
