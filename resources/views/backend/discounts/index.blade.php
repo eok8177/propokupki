@@ -4,7 +4,7 @@
 
     <div class="container">
         <h1 class="title-page">Акции <span class="badge badge-pill badge-secondary">238</span></h1>
-        <a href="" class="btn-noborder"><span class="ico ico-big ico-plus"></span> Новая акция</a>
+        <a href="{{ route('admin.discounts.create') }}" class="btn-noborder"><span class="ico ico-big ico-plus"></span> Новая акция</a>
     </div>
     <hr>
 
@@ -12,8 +12,8 @@
         <div class="container">
             <div class="select">
                 <select class="custom-select" name="" id="">
-                    <option selected="selected">Активные <span class="badge">60</span></option>
-                    <option >не активные <span class="badge">40</span></option>
+                    <option selected="selected">Активные <span class="badge">{{ $count_on }}</span></option>
+                    <option >не активные <span class="badge">{{ $count_off }}</span></option>
                 </select>
             </div>
 
@@ -50,7 +50,7 @@
                         <div class="block">
                             <a href="{{ route('admin.discounts.edit', $discount->id) }}">
                             <span class="date">14–27 марта </span>
-                            <span class="title">Вигідна пропозиція</span>
+                            <span class="title">{{ $shop->translate($app_locale)->first()['title'] }}</span>
                             </a>
                         </div>
                         <div class="status">

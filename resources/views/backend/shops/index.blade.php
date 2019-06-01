@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container">
-        <h1 class="title-page">Магазины <span class="badge badge-pill badge-secondary">{{ count($shops)  }}</span></h1>
+        <h1 class="title-page">Города <span class="badge badge-pill badge-secondary">{{ count($shops)  }}</span></h1>
     </div>
     <hr>
 
@@ -11,8 +11,8 @@
         <div class="container">
             <div class="select">
                 <select class="custom-select" name="" id="">
-                    <option selected="selected">Активные <span class="badge">{{ count($count_on) }}</span></option>
-                    <option >не активные <span class="badge">{{ count($count_off) }}</span></option>
+                    <option selected="selected" value="1">Активные <span class="badge">{{ $count_on }}</span></option>
+                    <option value="0">не активные <span class="badge">{{ $count_off }}</span></option>
                 </select>
             </div>
 
@@ -42,7 +42,7 @@
                                 <div class="status">
                                     <span>Активный</span>
                                     <label class="checkbox">
-                                        <input type="checkbox" {!! $shop->status ? 'checked="checked" ' : '' !!}>
+                                        <input data-href="{{route('admin.shops.status', $shop->id)}}" type="checkbox" {!! $shop->status ? 'checked="checked" ' : '' !!}>
                                         <span class="chk"></span>
                                     </label>
                                 </div>
@@ -73,9 +73,9 @@
                 <div class="select">
                     <label>Выводить по</label>
                     <select class="custom-select">
-                        <option value="">50</option>
-                        <option value="">100</option>
-                        <option value="">200</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
                     </select>
                 </div>
 

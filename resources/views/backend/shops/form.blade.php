@@ -12,8 +12,8 @@
                 @endforeach
             </div>
             <div class="form-group col-md-8 pl-0">
-                {{ Form::label('slug', 'Силка') }}
-                <p>Укажите силку магазина </p>
+                {{ Form::label('slug', 'Url') }}
+                <p>Укажите url магазина </p>
                 {{ Form::text('slug', $shop->slug, ['class' => $errors->has('slug') ? 'form-control is-invalid' : 'form-control']) }}
                 @if($errors->has('slug'))
                     <span class="invalid-feedback">{{ $errors->first('slug') }}</span>

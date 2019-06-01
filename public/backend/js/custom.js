@@ -21,20 +21,29 @@ $(document).ready(function () {
     });
 
     //Change status of record
-    $('.status').on('click', function (e) {
+    $('.checkbox').on('click', function (e) {
         e.preventDefault();
-        var item = $(this);
+        var item = $(this).find('input');
+        console.log(item);
         $.post({
             type: 'PUT',
-            url: $(this).attr('href'),
+            url: item.data('href'),
             dataType: 'json'
         }).done(function (status) {
             if (status == 1) {
-                item.removeClass('fa-times text-danger').addClass('fa-check text-success');
+                item.attr( 'checked', true );
             } else {
-                item.removeClass('fa-check text-success').addClass('fa-times text-danger');
+                item.removeAttr('checked');
             }
         });
+    });
+
+    //Change status of record
+    $('.custom-select').on('change', function (e) {
+        e.preventDefault();
+        var item = $(this).val();
+        console.log(item);
+        window.location.href = window.location.href + "?status="+item;
     });
 
 });

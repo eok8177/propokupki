@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Discount extends Model
+class Product extends Model
 {
-    protected $table = 'discounts';
+    protected $table = 'products';
 
     protected $fillable = ['slug','status'];
 
@@ -17,28 +17,28 @@ class Discount extends Model
 
     public function forAdmin()
     {
-        $discount = [];
-        $discount['discount'] = $this;
+        $product = [];
+        $product['product'] = $this;
         foreach ($this->langs() as $item) {
             $trans = $this->translate($item->locale)->first();
             if ($trans) {
-                $discount['contents'][$item->locale] = $trans;
+                $product['contents'][$item->locale] = $trans;
             } else {
-                $discount['contents'][$item->locale] = new DiscountTranslate;
+                $product['contents'][$item->locale] = new ProductTranslate;
             }
         }
-        return $discount;
+        return $product;
     }
 
     public function contents()
     {
-        return $this->hasMany('App\DiscountTranslate');
+        return $this->hasMany('App\ProductTranslate');
     }
 
     public function translate($locale = null)
     {
         $locale = $locale ?? app()->getLocale();
-        return $this->hasOne(DiscountTranslate::class)->where('locale', $locale);
+        return $this->hasOne(ProductTranslate::class)->where('locale', $locale);
     }
 
     public function getCategoriesForSelectAttribute()
@@ -51,10 +51,10 @@ class Discount extends Model
         return $this->belongsToMany('App\Category');
     }
 
-    public function searchDiscounts ($search, $locale = null)
+    public function searchProducts ($search, $locale = null)
     {
         $locale = $locale ?? app()->getLocale();
-        return $this->hasMany(DiscountTranslate::class)->where('locale', $locale)->where('title', $search);
+        return $this->hasMany(ProductTranslate::class)->where('locale', $locale)->where('title', $search);
     }
 
     public function products()

@@ -1,96 +1,182 @@
 <div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group col-md-8 pl-0">
-                @foreach ($languages as $lang)
-                    {{ Form::label('title', 'Название') }}
-                    <p>Укажите название магазина </p>
-                    {{ Form::text($lang->locale.'[title]', $contents[$lang->locale]->title, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
-                    @if($errors->has('title'))
-                        <span class="invalid-feedback">{{ $errors->first('title') }}</span>
-                    @endif
-                @endforeach
-            </div>
-            <div class="form-group col-md-8 pl-0">
-                {{ Form::label('slug', 'Силка') }}
-                <p>Укажите силку магазина </p>
-                {{ Form::text('slug', $shop->slug, ['class' => $errors->has('slug') ? 'form-control is-invalid' : 'form-control']) }}
-                @if($errors->has('slug'))
-                    <span class="invalid-feedback">{{ $errors->first('slug') }}</span>
-                @endif
-            </div>
-            <div class="form-group col-md-8 pl-0">
-                {{ Form::label('category', 'Категория') }}
-                <p>Выберите подходящую категорию магазина</p>
-                <div class="select">
-                    {{ Form::select('category[]', $shop->categories_for_select, $shop->categories, ['class' => $errors->has('category') ? 'form-control is-invalid' : 'form-control']) }}
-                    @if($errors->has('category'))
-                        <span class="invalid-feedback">{{ $errors->first('category') }}</span>
-                    @endif
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Логотип</label>
-                <p>Загрузите логотип магазина</p>
-                <div class="files-input">
-                    <input type="file" class="form-control" name="image" multiple="">
-                    <span class="btn-red">Добавить фото</span>
-                    <span class="text">Или перетащите его сюда</span>
-                </div>
-            </div>
 
+    <div class="form-group pl-0 col-md-4">
+        <label>Магазин</label>
+        <p>Выберите магазин в котором будет акция</p>
+
+        <div class="search">
+            <input type="text" placeholder="Введите название">
+            <button class="btn-search"></button>
         </div>
+    </div>
+    {{ Form::hidden('shop[]', $discount->shops, []) }}
+    <div class="filtered">
+        <div class="item">
+            <button class="btn-delete"></button>
+            <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
+        </div>
+        <div class="item">
+            <button class="btn-delete"></button>
+            <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
+        </div>
+        <div class="item">
+            <button class="btn-delete"></button>
+            <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
+        </div>
+    </div>
+
+    <div class="form-group col-md-4 pl-0">
+        @foreach ($languages as $lang)
+            {{ Form::label('title', 'Название') }}
+            <p>Укажите название акции </p>
+            {{ Form::text($lang->locale.'[title]', $contents[$lang->locale]->title, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
+            @if($errors->has('title'))
+                <span class="invalid-feedback">{{ $errors->first('title') }}</span>
+            @endif
+        @endforeach
+    </div>
+
+    <div class="form-group col-md-4 pl-0">
+        {{ Form::label('slug', 'Url') }}
+        <p>Укажите url акции </p>
+        {{ Form::text('slug', $discount->slug, ['class' => $errors->has('slug') ? 'form-control is-invalid' : 'form-control']) }}
+        @if($errors->has('slug'))
+            <span class="invalid-feedback">{{ $errors->first('slug') }}</span>
+        @endif
+    </div>
 
 
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>Превью</label>
-                <p>Вид добавляемой карточки магазина</p>
+    <div class="form-group pl-0 select-dates">
+        {{ Form::label('slug', 'Период действия') }}
+        <p>Укажите даты начала и окончания действия акции</p>
+        <div class="d-md-flex">
+            <div class="date">{{ Form::text('date_start', $discount->date_start, ['class' => $errors->has('date_start') ? 'form-control is-invalid' : 'form-control']) }}</div>
+            <div class="date">{{ Form::text('date_end', $discount->date_end, ['class' => $errors->has('date_end') ? 'form-control is-invalid' : 'form-control']) }}</div>
+        </div>
+    </div>
 
+</div>
+<hr>
 
-                <div class="shop-item">
-                    <div class="image"><img src="{{ asset('/storage/'.$shop->image) }}" alt=""></div>
-                    <span class="title">{{ $contents[$lang->locale]->title }}</span>
-                    <span class="desc">{{ $contents[$lang->locale]->title }}</span>
-                    <hr>
-                    <div class="status">
-                        <span>Активный</span>
-                        <label class="checkbox">
-                            <input type="checkbox" name="status" value="1" checked="checked">
-                            <span class="chk"></span>
-                        </label>
+{{-- Добавленые продукты, показывать при редактировании --}}
+<div class="container">
+    <div class="products" id="products">
+
+        @forelse ($discount->products as $product)
+            <div class="item row">
+                <span class="gray-title">Товар {{$i}}</span><button class="btn-delete"></button>
+                <div class="col-md-4 col-xl-6">
+                    <div class="form-group">
+                        <label>Фото</label>
+                        <p>Загрузите фото товара</p>
+                        <div class="files-input">
+                            <img src=""/>
+                            <input type="file" class="form-control input-img" multiple="">
+                            <span class="btn-red">Добавить фото</span>
+                            <span class="text">Или перетащите его сюда</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-xl-6">
+                    <div class="form-group col-xl-8 pl-0">
+                        @foreach ($languages as $lang)
+                            {{ Form::label('product_title', 'Название') }}
+                            <p>Укажите название товара </p>
+                            {{ Form::text($lang->locale.'[product_title]', $contents[$lang->locale]->product_title, ['class' => $errors->has('product_title') ? 'form-control is-invalid' : 'form-control']) }}
+                            @if($errors->has('title'))
+                                <span class="invalid-feedback">{{ $errors->first('product_title') }}</span>
+                            @endif
+                        @endforeach
+                    </div>
+
+                    <div class="form-group col-xl-8 pl-0 units-select">
+                        {{ Form::label('product_quantity', 'Количество и вес') }}
+                        <p>Укажите количество или вес продукта (шт, л, кг)</p>
+                        <div class="fields">
+                            {{ Form::text('product_quantity', $product->product_quantity, ['class' => $errors->has('product_quantity') ? 'form-control is-invalid' : 'form-control', 'placeholder'=>'Количество или вес']) }}
+                            <input type="text" class="form-control" placeholder="Количество или вес">
+                            <div class="select">
+                                <select class="custom-select" name="" id="">
+                                    <option selected="selected">шт</option>
+                                    <option >кг</option>
+                                    <option >л</option>
+                                    <option >уп</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group pl-0 price-input">
+                        <label>Цена</label>
+                        <p>Укажите старую цену и размер скидки, новая цена посчитается автоматически</p>
+                        <div class="fields">
+                            <input type="text" class="form-control price" placeholder="Старая цена грн">
+                            <input type="text" class="form-control discount" placeholder="Размер скидки %">
+                            <span class="new-price">Новая цена: <span class="result"></span></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endfor
+
     </div>
 </div>
 <hr>
 
-<div class="container">
+{{-- Форма добавления продукта --}}
+<div class="container" id="add_new_product">
+
     <div class="form-group">
-        <label>Адреса</label>
-        <p>Импорт или экспорт адресов из csv файла</p>
-        <div class="addresses-input">
-            @if ($method = 'create')
-                <input type="file" name="import_file" />
-            @else
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn import">Импорт</button>
-                    <button type="button" class="btn export">Экспорт</button>
-                </div>
-            @endif
-            <span class="message">
-            <span class="text">adresa-ashan-2019.csv</span>
-            <span class="red">Добавлен</span>
-          </span>
+        <label>Фото</label>
+        <p>Загрузите фото товара</p>
+        <div class="files-input">
+            <img src=""/>
+            <input type="file" class="form-control input-img" multiple="">
+            <span class="btn-red">Добавить фото</span>
+            <span class="text">Или перетащите его сюда</span>
         </div>
     </div>
 
+    <div class="form-group col-md-4 pl-0">
+        <label>Название</label>
+        <p>Укажите название товара</p>
+        <input type="text" class="form-control" placeholder="Название">
+    </div>
+
+    <div class="form-group col-md-4 pl-0 units-select">
+        <label>Количество и вес</label>
+        <p>Укажите количество или вес продукта (шт, л, кг)</p>
+        <div class="fields">
+            <input type="text" class="form-control" placeholder="Количество или вес">
+            <div class="select">
+                <select class="custom-select" name="" id="">
+                    <option selected="selected">шт</option>
+                    <option >кг</option>
+                    <option >л</option>
+                    <option >уп</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group pl-0 price-input">
+        <label>Цена</label>
+        <p>Укажите старую цену и размер скидки, новая цена посчитается автоматически</p>
+        <div class="fields">
+            <input type="text" class="form-control price" placeholder="Старая цена грн">
+            <input type="text" class="form-control discount" placeholder="Размер скидки %">
+            <span class="new-price">Новая цена: <span class="result"></span></span>
+        </div>
+    </div>
+
+</div>
+
+{{-- Кнопки сохранения --}}
+<div class="container">
     <div class="form-group">
         <div class="submit-btns">
-            <button class="btn btn-red" type="submit">Сохранить магазин</button>
-            <a href="/admin/shops" class="btn btn-white">Отмена</a>
+            <button class="btn btn-red" type="submit">Добавить акцию</button>
+            <button class="btn btn-white">Отмена</button>
         </div>
     </div>
 </div>

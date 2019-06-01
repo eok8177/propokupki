@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Discount;
 use App\Shop;
-use App\City;
 use App\Language;
 use App\Address;
 use App\ShopTranslate;
@@ -24,23 +24,49 @@ class ShopsController extends Controller
      */
     public function index(Request $request)
     {
+
+        if ($request->get('status')) {
+            $status = $request->get('status');
+        } else {
+            $status = '';
+        }
+
+        if ($request->get('limit')) {
+            $limit = $request->get('limit');
+        } else {
+            $limit = '';
+        }
+        
+        if ($request->get('search')) {
+            $search = $request->get('search');
+        } else {
+            $search = '';
+        }
+
+//        dd($request->get('status'));
+        if ($request->get('status') == 1){
+            $shops = Shop::where('status', 1)->orderBy('id', 'desc');
+        } elseif ($request->get('status') == 0) {
+            $shops = Shop::where('status', 0)->orderBy('id', 'desc');
+        }
         if ($request->get('search')) {
             $shops = new Shop();
             $shops->searchShops($request->get('search'), env('APP_LOCALE', 'ua'));
         } else {
-            $shops = Shop::orderBy('id', 'desc');
+            //$shops = Shop::orderBy('id', 'desc');
         }
         if ($request->get('limit')) {
             $shops =  $shops->paginate($request->get('limit'));
         } else {
             $shops =  $shops->paginate(50);
         }
+
 //        dd($shops);
         return view('backend.shops.index', [
-            'shops' => $shops,
-            'app_locale' => env('APP_LOCALE', 'ua'),
-            'count_on' => Shop::where('status', 1)->get(),
-            'count_off' => Shop::where('status', 0)->get(),
+            'shops'             => $shops,
+            'app_locale'        => env('APP_LOCALE', 'ua'),
+            'count_on'          => count(Shop::where('status', 1)->get()),
+            'count_off'         => count(Shop::where('status', 0)->get()),
         ]);
     }
 
@@ -284,18 +310,17 @@ class ShopsController extends Controller
         return response()->json('success', 200);
     }
 
-    /**
-     * Validate request form.
-     *
-     * @param Request $request
-     */
-    protected function validateForm(Request $request)
+
+    public function status($id)
     {
+        $shop = Shop::find($id);
+        if(!$shop)
+            return response()->json(['error'=> 'not found any page'], 400);
 
-        $this->validate($request, [
-            'title'             => 'required|max:255',
-        ]);
+        $shop->status = 1 - $shop->status;
+        $shop->save();
 
+        return response()->json($shop->status, 200);
     }
 
 }
