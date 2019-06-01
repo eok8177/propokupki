@@ -43,7 +43,7 @@ $(document).ready(function () {
         e.preventDefault();
         var item = $(this).val();
         console.log(item);
-        window.location.href = window.location.href + "?status="+item;
+        window.location.href = window.location.href.split('?')[0] + "?status="+item;
     });
 
 });

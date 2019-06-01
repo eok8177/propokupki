@@ -11,16 +11,18 @@
     <div class="actions">
         <div class="container">
             <div class="select">
-                <select class="custom-select" name="" id="">
-                    <option selected="selected">Активные <span class="badge">{{ $count_on }}</span></option>
-                    <option >не активные <span class="badge">{{ $count_off }}</span></option>
+                <select name="status" class="custom-select" name="" id="">
+                    <option value="1" {{$status == 1 ? 'selected="selected"' : ''}}>Активные <span class="badge">{{ $count_on }}</span></option>
+                    <option value="0" {{$status == 0 ? 'selected="selected"' : ''}}>не активные <span class="badge">{{ $count_off }}</span></option>
                 </select>
             </div>
 
+            {!! Form::open(['route' => ['admin.discounts.index'], 'method' => 'GET']) !!}
             <div class="search">
-                <input type="text" placeholder="Введите название">
-                <button class="btn-search"></button>
+                <input name="search" type="text" placeholder="Введите название" value="{{app('request')->input('search')}}">
+                <button type="submit" class="btn-search"></button>
             </div>
+            {!! Form::close() !!}
 
             <div class="filtered">
                 <div class="item">
@@ -40,17 +42,16 @@
             <div class="items">
 
                 @forelse ($discounts as $discount)
-
                     <div class="action-item">
-                        <button data-href="{{ route('admin.discounts.destroy', $discount->id) }}" class="btn-delete"></button>
-                        <a href="{{ route('admin.discounts.edit', $discount->id) }}">
-                            <div class="image"><img src="{{ asset('/storage/'.$discount->image) }}" alt=""></div>
+                        <button data-href="{{ route('admin.discounts.destroy', $discount->parent->id) }}" class="btn-delete"></button>
+                        <a href="{{ route('admin.discounts.edit', $discount->parent->id) }}">
+                            <div class="image"><img src="{{ asset('/storage/'.$discount->parent->image) }}" alt=""></div>
                         </a>
 
                         <div class="block">
-                            <a href="{{ route('admin.discounts.edit', $discount->id) }}">
+                            <a href="{{ route('admin.discounts.edit', $discount->parent->id) }}">
                             <span class="date">14–27 марта </span>
-                            <span class="title">{{ dd($discount->translate('uk')->title) }}</span>
+                            <span class="title">{{ $discount->title }}</span>
                             </a>
                         </div>
                         <div class="status">
