@@ -38,7 +38,8 @@ class Discount extends Model
     public function translate($locale = null)
     {
         $locale = $locale ?? app()->getLocale();
-        return $this->hasOne(DiscountTranslate::class)->where('locale', $locale);
+        $item = $this->hasOne(DiscountTranslate::class)->where('locale', $locale)->first();
+        return $item ? $item : new DiscountTranslate();
     }
 
     public function getCategoriesForSelectAttribute()

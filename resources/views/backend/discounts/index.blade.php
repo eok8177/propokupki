@@ -50,7 +50,7 @@
                         <div class="block">
                             <a href="{{ route('admin.discounts.edit', $discount->id) }}">
                             <span class="date">14–27 марта </span>
-                            <span class="title">{{ $shop->translate($app_locale)->first()['title'] }}</span>
+                            <span class="title">{{ dd($discount->translate('uk')->title) }}</span>
                             </a>
                         </div>
                         <div class="status">
