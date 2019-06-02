@@ -24,23 +24,19 @@ class DiscountsController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->get('search')) {
-            $discounts = new Discount();
-            $discounts->searchDiscounts($request->get('search'), env('APP_LOCALE', 'ua'));
-        } else {
-            $discounts = Discount::orderBy('id', 'desc');
-        }
-        if ($request->get('limit')) {
-            $discounts =  $discounts->paginate($request->get('limit'));
-        } else {
-            $discounts =  $discounts->paginate(50);
-        }
-//        dd($discounts);
+        $status = $request->input('status', 1);
+        $search = $request->input('search', false);
+        $limit = $request->input('limit', 50);
+        $locale = env('APP_LOCALE', 'ua');
+
+        $discounts = DiscountTranslate::searchDiscounts($locale, $search, $status);
+
         return view('backend.discounts.index', [
-            'discounts'         => $discounts,
+            'discounts'         => $discounts->paginate($limit),
             'app_locale'        => env('APP_LOCALE', 'ua'),
             'count_on'          => count(Discount::where('status', 1)->get()),
             'count_off'         => count(Discount::where('status', 0)->get()),
+            'status'            => $status,
         ]);
     }
 
