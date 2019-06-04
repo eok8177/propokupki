@@ -25,48 +25,19 @@ class ShopsController extends Controller
     public function index(Request $request)
     {
 
-        if ($request->get('status')) {
-            $status = $request->get('status');
-        } else {
-            $status = '';
-        }
+        $status = $request->input('status', 1);
+        $search = $request->input('search', false);
+        $limit = $request->input('limit', 50);
+        $locale = env('APP_LOCALE', 'ua');
 
-        if ($request->get('limit')) {
-            $limit = $request->get('limit');
-        } else {
-            $limit = '';
-        }
-        
-        if ($request->get('search')) {
-            $search = $request->get('search');
-        } else {
-            $search = '';
-        }
+        $shops = ShopTranslate::searchShops($locale, $search, $status);
 
-//        dd($request->get('status'));
-        if ($request->get('status') == 1){
-            $shops = Shop::where('status', 1)->orderBy('id', 'desc');
-        } elseif ($request->get('status') == 0) {
-            $shops = Shop::where('status', 0)->orderBy('id', 'desc');
-        }
-        if ($request->get('search')) {
-            $shops = new Shop();
-            $shops->searchShops($request->get('search'), env('APP_LOCALE', 'ua'));
-        } else {
-            //$shops = Shop::orderBy('id', 'desc');
-        }
-        if ($request->get('limit')) {
-            $shops =  $shops->paginate($request->get('limit'));
-        } else {
-            $shops =  $shops->paginate(50);
-        }
-
-//        dd($shops);
         return view('backend.shops.index', [
-            'shops'             => $shops,
-            'app_locale'        => env('APP_LOCALE', 'ua'),
+            'shops'             => $shops->paginate($limit),
+            'app_locale'        => $locale,
             'count_on'          => count(Shop::where('status', 1)->get()),
             'count_off'         => count(Shop::where('status', 0)->get()),
+            'status'            => $status,
         ]);
     }
 
@@ -182,7 +153,6 @@ class ShopsController extends Controller
     public function edit($id)
     {
         $shop = Shop::find($id)->forAdmin();
-
         if ($shop) {
             return view('backend.shops.edit', [
                 'shop'     => $shop['shop'],

@@ -33,7 +33,7 @@ class DiscountsController extends Controller
 
         return view('backend.discounts.index', [
             'discounts'         => $discounts->paginate($limit),
-            'app_locale'        => env('APP_LOCALE', 'ua'),
+            'app_locale'        => $locale,
             'count_on'          => count(Discount::where('status', 1)->get()),
             'count_off'         => count(Discount::where('status', 0)->get()),
             'status'            => $status,
@@ -48,6 +48,7 @@ class DiscountsController extends Controller
     public function create()
     {
         $discount = new Discount;
+        $products = Discount::products();
 
         return view('backend.discounts.create', [
             'discount'     => $discount->forAdmin()['discount'],

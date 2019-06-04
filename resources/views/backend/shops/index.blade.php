@@ -34,15 +34,15 @@
                     @forelse ($shops as $shop)
                         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
                             <div class="shop-item">
-                                <button data-href="{{ route('admin.shops.destroy', $shop->id) }}" class="btn-delete"></button>
-                                <div class="image"><img src="{{ asset('/storage/'.$shop->image) }}" alt=""></div>
-                                <a href="{{ route('admin.shops.edit', $shop->id) }}"><span class="title">{{ $shop->translate($app_locale)->first()['title'] }}</span></a>
+                                <button data-href="{{ route('admin.shops.destroy', $shop->parent->id) }}" class="btn-delete"></button>
+                                <div class="image"><img src="{{ asset('/storage/'.$shop->parent->image) }}" alt=""></div>
+                                <a href="{{ route('admin.shops.edit', $shop->parent->id) }}"><span class="title">{{ $shop->title }}</span></a>
                                 <span class="desc"></span>
                                 <hr>
                                 <div class="status">
                                     <span>Активный</span>
                                     <label class="checkbox">
-                                        <input data-href="{{route('admin.shops.status', $shop->id)}}" type="checkbox" {!! $shop->status ? 'checked="checked" ' : '' !!}>
+                                        <input data-href="{{route('admin.shops.status', $shop->parent->id)}}" type="checkbox" {!! $shop->parent->status ? 'checked="checked" ' : '' !!}>
                                         <span class="chk"></span>
                                     </label>
                                 </div>
@@ -58,16 +58,16 @@
             <div class="pagination-row">
                 <nav aria-label="Page navigation">
                 {{ $shops->links() }}
-                    <ul class="pagination">
-                        <li class="page-item disabled"><span class="page-link">«</span></li>
-                        <li class="page-item active"><span class="page-link">1</span></li>
-                        <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=4">4</a></li>
+{{--                    <ul class="pagination">--}}
+{{--                        <li class="page-item disabled"><span class="page-link">«</span></li>--}}
+{{--                        <li class="page-item active"><span class="page-link">1</span></li>--}}
+{{--                        <li class="page-item"><a class="page-link" href="?page=2">2</a></li>--}}
+{{--                        <li class="page-item"><a class="page-link" href="?page=3">3</a></li>--}}
+{{--                        <li class="page-item"><a class="page-link" href="?page=4">4</a></li>--}}
 
-                        <li class="page-item"><a class="page-link" href="?page=11">11</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=2" aria-label="Next">Следующая</a></li>
-                    </ul>
+{{--                        <li class="page-item"><a class="page-link" href="?page=11">11</a></li>--}}
+{{--                        <li class="page-item"><a class="page-link" href="?page=2" aria-label="Next">Следующая</a></li>--}}
+{{--                    </ul>--}}
                 </nav>
 
                 <div class="select">

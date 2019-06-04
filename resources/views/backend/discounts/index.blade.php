@@ -69,6 +69,7 @@
 
             <div class="pagination-row">
                 <nav aria-label="Page navigation">
+
                     <ul class="pagination">
                         <li class="page-item disabled"><span class="page-link">«</span></li>
                         <li class="page-item active"><span class="page-link">1</span></li>

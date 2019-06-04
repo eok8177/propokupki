@@ -61,10 +61,72 @@
 {{-- Добавленые продукты, показывать при редактировании --}}
 <div class="container">
     <div class="products" id="products">
-
+        @if ($discount->products)
         @forelse ($discount->products as $product)
             <div class="item row">
-                <span class="gray-title">Товар {{$i}}</span><button class="btn-delete"></button>
+                <span class="gray-title">Товар </span><button class="btn-delete"></button>
+                <div class="col-md-4 col-xl-6">
+                    <div class="form-group">
+                        <label>Фото</label>
+                        <p>Загрузите фото товара</p>
+                        <div class="files-input">
+                            <img src=""/>
+                            <input type="file" class="form-control input-img" multiple="">
+                            <span class="btn-red">Добавить фото</span>
+                            <span class="text">Или перетащите его сюда</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-xl-6">
+                    <div class="form-group col-xl-8 pl-0">
+                        @foreach ($languages as $lang)
+                            {{ Form::label('product_title', 'Название') }}
+                            <p>Укажите название товара </p>
+                            {{ Form::text($lang->locale.'[product_title]', '', ['class' => $errors->has('product_title') ? 'form-control is-invalid' : 'form-control']) }}
+                            @if($errors->has('product_title'))
+                                <span class="invalid-feedback">{{ $errors->first('product_title') }}</span>
+                            @endif
+                        @endforeach
+                    </div>
+
+                    <div class="form-group col-xl-8 pl-0 units-select">
+                        {{ Form::label('product_quantity', 'Количество и вес') }}
+                        <p>Укажите количество или вес продукта (шт, л, кг)</p>
+                        <div class="fields">
+                            {{ Form::text('product_quantity', $product->quantity, ['class' => $errors->has('product_quantity') ? 'form-control is-invalid' : 'form-control', 'placeholder'=>'Количество или вес']) }}
+
+                            <div class="select">
+                                <select class="custom-select" name="" id="">
+                                    <option selected="selected" value="sht">шт</option>
+                                    <option value="kg">кг</option>
+                                    <option value="l">л</option>
+                                    <option value="up">уп</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group pl-0 price-input">
+                        <label>Цена</label>
+                        <p>Укажите старую цену и размер скидки, новая цена посчитается автоматически</p>
+                        <div class="fields">
+                            {{ Form::text('product_price', $product->price, ['class' => $errors->has('product_price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Старая цена грн']) }}
+                            @if($errors->has('product_price'))
+                                <span class="invalid-feedback">{{ $errors->first('product_price') }}</span>
+                            @endif
+                            {{ Form::text('product_discount', $product->discount, ['class' => $errors->has('product_price') ? 'form-control discount is-invalid' : 'form-control discount', 'placeholder' => 'Размер скидки %']) }}
+                            @if($errors->has('product_price'))
+                                <span class="invalid-feedback">{{ $errors->first('product_discount') }}</span>
+                            @endif
+                            <span class="new-price">Новая цена: <span class="result"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endfor
+        @else
+            <div class="item row">
+                <span class="gray-title">Товар </span><button class="btn-delete"></button>
                 <div class="col-md-4 col-xl-6">
                     <div class="form-group">
                         <label>Фото</label>
@@ -117,8 +179,7 @@
                     </div>
                 </div>
             </div>
-        @endfor
-
+        @endif
     </div>
 </div>
 <hr>

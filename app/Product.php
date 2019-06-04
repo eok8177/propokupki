@@ -51,11 +51,6 @@ class Product extends Model
         return $this->belongsToMany('App\Category');
     }
 
-    public function searchProducts ($search, $locale = null)
-    {
-        $locale = $locale ?? app()->getLocale();
-        return $this->hasMany(ProductTranslate::class)->where('locale', $locale)->where('title', $search);
-    }
 
     public function products()
     {
