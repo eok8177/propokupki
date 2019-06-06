@@ -11,14 +11,14 @@
         <div class="wrap">
 
           <div class="shop" v-for="shop in shops">
-            <a href="#">
+            <router-link :to="{ name: 'Product', params: {slug: shop.slug} }" exact>
               <div class="image">
                 <img :src="shop.image" :alt="shop.title">
               </div>
               <p><span class="count">{{shop.shops}}</span> Магазинов</p>
               <p><span class="count">{{shop.actions}}</span> Акций</p>
               <p class="discount">Скидки до <span class="number">{{shop.discount}}</span></p>
-            </a>
+            </router-link>
           </div>
 
           <div class="shop">

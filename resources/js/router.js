@@ -5,6 +5,7 @@ Vue.use(Router)
 
 import Home from '@/views/Home'
 import Actions from '@/views/Actions'
+import Product from '@/views/Product'
 
 import ErrorPage from '@/views/ErrorPage'
 
@@ -12,6 +13,7 @@ const routes = [
 
   {path: '/', name: 'Home', component: Home},
   {path: '/actions', name: 'Actions', component: Actions},
+  {path: '/product/:slug', name: 'Product', component: Product, props: true},
   {path: '/404', name: '404', component: ErrorPage},
 
 

@@ -258,6 +258,7 @@ button {
       background: #FFFFFF;
       border-radius: 3px;
       padding: 16px;
+      a:hover {text-decoration: none;}
       .image {
         height: 120px;
         margin-bottom: 20px;
@@ -327,6 +328,79 @@ button {
   text-align: center;
 }
 
+.product {
+  overflow: hidden;
+  .image {
+    width: 100%;
+    text-align: center;
+    img {
+      object-fit: cover;
+      object-position: center;
+      height: 152px;
+    }
+  }
+  .title {
+    padding: 0 16px;
+    display: block;
+    font-size: 18px;
+    line-height: 21px;
+    color: #242729;
+  }
+  .desc {
+    padding: 0 16px;
+    display: block;
+    font-size: 14px;
+    line-height: 20px;
+    color: #242729;
+  }
+  .tara {
+    padding: 0 16px;
+    display: block;
+    font-size: 12px;
+    line-height: 20px;
+    color: #677075;
+  }
+  .prices {
+    .new {
+      display: inline-block;
+      width: 48%;
+      font-size: 24px;
+      line-height: 28px;
+      color: #242729;
+      padding-left: 16px;
+    }
+    .old {
+      display: inline-block;
+      width: 48%;
+      font-size: 18px;
+      line-height: 21px;
+      color: #677075;
+      text-decoration: line-through;
+    }
+  }
+  .sticker {
+    margin: 10px 0 40px;
+    display: inline-block;
+    background: #31CC74;
+    padding: 4px 16px;
+    font-size: 12px;
+    line-height: 20px;
+    color: #FFFFFF;
+    position: relative;
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 14px 8px 14px 0;
+      border-color: transparent #ffffff transparent transparent;
+    }
+    &.last {background: #FFBA1A;}
+  }
+}
 .products {
   background: #FAF9F5;
   padding-top: 30px;
@@ -341,6 +415,7 @@ button {
     padding: 0;
     margin-bottom: 24px;
     &:hover {box-shadow: 0px 4px 12px rgba(204, 202, 192, 0.25);}
+    a:hover {text-decoration: none;}
     hr {
       display: block;
       margin: 8px 16px;
@@ -374,82 +449,82 @@ button {
         }
       }
     }
-    .product {
+  }
+}
+
+.product-page {
+  .block-title {
+    padding: 50px 0 34px;
+    text-align: left;
+    font-size: 18px;
+  }
+  .product-item {
+    background: #fff;
+    border: 1px solid #F0EFEB;
+    border-radius: 3px;
+    padding: 8px 24px 65px;
+
+    .shop {
       overflow: hidden;
       .image {
-        width: 100%;
+        display: inline-block;
         text-align: center;
         img {
           object-fit: cover;
           object-position: center;
-          height: 152px;
+          height: 50px;
         }
+      }
+      .right {
+        padding-left: 30px;
+        display: inline-block;
+        .discount {
+          font-size: 12px;
+          color: #242729;
+          span {font-size: 18px;}
+        }
+        .dates {
+          font-size: 10px;
+          line-height: 11px;
+          color: #677075;
+        }
+      }
+    }
+
+    .image, .right {display: inline-block;}
+    .product {
+      img {
+        max-width: 100%;
       }
       .title {
-        padding: 0 16px;
-        display: block;
-        font-size: 18px;
-        line-height: 21px;
-        color: #242729;
+        padding: 0;
+        margin: 20px 0 10px;
       }
       .desc {
-        padding: 0 16px;
-        display: block;
-        font-size: 14px;
-        line-height: 20px;
-        color: #242729;
+        padding: 0;
       }
       .tara {
-        padding: 0 16px;
-        display: block;
-        font-size: 12px;
-        line-height: 20px;
-        color: #677075;
+        padding: 0;
+        margin: 10px 0;
       }
       .prices {
+        margin-top: 10px;
+        padding: 0;
         .new {
-          display: inline-block;
-          width: 48%;
-          font-size: 24px;
-          line-height: 28px;
-          color: #242729;
-          padding-left: 16px;
+          padding: 0;
+          width: auto;
+          padding-right: 20px;
         }
         .old {
-          display: inline-block;
-          width: 48%;
-          font-size: 18px;
-          line-height: 21px;
-          color: #677075;
-          text-decoration: line-through;
+          width: auto;
         }
       }
       .sticker {
-        margin: 10px 0 40px;
-        display: inline-block;
-        background: #31CC74;
-        padding: 4px 16px;
-        font-size: 12px;
-        line-height: 20px;
-        color: #FFFFFF;
-        position: relative;
-        &:after {
-          content: '';
-          position: absolute;
-          right: 0;
-          top: 0;
-          width: 0;
-          height: 0;
-          border-style: solid;
-          border-width: 14px 8px 14px 0;
-          border-color: transparent #ffffff transparent transparent;
-        }
-        &.last {background: #FFBA1A;}
+        margin: 10px 0;
       }
     }
   }
 }
-
 
 footer {
   margin-top: 14px;
