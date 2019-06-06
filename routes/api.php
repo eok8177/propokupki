@@ -23,5 +23,9 @@ Route::group(['namespace' => 'Api'], function() {
     Route::get('/actions',  ['uses' => 'ActionController@index']);
     Route::post('/actions',  ['uses' => 'ActionController@search']);
 
+    Route::get('/admin-actions/{action}',  ['uses' => 'AdminActionController@index']);
+    Route::post('/admin-actions/{action}',  ['uses' => 'AdminActionController@addProduct']);
+    Route::delete('/admin-actions/{action}/{product}',  ['uses' => 'AdminActionController@deleteProduct']);
+
 
 });

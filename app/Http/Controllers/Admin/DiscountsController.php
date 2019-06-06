@@ -1,0 +1,301 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Shop;
+use App\City;
+use App\Language;
+use App\Address;
+use App\ShopTranslate;
+use App\AddressTranslate;
+use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+
+
+class DiscountsController extends Controller
+{
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        if ($request->get('search')) {
+            $discounts = new Shop();
+            $discounts->searchShops($request->get('search'), env('APP_LOCALE', 'ua'));
+        } else {
+            $discounts = Shop::orderBy('id', 'desc');
+        }
+        if ($request->get('limit')) {
+            $discounts =  $discounts->paginate($request->get('limit'));
+        } else {
+            $discounts =  $discounts->paginate(50);
+        }
+//        dd($discounts);
+        return view('backend.discounts.index', [
+            'discounts' => $discounts,
+            'app_locale' => env('APP_LOCALE', 'ua'),
+            'count_on' => Shop::where('status', 1)->get(),
+            'count_off' => Shop::where('status', 0)->get(),
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $discount = new Shop;
+//        dd(Language::where('status', '1')->get());
+
+        return view('backend.discounts.create', [
+            'method' => 'create',
+            'discount'     => $discount->forAdmin()['discount'],
+            'contents' => $discount->forAdmin()['contents'],
+            'languages' => Language::where('status', '1')->get(),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+//        dd($request->image);
+        $request->validate([
+            'slug' => 'required|unique:pages|max:255',
+            'import_file' => 'required',
+            'image' => 'required'
+        ]);
+
+
+        $discount = Shop::create($request->all());
+        $image = $request->file('image')->store('uploads/'.$discount->id, 'public');
+        $discount->image = $image;
+        $discount->save();
+        $languages = Language::where('status', '1')->get();
+        $discount->categories()->attach($request->category);
+
+        foreach ($languages as $lang) {
+
+            $locale = $lang->locale;
+
+            $discount_translate = new ShopTranslate();
+            $discount_translate->discount_id = $discount->id;
+            $discount_translate->locale = $locale;
+            $discount_translate->title = $request->$locale['title'];
+            $discount_translate->save();
+        }
+
+        $filename = fopen($request->file('import_file'), "r");
+
+        $i = 0;
+        $city_arr = array();
+        while (($data = fgetcsv($filename, 1000, ";")) !== FALSE) {
+            if($i != 0){
+                $addres = new Address();
+                if (!in_array($data[0], $city_arr)){
+                    DB::table('city_discount')->insert(['city_id' => $data[0], 'discount_id' => $discount->id]);
+                    array_push($city_arr, $data[0]);
+                }
+
+                $addres->city_id = $data[0];
+                $addres->latitude = $data[3];
+                $addres->longitude = $data[4];
+                $addres->save();
+                $addres->discounts()->attach($discount->id);
+
+                foreach ($languages as $lang) {
+
+                    $locale = $lang->locale;
+
+                    $address_translate = new AddressTranslate();
+                    $address_translate->address_id = $addres->id;
+                    $address_translate->locale = $locale;
+                    $address_translate->title = $data[1];
+                    $address_translate->save();
+
+                }
+            }
+            $i++;
+        }
+        fclose($filename);
+
+
+        return redirect()
+            ->route('admin.discounts.edit', $discount->id)->with('success', 'Shop add' );
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return view('backend.language.show', [
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $discount = Shop::find($id)->forAdmin();
+
+        if ($discount) {
+            return view('backend.discounts.edit', [
+                'discount'     => $discount['discount'],
+                'contents' => $discount['contents'],
+                'languages' => Language::where('status', '1')->get()
+            ]);
+        }
+
+        return redirect()->route('admin.discounts.index');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $discount = Shop::find($id);
+
+        if ($discount) {
+            $request->validate([
+                'slug' => Rule::unique('discounts')->ignore($discount->id),
+                'slug' => 'required|max:255',
+//                'import_file' => 'required',
+//                'image' => 'required'
+            ]);
+
+            $discount->fill($request->all())->save();
+            $discount->categories()->sync($request->category);
+
+            if ($request->file('image')){
+                $image = $request->file('image')->store('uploads/'.$discount->id, 'public');
+                $discount->image = $image;
+                $discount->save();
+            }
+
+
+            $languages = Language::where('status', '1')->get();
+
+            foreach ($languages as $lang) {
+
+                $locale = $lang->locale;
+
+                $discount_translate = ShopTranslate::where('discount_id', $discount->id)->where('locale', $lang->locale)->first();
+
+                if (!$discount_translate) {
+                    $discount_translate = new ShopTranslate();
+                    $discount_translate->discount_id = $discount->id;
+                }
+                $discount_translate->locale = $locale;
+                $discount_translate->title = $request->$locale['title'];
+                $discount_translate->save();
+            }
+            if ($request->file('import_file')) {
+
+                $old_addresses = DB::table('address_discount')->where('discount_id', $discount->id)->pluck('address_id');
+                DB::table('addresses')->whereIn('id', $old_addresses)->delete();
+                DB::table('addresses_translations')->whereIn('address_id', $old_addresses)->delete();
+                DB::table('city_discount')->where('discount_id', $discount->id)->delete();
+                DB::table('address_discount')->where('discount_id', $discount->id)->delete();
+
+
+                $filename = fopen($request->file('import_file'), "r");
+
+                $i = 0;
+                $city_arr = array();
+                while (($data = fgetcsv($filename, 1000, ",")) !== FALSE) {
+                    if($i != 0){
+                        $addres = new Address();
+                        if (!in_array($data[0], $city_arr)){
+                            DB::table('city_discount')->insert(['city_id' => $data[0], 'discount_id' => $discount->id]);
+                            array_push($city_arr, $data[0]);
+                        }
+
+                        $addres->city_id = $data[0];
+                        $addres->latitude = $data[3];
+                        $addres->longitude = $data[4];
+                        $addres->save();
+                        $addres->discounts()->sync($discount->id);
+                        foreach ($languages as $lang) {
+
+                            $locale = $lang->locale;
+
+                            $address_translate = new AddressTranslate();
+                            $address_translate->address_id = $addres->id;
+                            $address_translate->locale = $locale;
+                            $address_translate->title = $data[1];
+                            $address_translate->save();
+
+                        }
+                    }
+                    $i++;
+                }
+                fclose($filename);
+            }
+
+            return redirect()
+                ->route('admin.discounts.edit', $discount->id)
+                ->with('success', 'Shop update');
+        }
+
+        return redirect()->route('admin.posts.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function destroy(Shop $discount)
+    {
+        $old_addresses = DB::table('address_discount')->where('discount_id', $discount->id)->pluck('address_id');
+        DB::table('addresses')->whereIn('id', $old_addresses)->delete();
+        DB::table('addresses_translations')->whereIn('address_id', $old_addresses)->delete();
+        DB::table('city_discount')->where('discount_id', $discount->id)->delete();
+        DB::table('category_discount')->where('discount_id', $discount->id)->delete();
+        DB::table('address_discount')->where('discount_id', $discount->id)->delete();
+        DB::table('discounts_translations')->where('discount_id', $discount->id)->delete();
+        $discount->delete();
+        return response()->json('success', 200);
+    }
+
+    /**
+     * Validate request form.
+     *
+     * @param Request $request
+     */
+    protected function validateForm(Request $request)
+    {
+
+        $this->validate($request, [
+            'title'             => 'required|max:255',
+        ]);
+
+    }
+
+}
