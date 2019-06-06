@@ -12,8 +12,8 @@
                 @endforeach
             </div>
             <div class="form-group col-md-8 pl-0">
-                {{ Form::label('slug', 'Силка') }}
-                <p>Укажите силку магазина </p>
+                {{ Form::label('slug', 'Url') }}
+                <p>Укажите url магазина </p>
                 {{ Form::text('slug', $shop->slug, ['class' => $errors->has('slug') ? 'form-control is-invalid' : 'form-control']) }}
                 @if($errors->has('slug'))
                     <span class="invalid-feedback">{{ $errors->first('slug') }}</span>
@@ -33,8 +33,8 @@
                 <label>Логотип</label>
                 <p>Загрузите логотип магазина</p>
                 <div class="files-input">
-                    <img src=""/>
-                    <input type="file" class="form-control input-img" name="image" multiple="">
+                    <img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}"/>
+                    {{ Form::file('image', $shop->image, ['class' => $errors->has('image') ? 'form-control input-img is-invalid' : 'form-control input-img']) }}
                     <span class="btn-red">Добавить фото</span>
                     <span class="text">Или перетащите его сюда</span>
                 </div>
@@ -42,22 +42,19 @@
 
         </div>
 
-
         <div class="col-md-6">
             <div class="form-group">
                 <label>Превью</label>
                 <p>Вид добавляемой карточки магазина</p>
-
-
                 <div class="shop-item">
-                    <div class="image"><img src="{{ asset('/storage/'.$shop->image) }}" alt="" class="preview-img"></div>
+                    <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt="" class="preview-img"></div>
                     <span class="title">{{ $contents[$lang->locale]->title }}</span>
                     <span class="desc">{{ $contents[$lang->locale]->title }}</span>
                     <hr>
                     <div class="status">
                         <span>Активный</span>
                         <label class="checkbox">
-                            <input type="checkbox" name="status" value="1" checked="checked">
+                            {{ Form::checkbox('status', 1, ['class' => $errors->has('status') ? 'is-invalid' : '', 'checked' => 'checked']) }}
                             <span class="chk"></span>
                         </label>
                     </div>
@@ -74,7 +71,7 @@
         <p>Импорт или экспорт адресов из csv файла</p>
         <div class="addresses-input">
             @if ($method = 'create')
-                <input type="file" name="import_file" />
+                {{ Form::file('import_file') }}
             @else
                 <div class="btn-group" role="group">
                     <button type="button" class="btn import">Импорт</button>
@@ -82,15 +79,15 @@
                 </div>
             @endif
             <span class="message">
-            <span class="text">adresa-ashan-2019.csv</span>
-            <span class="red">Добавлен</span>
+{{--            <span class="text">adresa-ashan-2019.csv</span>--}}
+{{--            <span class="red">Добавлен</span>--}}
           </span>
         </div>
     </div>
 
     <div class="form-group">
         <div class="submit-btns">
-            <button class="btn btn-red" type="submit">Сохранить магазин</button>
+            {{ Form::submit('Сохранить магазин', ['class' => 'btn btn-red']) }}
             <a href="/admin/shops" class="btn btn-white">Отмена</a>
         </div>
     </div>

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Shop;
-use App\City;
+use App\Discount;
 use App\Language;
 use App\Address;
-use App\ShopTranslate;
+use App\DiscountTranslate;
 use App\AddressTranslate;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
@@ -24,23 +24,19 @@ class DiscountsController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->get('search')) {
-            $discounts = new Shop();
-            $discounts->searchShops($request->get('search'), env('APP_LOCALE', 'ua'));
-        } else {
-            $discounts = Shop::orderBy('id', 'desc');
-        }
-        if ($request->get('limit')) {
-            $discounts =  $discounts->paginate($request->get('limit'));
-        } else {
-            $discounts =  $discounts->paginate(50);
-        }
-//        dd($discounts);
+        $status = $request->input('status', 1);
+        $search = $request->input('search', false);
+        $limit = $request->input('limit', 50);
+        $locale = env('APP_LOCALE', 'ua');
+
+        $discounts = DiscountTranslate::searchDiscounts($locale, $search, $status);
+
         return view('backend.discounts.index', [
-            'discounts' => $discounts,
-            'app_locale' => env('APP_LOCALE', 'ua'),
-            'count_on' => Shop::where('status', 1)->get(),
-            'count_off' => Shop::where('status', 0)->get(),
+            'discounts'         => $discounts->paginate($limit),
+            'app_locale'        => $locale,
+            'count_on'          => count(Discount::where('status', 1)->get()),
+            'count_off'         => count(Discount::where('status', 0)->get()),
+            'status'            => $status,
         ]);
     }
 
@@ -51,11 +47,10 @@ class DiscountsController extends Controller
      */
     public function create()
     {
-        $discount = new Shop;
-//        dd(Language::where('status', '1')->get());
+        $discount = new Discount;
+        $products = Discount::products();
 
         return view('backend.discounts.create', [
-            'method' => 'create',
             'discount'     => $discount->forAdmin()['discount'],
             'contents' => $discount->forAdmin()['contents'],
             'languages' => Language::where('status', '1')->get(),
@@ -78,7 +73,7 @@ class DiscountsController extends Controller
         ]);
 
 
-        $discount = Shop::create($request->all());
+        $discount = Discount::create($request->all());
         $image = $request->file('image')->store('uploads/'.$discount->id, 'public');
         $discount->image = $image;
         $discount->save();
@@ -89,7 +84,7 @@ class DiscountsController extends Controller
 
             $locale = $lang->locale;
 
-            $discount_translate = new ShopTranslate();
+            $discount_translate = new DiscountTranslate();
             $discount_translate->discount_id = $discount->id;
             $discount_translate->locale = $locale;
             $discount_translate->title = $request->$locale['title'];
@@ -132,7 +127,7 @@ class DiscountsController extends Controller
 
 
         return redirect()
-            ->route('admin.discounts.edit', $discount->id)->with('success', 'Shop add' );
+            ->route('admin.discounts.edit', $discount->id)->with('success', 'Discount add' );
     }
 
     /**
@@ -155,7 +150,7 @@ class DiscountsController extends Controller
      */
     public function edit($id)
     {
-        $discount = Shop::find($id)->forAdmin();
+        $discount = Discount::find($id)->forAdmin();
 
         if ($discount) {
             return view('backend.discounts.edit', [
@@ -177,7 +172,7 @@ class DiscountsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $discount = Shop::find($id);
+        $discount = Discount::find($id);
 
         if ($discount) {
             $request->validate([
@@ -203,10 +198,10 @@ class DiscountsController extends Controller
 
                 $locale = $lang->locale;
 
-                $discount_translate = ShopTranslate::where('discount_id', $discount->id)->where('locale', $lang->locale)->first();
+                $discount_translate = DiscountTranslate::where('discount_id', $discount->id)->where('locale', $lang->locale)->first();
 
                 if (!$discount_translate) {
-                    $discount_translate = new ShopTranslate();
+                    $discount_translate = new DiscountTranslate();
                     $discount_translate->discount_id = $discount->id;
                 }
                 $discount_translate->locale = $locale;
@@ -258,7 +253,7 @@ class DiscountsController extends Controller
 
             return redirect()
                 ->route('admin.discounts.edit', $discount->id)
-                ->with('success', 'Shop update');
+                ->with('success', 'Discount update');
         }
 
         return redirect()->route('admin.posts.index');
@@ -271,7 +266,7 @@ class DiscountsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy(Shop $discount)
+    public function destroy(Discount $discount)
     {
         $old_addresses = DB::table('address_discount')->where('discount_id', $discount->id)->pluck('address_id');
         DB::table('addresses')->whereIn('id', $old_addresses)->delete();

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Discount;
 use App\Shop;
-use App\City;
 use App\Language;
 use App\Address;
 use App\ShopTranslate;
@@ -24,23 +24,20 @@ class ShopsController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->get('search')) {
-            $shops = new Shop();
-            $shops->searchShops($request->get('search'), env('APP_LOCALE', 'ua'));
-        } else {
-            $shops = Shop::orderBy('id', 'desc');
-        }
-        if ($request->get('limit')) {
-            $shops =  $shops->paginate($request->get('limit'));
-        } else {
-            $shops =  $shops->paginate(50);
-        }
-//        dd($shops);
+
+        $status = $request->input('status', 1);
+        $search = $request->input('search', false);
+        $limit = $request->input('limit', 50);
+        $locale = env('APP_LOCALE', 'ua');
+
+        $shops = ShopTranslate::searchShops($locale, $search, $status);
+
         return view('backend.shops.index', [
-            'shops' => $shops,
-            'app_locale' => env('APP_LOCALE', 'ua'),
-            'count_on' => Shop::where('status', 1)->get(),
-            'count_off' => Shop::where('status', 0)->get(),
+            'shops'             => $shops->paginate($limit),
+            'app_locale'        => $locale,
+            'count_on'          => count(Shop::where('status', 1)->get()),
+            'count_off'         => count(Shop::where('status', 0)->get()),
+            'status'            => $status,
         ]);
     }
 
@@ -156,7 +153,6 @@ class ShopsController extends Controller
     public function edit($id)
     {
         $shop = Shop::find($id)->forAdmin();
-
         if ($shop) {
             return view('backend.shops.edit', [
                 'shop'     => $shop['shop'],
@@ -284,18 +280,17 @@ class ShopsController extends Controller
         return response()->json('success', 200);
     }
 
-    /**
-     * Validate request form.
-     *
-     * @param Request $request
-     */
-    protected function validateForm(Request $request)
+
+    public function status($id)
     {
+        $shop = Shop::find($id);
+        if(!$shop)
+            return response()->json(['error'=> 'not found any page'], 400);
 
-        $this->validate($request, [
-            'title'             => 'required|max:255',
-        ]);
+        $shop->status = 1 - $shop->status;
+        $shop->save();
 
+        return response()->json($shop->status, 200);
     }
 
 }

@@ -25,7 +25,7 @@
 @include('backend.layouts.footer')
 <!-- Scripts -->
 <script src="{{ asset('js/admin.js') }}"></script>
-{{-- <script src="{{ asset('/backend/js/custom.js') }}"></script> --}}
+<script src="{{ asset('/backend/js/custom.js') }}"></script>
 
 <script>
   // Отображение картинки при выборе
