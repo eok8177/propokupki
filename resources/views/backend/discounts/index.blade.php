@@ -11,7 +11,7 @@
     <div class="actions">
         <div class="container">
             <div class="select">
-                <select name="status" class="custom-select" name="" id="">
+                <select name="" class="custom-select" name="" id="status">
                     <option value="1" {{$status == 1 ? 'selected="selected"' : ''}}>Активные <span class="badge">{{ $count_on }}</span></option>
                     <option value="0" {{$status == 0 ? 'selected="selected"' : ''}}>не активные <span class="badge">{{ $count_off }}</span></option>
                 </select>
@@ -45,7 +45,7 @@
                     <div class="action-item">
                         <button data-href="{{ route('admin.discounts.destroy', $discount->parent->id) }}" class="btn-delete"></button>
                         <a href="{{ route('admin.discounts.edit', $discount->parent->id) }}">
-                            <div class="image"><img src="{{ asset('/storage/'.$discount->parent->image) }}" alt=""></div>
+                            <div class="image"><img src="{{ $discount->parent->image ? asset('/storage/'.$discount->parent->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
                         </a>
 
                         <div class="block">
@@ -57,6 +57,7 @@
                         <div class="status">
                             <span>Активный</span>
                             <label class="checkbox">
+                                <input data-href="{{route('admin.shops.status', $discount->parent->id)}}" type="checkbox" {!! $discount->parent->status ? 'checked="checked" ' : '' !!}>
                                 <input type="checkbox">
                                 <span class="chk"></span>
                             </label>
@@ -69,27 +70,13 @@
 
             <div class="pagination-row">
                 <nav aria-label="Page navigation">
-
-                    <ul class="pagination">
-                        <li class="page-item disabled"><span class="page-link">«</span></li>
-                        <li class="page-item active"><span class="page-link">1</span></li>
-                        <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=4">4</a></li>
-
-                        <li class="page-item"><a class="page-link" href="?page=11">11</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=2" aria-label="Next">Следующая</a></li>
-                    </ul>
+                    {{ $discounts->links() }}
                 </nav>
 
                 <div class="select">
                     <label>Выводить по</label>
-                    <select class="custom-select">
-                        <option value="">50</option>
-                        <option value="">100</option>
-                        <option value="">200</option>
-                    </select>
-                </div>
+                    {{ Form::select('status', [50 => 50, 100 => 100, 200 => 200], $limit, ['class' => 'custom-select', 'id' => 'limit']) }}
+                 </div>
 
             </div>
         </div>

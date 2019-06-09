@@ -52,8 +52,8 @@ class Product extends Model
     }
 
 
-    public function products()
+    public function discounts()
     {
-        return $this->belongsToMany('App\Product');
+        return $this->belongsToMany('App\Discount');
     }
 }

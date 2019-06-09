@@ -3,12 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Discount extends Model
 {
     protected $table = 'discounts';
 
-    protected $fillable = ['slug','status'];
+//    protected $dates = ['date_start', 'date_end'];
+
+    protected $fillable = ['slug','status', 'date_start', 'date_end'];
 
     public function langs($status = 1)
     {
@@ -42,14 +45,20 @@ class Discount extends Model
         return $item ? $item : new DiscountTranslate();
     }
 
-    public function getCategoriesForSelectAttribute()
-    {
-        return Category::pluck('slug', 'id')->toArray();
-    }
 
     public function shops()
     {
-        return $this->belongsToMany('App\Category');
+        return $this->belongsToMany('App\Shop');
+    }
+
+    public function setDateStartAttribute($value)
+    {
+        $this->attributes['date_start'] =  Carbon::parse($value);
+    }
+
+    public function setDateEndAttribute($value)
+    {
+        $this->attributes['date_end'] =  Carbon::parse($value);
     }
 
     public function searchDiscounts ($search, $locale = null)

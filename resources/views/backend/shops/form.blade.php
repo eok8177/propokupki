@@ -34,7 +34,7 @@
                 <p>Загрузите логотип магазина</p>
                 <div class="files-input">
                     <img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}"/>
-                    {{ Form::file('image', $shop->image, ['class' => $errors->has('image') ? 'form-control input-img is-invalid' : 'form-control input-img']) }}
+                    {{ Form::file('image', ['class' => $errors->has('image') ? 'form-control input-img is-invalid' : 'form-control input-img']) }}
                     <span class="btn-red">Добавить фото</span>
                     <span class="text">Или перетащите его сюда</span>
                 </div>
