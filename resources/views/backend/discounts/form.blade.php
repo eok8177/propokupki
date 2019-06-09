@@ -39,7 +39,6 @@
         @endif
     </div>
 
-
     <div class="form-group pl-0 select-dates">
         {{ Form::label('slug', 'Период действия') }}
         <p>Укажите даты начала и окончания действия акции</p>
@@ -48,6 +47,7 @@
             <div class="date">{{ Form::text('date_end', $discount->date_end, ['class' => $errors->has('date_end') ? 'form-control is-invalid' : 'form-control']) }}</div>
         </div>
     </div>
+    {{ Form::text('status', 1, []) }}
 
 </div>
 <hr>
@@ -82,7 +82,11 @@
                         @endif
                     @endforeach
                 </div>
-
+                <div class="form-group col-xl-8 pl-0">
+                    {{ Form::label('title', 'Url') }}
+                    <p>Укажите Url товара </p>
+                    {{ Form::text('product['.$prodId.'][slug]', '', ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
+                </div>
                 <div class="form-group col-xl-8 pl-0 units-select">
                     {{ Form::label('quantity', 'Количество и вес') }}
                     <p>Укажите количество или вес продукта (шт, л, кг)</p>
@@ -202,6 +206,11 @@
       htmlProduct += '<input type="text" name="product['+productId+'][{{ $lang->locale }}][title]" class="form-control">';
       @endforeach
           htmlProduct += '</div>';
+      htmlProduct += '<div class="form-group col-xl-8 pl-0">';
+      htmlProduct += '<label for="title">Url</lebel>';
+      htmlProduct += '<p>Укажите Url товара </p>';
+      htmlProduct += '<input type="text" name="product['+productId+'][slug]" class="form-control">';
+      htmlProduct += '</div>';
       htmlProduct += '<div class="form-group col-xl-8 pl-0 units-select">';
       htmlProduct += '<label for="quantity">Количество и вес</lebel>';
       htmlProduct += '<p>Укажите количество или вес продукта (шт, л, кг)</p>';

@@ -8,7 +8,7 @@ class Product extends Model
 {
     protected $table = 'products';
 
-    protected $fillable = ['slug','status'];
+    protected $fillable = ['slug', 'price', 'discount', 'quantity', 'unit', 'status'];
 
     public function langs($status = 1)
     {

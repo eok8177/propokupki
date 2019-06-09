@@ -176,7 +176,7 @@ class DiscountsController extends Controller
 //                    $image = $request->file('productimage')->store('uploads/'.$product->id, 'public');
 //                    $prod->image = $image;
 //                    $prod->save();
-
+                    dd($prod->id);
                     $prod->discounts()->syns($discount->id);
 
                     foreach ($languages as $lang) {
