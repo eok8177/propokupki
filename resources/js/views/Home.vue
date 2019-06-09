@@ -34,7 +34,7 @@
     </div>
 
     <h2 class="block-title">Лучшие акции Киева</h2>
-    <products></products>
+    <products :products="actions"></products>
 
   </div>
 </template>
@@ -51,6 +51,7 @@ export default {
   data() {
     return {
         shops: [],
+        actions: [],
     }
   },
   created: function() {
@@ -63,6 +64,15 @@ export default {
       .catch(
         (error) => console.log(error)
       );
+      axios.get('/api/actions')
+        .then(
+          (response) => {
+            this.actions = response.data;
+          }
+        )
+        .catch(
+          (error) => console.log(error)
+        );
   },
 }
 </script>

@@ -50,21 +50,16 @@
 import axios from 'axios';
 export default {
   name: 'Products',
+  props: ['products'],
   data() {
     return {
-        actions: [],
+        actions: this.products,
     }
   },
-  created: function() {
-    axios.get('/api/actions')
-      .then(
-        (response) => {
-          this.actions = response.data;
-        }
-      )
-      .catch(
-        (error) => console.log(error)
-      );
-  },
+  watch: {
+    products: function (newVal) {
+      this.actions = newVal
+    }
+  }
 }
 </script>

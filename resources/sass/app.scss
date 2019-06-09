@@ -526,6 +526,85 @@ button {
   }
 }
 
+.top-filter {
+  padding: 0 0 24px 0;
+  .filter {
+    background: #FFFFFF;
+    box-shadow: 0px 8px 12px rgba(178, 178, 178, 0.15);
+    border-radius: 3px;
+    .first-line {
+      padding: 16px;
+      @media(min-width:768px) {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+  .btn {
+    width: 256px;
+    padding: 9px 16px;
+    border: 1px solid #C4C9CC;
+    box-sizing: border-box;
+    border-radius: 3px;
+    text-align: center;
+    position: relative;
+    span {
+      font-size: 12px;
+      color: #677075;
+      padding-left: 8px;
+    }
+  }
+  .btn-select {
+    width: 256px;
+    padding: 9px 16px;
+    border: 1px solid #C4C9CC;
+    box-sizing: border-box;
+    border-radius: 3px;
+    text-align: left;
+    position: relative;
+    &:after {
+      content: '';
+      position: absolute;
+      right: 16px;
+      top: 17px;
+      width: 10px;
+      height: 6px;
+      background: url('../img/ico-down.svg') no-repeat center;
+      background-size: contain;
+    }
+  }
+  .select {
+    position: relative;
+    ul {
+      position: absolute;
+      left: 0; right: 0;
+      top: 100%;
+      list-style: none;
+      z-index: 2;
+      background: #fff;
+      border-radius: 3px;
+      border: 1px solid #C4C9CC;
+      box-shadow: 0px 8px 12px rgba(178, 178, 178, 0.15);
+      padding: 0;
+      li {
+        padding: 6px 0 6px 16px;
+        width: 100%;
+        cursor: pointer;
+      }
+    }
+  }
+  .shops {
+    display: none;
+    padding: 0 16px 32px 16px;
+    &.open {display: block;}
+    .inner {
+      border: 1px solid #EBF1F5;
+      box-sizing: border-box;
+      border-radius: 3px;
+    }
+  }
+}
+
 footer {
   margin-top: 14px;
   background: #FAF9F5;
