@@ -10,7 +10,7 @@
       <div class="container">
         <div class="wrap">
 
-          <div class="shop" v-for="shop in shops">
+          <div class="shop" v-for="shop in shops.slice(0, 5)">
             <router-link :to="{ name: 'Product', params: {slug: shop.slug} }" exact>
               <div class="image">
                 <img :src="shop.image" :alt="shop.title">

@@ -16,7 +16,7 @@
           </ul>
         </div>
 
-        <button class="btn" @click="toggle('shops')">Магазины <span>238</span></button>
+        <button class="btn" @click="toggle('shops')">Магазины <span>{{shops.length}}</span></button>
         <button class="btn">Все категории</button>
 
         <div class="select">
@@ -38,10 +38,13 @@
           <div class="inner">
             <div class="search">
               <input type="text" placeholder="Введите название" v-model.trim="search_shops">
-              <button class="close">X</button>
+              <button class="ico ico-delete" @click="allShops"></button>
             </div>
             <ul>
-              <li v-for="shop in shops">{{shop.title}}</li>
+              <li v-for="shop in shops" class="checkbox">
+                <input type="checkbox" :id="'shop_'+shop.id" v-model="shopsSelected" :value="shop.id">
+                <label :for="'shop_'+shop.id">{{shop.title}}</label>
+              </li>
             </ul>
           </div>
         </div>
@@ -49,7 +52,14 @@
     </div>
 
 
-    <div class="result"></div>
+    <div class="result">
+      <span class="shop-selected" v-for="item in shopsSelected">
+        <img :src="shops[item].image" :alt="shops[item].title">
+        <span class="btn-delete" @click="removeShop(item)"></span>
+      </span>
+
+      <button class="btn btn-red" v-if="shopsSelected.length" @click="resetFilter">Очистить</button>
+    </div>
   </div>
 
 </template>
@@ -88,24 +98,21 @@ export default {
         categories: '',
         dates: 'all',
       },
+      shopsSelected: []
     }
   },
   watch: {
-    search_shops: function (newQuestion, oldQuestion) {
+    search_shops: function () {
       this.debouncedSearchShops()
+    },
+    shopsSelected: function (value) {
+      this.filter.shops = value.toString();
+      this.$parent.filtered(this.filter);
     }
   },
   created: function () {
     this.debouncedSearchShops = _.debounce(this.searchShops, 500);
-    axios.get('/api/shops')
-      .then(
-        (response) => {
-          this.shops = response.data;
-        }
-      )
-      .catch(
-        (error) => console.log(error)
-      );
+    this.allShops();
   },
   methods: {
     toggle: function(name) {
@@ -127,6 +134,40 @@ export default {
         .catch(
           (error) => console.log(error)
         );
+    },
+    allShops: function() {
+      axios.get('/api/shops')
+        .then(
+          (response) => {
+            this.shops = response.data;
+            this.search_shops = '';
+            this.filter.shops = '';
+            this.$parent.filtered(this.filter);
+          }
+        )
+        .catch(
+          (error) => console.log(error)
+        );
+    },
+    removeShop: function(item) {
+      var index = this.shopsSelected.indexOf(item);
+      if (index > -1) this.shopsSelected.splice(index, 1);
+    },
+    resetFilter: function() {
+      this.filter = {
+        sort: 'new',
+        shops: '',
+        categories: '',
+        dates: 'all',
+      };
+      this.dropDowns = {
+        sort: false,
+        shops: false,
+        categories: false,
+        dates: false
+      };
+      this.shopsSelected = [];
+      this.$parent.filtered(this.filter);
     }
   },
 
