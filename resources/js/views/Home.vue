@@ -10,15 +10,15 @@
       <div class="container">
         <div class="wrap">
 
-          <div class="shop" v-for="shop in shops">
-            <a href="#">
+          <div class="shop" v-for="shop in shops.slice(0, 5)">
+            <router-link :to="{ name: 'Product', params: {slug: shop.slug} }" exact>
               <div class="image">
                 <img :src="shop.image" :alt="shop.title">
               </div>
               <p><span class="count">{{shop.shops}}</span> Магазинов</p>
               <p><span class="count">{{shop.actions}}</span> Акций</p>
               <p class="discount">Скидки до <span class="number">{{shop.discount}}</span></p>
-            </a>
+            </router-link>
           </div>
 
           <div class="shop">
@@ -34,7 +34,7 @@
     </div>
 
     <h2 class="block-title">Лучшие акции Киева</h2>
-    <products></products>
+    <products :products="actions"></products>
 
   </div>
 </template>
@@ -51,6 +51,7 @@ export default {
   data() {
     return {
         shops: [],
+        actions: [],
     }
   },
   created: function() {
@@ -63,6 +64,15 @@ export default {
       .catch(
         (error) => console.log(error)
       );
+      axios.get('/api/actions')
+        .then(
+          (response) => {
+            this.actions = response.data;
+          }
+        )
+        .catch(
+          (error) => console.log(error)
+        );
   },
 }
 </script>

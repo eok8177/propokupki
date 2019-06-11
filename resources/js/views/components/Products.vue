@@ -10,28 +10,30 @@
                 </div>
                 <div class="right">
                   <div class="discount">Скидка <span>{{action.shop.discount}}</span></div>
-                  <div class="dates">{{action.shop.discount}}</div>
+                  <div class="dates">{{action.shop.dates}}</div>
                 </div>
               </div>
               <div class="product">
-                <hr>
-                <div class="image">
-                  <img :src="action.image" :alt="action.title">
-                </div>
-                <span class="title">{{action.title}}</span>
-                <span class="desc">{{action.desc}}</span>
-                <span class="tara">{{action.tara}}</span>
-                <hr>
-                <div class="prices">
-                  <span class="new">{{action.price}}</span>
-                  <span class="old">{{action.oldprice}}</span>
-                </div>
-                <div v-if="action.count > 1" class="sticker">
-                  Осталось {{action.count}} дней
-                </div>
-                <div v-if="action.count == 1" class="sticker last">
-                  Последний день
-                </div>
+                <router-link :to="{ name: 'Product', params: {slug: action.slug} }" exact>
+                  <hr>
+                  <div class="image">
+                    <img :src="action.image" :alt="action.title">
+                  </div>
+                  <span class="title">{{action.title}}</span>
+                  <span class="desc">{{action.desc}}</span>
+                  <span class="tara">{{action.tara}}</span>
+                  <hr>
+                  <div class="prices">
+                    <span class="new">{{action.price}}</span>
+                    <span class="old">{{action.oldprice}}</span>
+                  </div>
+                  <div v-if="action.count > 1" class="sticker">
+                    Осталось {{action.count}} дней
+                  </div>
+                  <div v-if="action.count == 1" class="sticker last">
+                    Последний день
+                  </div>
+                </router-link>
               </div>
             </div>
           </div>
@@ -48,21 +50,16 @@
 import axios from 'axios';
 export default {
   name: 'Products',
+  props: ['products'],
   data() {
     return {
-        actions: [],
+        actions: this.products,
     }
   },
-  created: function() {
-    axios.get('/api/actions')
-      .then(
-        (response) => {
-          this.actions = response.data;
-        }
-      )
-      .catch(
-        (error) => console.log(error)
-      );
-  },
+  watch: {
+    products: function (newVal) {
+      this.actions = newVal
+    }
+  }
 }
 </script>

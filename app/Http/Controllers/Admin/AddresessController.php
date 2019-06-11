@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 
-class AddressesController extends Controller
+class AddresessController extends Controller
 {
 
     public function addAddress($data = array())
