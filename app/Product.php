@@ -37,23 +37,25 @@ class Product extends Model
 
     public function translate($locale = null)
     {
-        $locale = $locale ?? app()->getLocale();
-        return $this->hasOne(ProductTranslate::class)->where('locale', $locale);
+        $locale = $locale ?: app()->getLocale();
+
+        foreach ($this->translations as $translation) {
+            if ($translation->attributes['locale'] === $locale) {
+                return $translation;
+            }
+        }
+
+        return null;
     }
 
-    public function getCategoriesForSelectAttribute()
+    public function translations()
     {
-        return Category::pluck('slug', 'id')->toArray();
-    }
-
-    public function shops()
-    {
-        return $this->belongsToMany('App\Category');
+        return $this->hasMany(ProductTranslate::class);
     }
 
 
     public function discounts()
     {
-        return $this->belongsToMany('App\Discount');
+        return $this->belongsToMany('App\Discount', 'discount_product', 'product_id', 'discount_id');
     }
 }

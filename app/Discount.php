@@ -61,14 +61,23 @@ class Discount extends Model
         $this->attributes['date_end'] =  Carbon::parse($value);
     }
 
-    public function searchDiscounts ($search, $locale = null)
-    {
-        $locale = $locale ?? app()->getLocale();
-        return $this->hasMany(DiscountTranslate::class)->where('locale', $locale)->where('title', $search);
-    }
+//    public function searchDiscounts ($search, $locale = null)
+//    {
+//        $locale = $locale ?? app()->getLocale();
+//        return $this->hasMany(DiscountTranslate::class)->where('locale', $locale)->where('title', $search);
+//    }
 
     public function products()
     {
         return $this->belongsToMany('App\Product');
+    }
+
+    public function searchDiscounts($shops)
+    {
+
+        return $this->belongsToMany(Shop::class)
+            ->whereIn('shop_id', $shops);
+
+
     }
 }

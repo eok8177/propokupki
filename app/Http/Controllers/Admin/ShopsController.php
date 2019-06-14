@@ -224,7 +224,7 @@ class ShopsController extends Controller
 
                 $i = 0;
                 $city_arr = array();
-                while (($data = fgetcsv($filename, 1000, ",")) !== FALSE) {
+                while (($data = fgetcsv($filename, 1000, ";")) !== FALSE) {
                     if($i != 0){
                         $addres = new Address();
                         if (!in_array($data[0], $city_arr)){

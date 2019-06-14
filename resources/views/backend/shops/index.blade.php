@@ -17,7 +17,7 @@
             </div>
 
             <div class="search">
-                <input type="text" id="search" placeholder="Введите название">
+                <input type="text" id="search" value="{{ $search }}" placeholder="Введите название">
                 <button class="btn-search"></button>
             </div>
 
@@ -26,7 +26,7 @@
                     <div class="col-6 col-md-4 col-lg-3 col-xl-2">
                         <div class="shop-item add">
                             <span class="ico ico-plus"></span>
-                            <span class="title">Новый<br>город</span>
+                            <span class="title">Новый<br>магазин</span>
                             <hr>
                             <a href="{{ route('admin.shops.create') }}" class="btn btn-red">Добавить</a>
                         </div>
@@ -35,7 +35,7 @@
                         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
                             <div class="shop-item">
                                 <button data-href="{{ route('admin.shops.destroy', $shop->parent->id) }}" class="btn-delete"></button>
-                                <div class="image"><img src="{{ $shop->parent->image ? asset('/storage/shops/'.$shop->parent->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
+                                <div class="image"><img src="{{ $shop->parent->image ? asset('/storage/'.$shop->parent->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
                                 <a href="{{ route('admin.shops.edit', $shop->parent->id) }}"><span class="title">{{ $shop->title }}</span></a>
                                 <span class="desc"></span>
                                 <hr>

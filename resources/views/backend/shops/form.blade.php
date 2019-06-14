@@ -60,6 +60,18 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <label>Города:</label>
+                <div>
+                    @foreach($shop->cities as $city)
+                        @php ($content = $city->forAdmin())
+                        <span>{{ $content['sities']['ua']->title }}</span> <br>
+                    @endforeach
+                </div>
+            </div>
+            <div>
+                <span></span>
+            </div>
         </div>
     </div>
 </div>

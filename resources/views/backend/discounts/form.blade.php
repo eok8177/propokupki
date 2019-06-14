@@ -47,7 +47,7 @@
             <div class="date">{{ Form::text('date_end', $discount->date_end, ['class' => $errors->has('date_end') ? 'form-control is-invalid' : 'form-control']) }}</div>
         </div>
     </div>
-    {{ Form::text('status', 1, []) }}
+    {{ Form::hidden('status', 1, []) }}
 
 </div>
 <hr>
@@ -57,6 +57,7 @@
     <div class="products" id="products">
         @php ($prodId = 0)
         @forelse($discount->products as $product)
+            @php ($content = $product->forAdmin())
         <div class="item row">
             <span class="gray-title">Товар </span><button class="btn-delete"></button>
             <div class="col-md-4 col-xl-6">
@@ -76,7 +77,7 @@
                     @foreach ($languages as $lang)
                         {{ Form::label('title', 'Название') }}
                         <p>Укажите название товара </p>
-                        {{ Form::text('product['.$prodId.']['.$lang->locale.'][title]', '', ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
+                        {{ Form::text('product['.$prodId.']['.$lang->locale.'][title]', optional($content['product']->translate($lang->locale))->title, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
                         @if($errors->has('title'))
                             <span class="invalid-feedback">{{ $errors->first('title') }}</span>
                         @endif
@@ -85,7 +86,7 @@
                 <div class="form-group col-xl-8 pl-0">
                     {{ Form::label('title', 'Url') }}
                     <p>Укажите Url товара </p>
-                    {{ Form::text('product['.$prodId.'][slug]', '', ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
+                    {{ Form::text('product['.$prodId.'][slug]', $product->slug, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
                 </div>
                 <div class="form-group col-xl-8 pl-0 units-select">
                     {{ Form::label('quantity', 'Количество и вес') }}
@@ -178,9 +179,10 @@
           '              <input type="hidden" name="shop[]" value="'+idShop+'" >\n' +
           '            <div class="image"><img src="'+imgShop+'" alt=""></div>\n' +
           '        </div>';
+
       $('.filtered').append(addHtml);
   }
-  var productId = {{ $prodId }};
+  var productId = {{ isset($prodId) ? $prodId : 0 }};
   //add product
   function addProduct() {
       $('.not-product').remove();

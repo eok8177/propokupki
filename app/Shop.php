@@ -51,7 +51,7 @@ class Shop extends Model
         return $this->belongsToMany('App\Category');
     }
 
-    public function sities()
+    public function cities()
     {
         return $this->belongsToMany('App\City');
     }
@@ -65,5 +65,10 @@ class Shop extends Model
     {
         $locale = $locale ?? app()->getLocale();
         return $this->hasMany(ShopTranslate::class)->where('locale', $locale)->where('title', $search);
+    }
+
+    public function discounts()
+    {
+        return $this->belongsToMany('App\Discount', 'discount_shop', 'shop_id', 'discount_id');
     }
 }

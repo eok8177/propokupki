@@ -17,22 +17,4 @@ class DiscountTranslate extends Model
     {
         return $this->belongsTo(Discount::class, 'discount_id')->withDefault();
     }
-
-
-    public static function searchDiscounts ($locale = null, $search, $status)
-    {
-        $locale = $locale ?? app()->getLocale();
-
-        if ($search) {
-            $items = DiscountTranslate::where('title','LIKE', '%'.$search.'%');
-        } else {
-            $items = DiscountTranslate::where(function ($query) use ($status) {
-                $query->WhereHas('parent', function ($query) use ($status) {
-                    $query->where('status',$status);
-                });
-            });
-        }
-
-        return $items;
-    }
 }

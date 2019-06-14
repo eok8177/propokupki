@@ -19,45 +19,39 @@
 
             {!! Form::open(['route' => ['admin.discounts.index'], 'method' => 'GET']) !!}
             <div class="search">
-                <input name="search" type="text" placeholder="Введите название" value="{{app('request')->input('search')}}">
+                <input name="search" id="shop_search" type="text" data-href="{{route('admin.shops.ajaxShops')}}" placeholder="Введите название" value="{{app('request')->input('search')}}">
                 <button type="submit" class="btn-search"></button>
             </div>
             {!! Form::close() !!}
 
             <div class="filtered">
-                <div class="item">
-                    <button class="btn-delete"></button>
-                    <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                </div>
-                <div class="item">
-                    <button class="btn-delete"></button>
-                    <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                </div>
-                <div class="item">
-                    <button class="btn-delete"></button>
-                    <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                </div>
+                @foreach($shops as $shop)
+                    <div class="item">
+                        <button class="btn-delete" onclick="$(this).parent().remove()"></button>
+                        <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
+                    </div>
+                @endforeach
             </div>
 
             <div class="items">
 
                 @forelse ($discounts as $discount)
                     <div class="action-item">
-                        <button data-href="{{ route('admin.discounts.destroy', $discount->parent->id) }}" class="btn-delete"></button>
-                        <a href="{{ route('admin.discounts.edit', $discount->parent->id) }}">
-                            <div class="image"><img src="{{ $discount->parent->image ? asset('/storage/'.$discount->parent->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
+                        <button data-href="{{ route('admin.discounts.destroy', $discount->id) }}" class="btn-delete"></button>
+                        <a href="{{ route('admin.discounts.edit', $discount->id) }}">
+                            <div class="image"><img src="{{ $discount->image ? asset('/storage/'.$discount->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
                         </a>
 
                         <div class="block">
-                            <a href="{{ route('admin.discounts.edit', $discount->parent->id) }}">
+                            <a href="{{ route('admin.discounts.edit', $discount->id) }}">
                             <span class="date">14–27 марта </span>
-                            <span class="title">{{ $discount->title }}</span>
+                            <span class="title">{{ $discount->translate($app_locale)->first()['title'] }}</span>
                             </a>
                         </div>
                         <div class="status">
                             <span>Активный</span>
                             <label class="checkbox">
-                                <input data-href="{{route('admin.shops.status', $discount->parent->id)}}" type="checkbox" {!! $discount->parent->status ? 'checked="checked" ' : '' !!}>
+                                <input data-href="{{route('admin.shops.status', $discount->id)}}" type="checkbox" {!! $discount->status ? 'checked="checked" ' : '' !!}>
                                 <input type="checkbox">
                                 <span class="chk"></span>
                             </label>
@@ -82,3 +76,29 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    function addIdShop(idShop, imgShop){
+        var addHtml = '<div class="item">\n' +
+        '            <button class="btn-delete" onclick="$(this).parent().remove()"></button>\n' +
+        '              <input type="hidden" class="shop-id" name="shop[]" value="'+idShop+'" >\n' +
+        '            <div class="image"><img src="'+imgShop+'" alt=""></div>\n' +
+        '        </div>';
+
+    $('.filtered').append(addHtml);
+    }
+    $(function() {
+        $("body").on('DOMSubtreeModified', ".filtered", function() {
+            setTimeout(function () {
+                var IDs = [];
+                $(document).find('.shop-id').each(function () {
+                    IDs.push($(this).val());
+                });
+                window.location.href = window.location.href.split('?')[0] + "?shops[]=" + IDs;
+            }, 2000);
+        });
+    });
+</script>
+
+@endpush
