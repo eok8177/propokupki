@@ -11,6 +11,7 @@ class ActionController extends Controller
   {
     $res = [
       0 => [
+        'slug' => 'product-slug',
         'title' => 'Крупа',
         'image' => 'images/action-1.jpg',
         'desc' => 'гречневая экстра ТМ Зерновита 1000 г',
@@ -25,6 +26,7 @@ class ActionController extends Controller
         ],
       ],
       1 => [
+        'slug' => 'product-slug',
         'title' => 'Ананасы',
         'image' => 'images/action-2.jpg',
         'desc' => 'кусочками в легком сиропе ТМ Варто 565 г',
@@ -39,6 +41,7 @@ class ActionController extends Controller
         ],
       ],
       2 => [
+        'slug' => 'product-slug',
         'title' => 'Хлебцы',
         'image' => 'images/action-3.jpg',
         'desc' => 'многокомпонентные, ржаные с отрубями ТМ Финн Крисп 175 г',
@@ -53,6 +56,7 @@ class ActionController extends Controller
         ],
       ],
       3 => [
+        'slug' => 'product-slug',
         'title' => 'Вино',
         'image' => 'images/action-4.jpg',
         'desc' => 'Терре Сицилиане красное/белое сухое ТМ Кастелмарко 0,75 л',
@@ -68,6 +72,7 @@ class ActionController extends Controller
       ],
 
       4 => [
+        'slug' => 'product-slug',
         'title' => 'Крупа',
         'image' => 'images/action-1.jpg',
         'desc' => 'гречневая экстра ТМ Зерновита 1000 г',
@@ -82,6 +87,7 @@ class ActionController extends Controller
         ],
       ],
       5 => [
+        'slug' => 'product-slug',
         'title' => 'Ананасы',
         'image' => 'images/action-2.jpg',
         'desc' => 'кусочками в легком сиропе ТМ Варто 565 г',
@@ -96,6 +102,7 @@ class ActionController extends Controller
         ],
       ],
       6 => [
+        'slug' => 'product-slug',
         'title' => 'Хлебцы',
         'image' => 'images/action-3.jpg',
         'desc' => 'многокомпонентные, ржаные с отрубями ТМ Финн Крисп 175 г',
@@ -110,6 +117,7 @@ class ActionController extends Controller
         ],
       ],
       7 => [
+        'slug' => 'product-slug',
         'title' => 'Вино',
         'image' => 'images/action-4.jpg',
         'desc' => 'Терре Сицилиане красное/белое сухое ТМ Кастелмарко 0,75 л',
