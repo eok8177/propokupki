@@ -55,7 +55,7 @@ export default {
     }
   },
   created: function() {
-    axios.get('/api/shops')
+    axios.get('/api/shops/?city='+localStorage.cityId)
       .then(
         (response) => {
           this.shops = response.data;
@@ -64,7 +64,7 @@ export default {
       .catch(
         (error) => console.log(error)
       );
-      axios.get('/api/actions')
+      axios.get('/api/actions/?city='+localStorage.cityId)
         .then(
           (response) => {
             this.actions = response.data;

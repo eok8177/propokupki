@@ -131,7 +131,7 @@ export default {
       (error) => console.log(error)
     );
 
-    axios.get('/api/product-related/slug')
+    axios.get('/api/product-related/slug/?city='+localStorage.cityId)
     .then(
       (response) => {
         this.actions = response.data;

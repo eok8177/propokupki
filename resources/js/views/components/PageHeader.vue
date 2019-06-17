@@ -12,7 +12,7 @@
       </div>
 
       <div class="righ">
-        <button class="city-select" @click="showModalCity = true">Киев</button>
+        <button class="city-select" @click="showModalCity = true">{{city.name}}</button>
 
         <a href="/cutup-login" class="login"><span class="ico ico-login"></span> Войти</a>
       </div>
@@ -40,9 +40,14 @@
 
     </div>
 
-    <modal v-if="showModalCity" @close="showModalCity = false">
-      <h3 slot="header">Ваш город Киев?</h3>
-      <span slot="body">modal body here</span>
+    <modal v-if="showModalCity" @close="showModalCity = false" class="city-modal">
+      <h3 slot="header">Ваш город {{city.name}}?</h3>
+      <span slot="body">
+        <input type="text" placeholder="Изменить город" v-model.trim="searchCity">
+        <div class="cities">
+          <span class="city" v-for="(city, id) in cities" @click="setCity(id, city)">{{city}}</span>
+        </div>
+      </span>
       <div slot="footer">
         <button class="btn btn-red" @click="showModalCity = false">Да</button>
       </div>
@@ -65,29 +70,39 @@
         showModalCity: false,
         search: '',
         resultOK: false,
-        answer: []
+        answer: [],
+        city: {
+          id: localStorage.cityId,
+          name: localStorage.cityName
+        },
+        searchCity: '',
+        cities: []
       }
     },
     watch: { // эта функция запускается при любом изменении вопроса
-      search: function (newQuestion, oldQuestion) {
-        this.debouncedGetSearch()
-      },
-      '$route' (to, from) {
-        console.log('watch');
+      search: function () {this.debouncedGetSearch()},
+      searchCity: function () {this.debouncedSearchCities()},
+      '$route' (to, from) { //убирать модалки при переходе
         this.resultOK = false;
         this.search = '';
       }
     },
     created: function () { // _.debounce — это функция lodash, позволяющая ограничить то, насколько часто может выполняться определённая операция.
       this.debouncedGetSearch = _.debounce(this.getSearch, 500);
+      this.debouncedSearchCities = _.debounce(this.searchCities, 500);
       this.resultOK = false;
     },
     mounted() {
       document.body.addEventListener('keyup', e => {
-        if (e.keyCode === 27) {
+        if (e.keyCode === 27) { //Esc key event
           this.resultOK = false;
         }
       })
+
+      if (!localStorage.cityId) {
+        this.getCity();
+        this.showModalCity = true;
+      }
     },
     methods: {
       getSearch: function () {
@@ -103,6 +118,44 @@
           .catch(
             (error) => console.log(error)
           );
+      },
+
+      getCity: function() {
+        axios.get('/api/city')
+          .then(
+            (response) => {
+              this.city = response.data;
+              localStorage.cityId = this.city.id;
+              localStorage.cityName = this.city.name;
+            }
+          )
+          .catch(
+            (error) => console.log(error)
+          );
+      },
+
+      searchCities: function() {
+        if (this.searchCity.length < 1) return;
+        axios.get('/api/cities/'+this.searchCity)
+          .then(
+            (response) => {
+              this.cities = response.data;
+              // if (this.answer.status) this.resultOK = true;
+            }
+          )
+          .catch(
+            (error) => console.log(error)
+          );
+      },
+
+      setCity: function(id, city) {
+        localStorage.cityId = id;
+        localStorage.cityName = city;
+        this.city.id = id;
+        this.city.name = city;
+        this.showModalCity = false;
+        this.searchCity = '';
+        this.cities = [];
       }
     },
 
