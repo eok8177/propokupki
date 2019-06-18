@@ -38,12 +38,62 @@ $(document).ready(function () {
         });
     });
 
-    //Change status of record
-    $('.custom-select').on('change', function (e) {
+    //Select limit
+    $('#limit').on('change', function (e) {
+        e.preventDefault();
+        var item = $(this).val();
+        console.log(item);
+        window.location.href = window.location.href.split('?')[0] + "?limit="+item;
+    });
+
+    //Select status
+    $('#status').on('change', function (e) {
         e.preventDefault();
         var item = $(this).val();
         console.log(item);
         window.location.href = window.location.href.split('?')[0] + "?status="+item;
     });
+
+    //Change search
+    $('.btn-search').on('click', function (e) {
+        e.preventDefault();
+        var item = $('#search').val();
+        console.log(item);
+        window.location.href = window.location.href.split('?')[0] + "?search="+item;
+    });
+
+
+    //Live search shops
+    $('#shop_search').keyup( function(e) {
+        e.preventDefault();
+       var string = $(this).val();
+       if (string.length >= 3){
+           var data = {
+               str:  string
+           }
+           $.post({
+               type: 'POST',
+               url: $(this).data('href'),
+               data: data,
+               dataType: 'json'
+           }).done(function (data) {
+               console.log(data);
+               var html_code = '<div class="search-result">';
+                html_code += '<ul class="actions">';
+                html_code += data;
+                html_code += '</ul>';
+                html_code += '</div>';
+                $('.search-result').remove();
+               $('#shop_search').after(html_code);
+               console.log(html_code);
+               // if (status == 1) {
+               //     item.attr( 'checked', true );
+               // } else {
+               //     item.removeAttr('checked');
+               // }
+           });
+       }
+    });
+
 
 });

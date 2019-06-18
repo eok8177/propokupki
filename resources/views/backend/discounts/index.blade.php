@@ -11,7 +11,7 @@
     <div class="actions">
         <div class="container">
             <div class="select">
-                <select name="status" class="custom-select" name="" id="">
+                <select name="" class="custom-select" name="" id="status">
                     <option value="1" {{$status == 1 ? 'selected="selected"' : ''}}>Активные <span class="badge">{{ $count_on }}</span></option>
                     <option value="0" {{$status == 0 ? 'selected="selected"' : ''}}>не активные <span class="badge">{{ $count_off }}</span></option>
                 </select>
@@ -19,44 +19,39 @@
 
             {!! Form::open(['route' => ['admin.discounts.index'], 'method' => 'GET']) !!}
             <div class="search">
-                <input name="search" type="text" placeholder="Введите название" value="{{app('request')->input('search')}}">
+                <input name="search" id="shop_search" type="text" data-href="{{route('admin.shops.ajaxShops')}}" placeholder="Введите название" value="{{app('request')->input('search')}}">
                 <button type="submit" class="btn-search"></button>
             </div>
             {!! Form::close() !!}
 
             <div class="filtered">
-                <div class="item">
-                    <button class="btn-delete"></button>
-                    <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                </div>
-                <div class="item">
-                    <button class="btn-delete"></button>
-                    <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                </div>
-                <div class="item">
-                    <button class="btn-delete"></button>
-                    <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                </div>
+                @foreach($shops as $shop)
+                    <div class="item">
+                        <button class="btn-delete" onclick="$(this).parent().remove()"></button>
+                        <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
+                    </div>
+                @endforeach
             </div>
 
             <div class="items">
 
                 @forelse ($discounts as $discount)
                     <div class="action-item">
-                        <button data-href="{{ route('admin.discounts.destroy', $discount->parent->id) }}" class="btn-delete"></button>
-                        <a href="{{ route('admin.discounts.edit', $discount->parent->id) }}">
-                            <div class="image"><img src="{{ asset('/storage/'.$discount->parent->image) }}" alt=""></div>
+                        <button data-href="{{ route('admin.discounts.destroy', $discount->id) }}" class="btn-delete"></button>
+                        <a href="{{ route('admin.discounts.edit', $discount->id) }}">
+                            <div class="image"><img src="{{ $discount->image ? asset('/storage/'.$discount->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
                         </a>
 
                         <div class="block">
-                            <a href="{{ route('admin.discounts.edit', $discount->parent->id) }}">
+                            <a href="{{ route('admin.discounts.edit', $discount->id) }}">
                             <span class="date">14–27 марта </span>
-                            <span class="title">{{ $discount->title }}</span>
+                            <span class="title">{{ $discount->translate($app_locale)->first()['title'] }}</span>
                             </a>
                         </div>
                         <div class="status">
                             <span>Активный</span>
                             <label class="checkbox">
+                                <input data-href="{{route('admin.shops.status', $discount->id)}}" type="checkbox" {!! $discount->status ? 'checked="checked" ' : '' !!}>
                                 <input type="checkbox">
                                 <span class="chk"></span>
                             </label>
@@ -69,29 +64,41 @@
 
             <div class="pagination-row">
                 <nav aria-label="Page navigation">
-
-                    <ul class="pagination">
-                        <li class="page-item disabled"><span class="page-link">«</span></li>
-                        <li class="page-item active"><span class="page-link">1</span></li>
-                        <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=4">4</a></li>
-
-                        <li class="page-item"><a class="page-link" href="?page=11">11</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=2" aria-label="Next">Следующая</a></li>
-                    </ul>
+                    {{ $discounts->links() }}
                 </nav>
 
                 <div class="select">
                     <label>Выводить по</label>
-                    <select class="custom-select">
-                        <option value="">50</option>
-                        <option value="">100</option>
-                        <option value="">200</option>
-                    </select>
-                </div>
+                    {{ Form::select('status', [50 => 50, 100 => 100, 200 => 200], $limit, ['class' => 'custom-select', 'id' => 'limit']) }}
+                 </div>
 
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    function addIdShop(idShop, imgShop){
+        var addHtml = '<div class="item">\n' +
+        '            <button class="btn-delete" onclick="$(this).parent().remove()"></button>\n' +
+        '              <input type="hidden" class="shop-id" name="shop[]" value="'+idShop+'" >\n' +
+        '            <div class="image"><img src="'+imgShop+'" alt=""></div>\n' +
+        '        </div>';
+
+    $('.filtered').append(addHtml);
+    }
+    $(function() {
+        $("body").on('DOMSubtreeModified', ".filtered", function() {
+            setTimeout(function () {
+                var IDs = [];
+                $(document).find('.shop-id').each(function () {
+                    IDs.push($(this).val());
+                });
+                window.location.href = window.location.href.split('?')[0] + "?shops[]=" + IDs;
+            }, 2000);
+        });
+    });
+</script>
+
+@endpush

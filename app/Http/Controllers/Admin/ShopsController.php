@@ -38,6 +38,8 @@ class ShopsController extends Controller
             'count_on'          => count(Shop::where('status', 1)->get()),
             'count_off'         => count(Shop::where('status', 0)->get()),
             'status'            => $status,
+            'limit'            => $limit,
+            'search'            => $search,
         ]);
     }
 
@@ -222,7 +224,7 @@ class ShopsController extends Controller
 
                 $i = 0;
                 $city_arr = array();
-                while (($data = fgetcsv($filename, 1000, ",")) !== FALSE) {
+                while (($data = fgetcsv($filename, 1000, ";")) !== FALSE) {
                     if($i != 0){
                         $addres = new Address();
                         if (!in_array($data[0], $city_arr)){
@@ -257,7 +259,7 @@ class ShopsController extends Controller
                 ->with('success', 'Shop update');
         }
 
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.shops.index');
     }
 
     /**
@@ -292,5 +294,22 @@ class ShopsController extends Controller
 
         return response()->json($shop->status, 200);
     }
+
+    public function ajaxShops(Request $request)
+    {
+        $search = $request->str;
+        $locale = env('APP_LOCALE', 'ua');
+        $status = 1;
+
+        $shops = ShopTranslate::searchShops($locale, $search, $status);
+        $hlml = '';
+
+        foreach ($shops->get() as $shop) {
+            $hlml .= '<li><a class="shop_id" href="#" onclick="addIdShop('.$shop->parent->id.', \''. asset('/storage/'.$shop->parent->image).'\')">'. $shop->title .'</a></li>';
+        }
+        return response()->json($hlml, 200);
+
+    }
+
 
 }

@@ -1,11 +1,11 @@
-@extends('cutup.admin.layout')
+@extends('backend.layouts.admin')
 
 @section('content')
 
-    <div class="shops">
+    <div class="discounts actions">
         <div class="container">
-            {!! Form::open(['route' => ['admin.shops.update', $shop->id], 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
-            @include('backend.shops.form')
+            {!! Form::open(['route' => ['admin.discounts.update', $discount->id], 'method' => 'PUT', 'enctype' => 'multipart/form-data']) !!}
+            @include('backend.discounts.form')
             {{ Form::close() }}
         </div>
     </div>

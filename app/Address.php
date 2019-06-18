@@ -47,7 +47,7 @@ class Address extends Model
         return $this->hasMany(AddressTranslate::class)->where('locale', $locale)->where('title', $search);
     }
 
-    public function sities()
+    public function cities()
     {
         return $this->belongsToMany('App\City');
     }

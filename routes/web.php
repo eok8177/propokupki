@@ -27,6 +27,7 @@ Route::group([
     Route::resource('/cities', 'CitiesController');
     //      Shops
     Route::resource('/shops', 'ShopsController');
+    Route::post('shops/ajaxShops', ['as' => 'shops.ajaxShops', 'uses' => 'ShopsController@ajaxShops']);
     Route::put('shops/status/{id}', ['as' => 'shops.status', 'uses' => 'ShopsController@status']);
     //      Discounts
     Route::resource('/discounts', 'DiscountsController');
