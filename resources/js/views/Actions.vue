@@ -33,7 +33,7 @@ export default {
       this.getActions(filter);
     },
     getActions: function(filter) {
-      axios.get('/api/actions',{params: filter})
+      axios.get('/api/actions?city='+localStorage.cityId,{params: filter})
         .then(
           (response) => {
             this.actions = response.data;

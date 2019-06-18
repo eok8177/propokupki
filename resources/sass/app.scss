@@ -801,3 +801,17 @@ footer {
     color: #677075;
   }
 }
+
+.city-modal {
+  input {
+    width: 100%;
+  }
+  .cities {
+    .city {
+      display: inline-block;
+      width: 48%;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  }
+}

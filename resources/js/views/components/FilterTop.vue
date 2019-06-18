@@ -125,7 +125,10 @@ export default {
     },
     searchShops: function () {
       if (this.search_shops.length < 3) return;
-      axios.post('/api/shops', {data: this.search_shops})
+      axios.post('/api/shops', {
+          search: this.search_shops,
+          city: localStorage.cityId
+        })
         .then(
           (response) => {
             this.shops = response.data;
@@ -136,7 +139,7 @@ export default {
         );
     },
     allShops: function() {
-      axios.get('/api/shops')
+      axios.get('/api/shops/?city='+localStorage.cityId)
         .then(
           (response) => {
             this.shops = response.data;
