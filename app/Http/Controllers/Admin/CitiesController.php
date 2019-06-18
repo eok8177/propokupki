@@ -22,33 +22,13 @@ class CitiesController extends Controller
     public function index(Request $request)
     {
 
-//        $old_cities = DB::table('old_cities')->get();
-//        foreach ($old_cities as $old_city) {
-//            DB::table('cities')->insert([
-//                'id' => $old_city->id,
-//                'slug' => $old_city->slug,
-//                'code' => $old_city->id,
-//                'status' => 1,
-//                'created_at' => NOW(),
-//                'updated_at' => NOW(),
-//            ]);
-//            DB::table('cities_translations')->insert([
-//                'city_id' => $old_city->id,
-//                'locale' => 'ua',
-//                'title' => $old_city->nameuk,
-//                'created_at' => NOW(),
-//                'updated_at' => NOW(),
-//
-//            ]);
-//        }
-//        dd($old_cities);
         if ($request->get('search')) {
-            $cities = City::where('code', 'like', '%'. $request->search . '%')
+            $cities = City::where('code', 'like', '%' . $request->search . '%')
                 ->orderBy('id', 'asc');
         } else {
             $cities = City::orderBy('id', 'desc');
         }
-//        dd($cities);
+
         return view('backend.cities.index', [
             'cities' => $cities->paginate(10),
             'app_locale' => env('APP_LOCALE', 'ua')
@@ -63,10 +43,9 @@ class CitiesController extends Controller
     public function create()
     {
         $city = new City;
-//        dd(Language::where('status', '1')->get());
 
         return view('backend.cities.create', [
-            'city'     => $city->forAdmin()['city'],
+            'city' => $city->forAdmin()['city'],
             'contents' => $city->forAdmin()['contents'],
             'languages' => Language::where('status', '1')->get(),
         ]);
@@ -75,7 +54,7 @@ class CitiesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -100,13 +79,13 @@ class CitiesController extends Controller
 
 
         return redirect()
-            ->route('admin.cities.edit', $city->id)->with('success', 'City add' );
+            ->route('admin.cities.edit', $city->id)->with('success', 'City add');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -118,7 +97,7 @@ class CitiesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -127,7 +106,7 @@ class CitiesController extends Controller
 
         if ($city) {
             return view('backend.cities.edit', [
-                'city'     => $city['city'],
+                'city' => $city['city'],
                 'contents' => $city['contents'],
                 'languages' => Language::where('status', '1')->get()
             ]);
@@ -139,8 +118,8 @@ class CitiesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -182,7 +161,7 @@ class CitiesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(City $language)
@@ -203,9 +182,8 @@ class CitiesController extends Controller
     {
 
         $this->validate($request, [
-            'title'             => 'required|max:255',
+            'title' => 'required|max:255',
         ]);
 
     }
-
 }

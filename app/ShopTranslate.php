@@ -21,7 +21,7 @@ class ShopTranslate extends Model
         $locale = $locale ?? app()->getLocale();
 
         if ($search) {
-            $items = ShopTranslate::where('title','LIKE', '%'.$search.'%');
+            $items = ShopTranslate::where('title','LIKE', '%'.$search.'%')->where('locale', $locale);
         } else {
             $items = ShopTranslate::where(function ($query) use ($status) {
                 $query->WhereHas('parent', function ($query) use ($status) {

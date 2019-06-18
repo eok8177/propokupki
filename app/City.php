@@ -20,11 +20,11 @@ class City extends Model
         $city = [];
         $city['city'] = $this;
         foreach ($this->langs() as $item) {
-            $trans = $this->translate($item->locale)->first();
+            $trans = $this->translate($item->locale);
             if ($trans) {
-                $city['contents'][$item->locale] = $trans;
+                $city['sities'][$item->locale] = $trans;
             } else {
-                $city['contents'][$item->locale] = new CityTranslate;
+                $city['cities'][$item->locale] = new CityTranslate;
             }
         }
         return $city;
@@ -37,8 +37,19 @@ class City extends Model
 
     public function translate($locale = null)
     {
-        $locale = $locale ?? app()->getLocale();
-//        dd($locale);
-        return $this->hasOne(CityTranslate::class)->where('locale', $locale);
+        $locale = $locale ?: app()->getLocale();
+
+        foreach ($this->translations as $translation) {
+            if ($translation->attributes['locale'] === $locale) {
+                return $translation;
+            }
+        }
+
+        return null;
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(CityTranslate::class);
     }
 }
