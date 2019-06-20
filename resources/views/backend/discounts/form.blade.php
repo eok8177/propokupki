@@ -23,7 +23,7 @@
         @foreach ($languages as $lang)
             {{ Form::label('title', 'Название') }}
             <p>Укажите название акции </p>
-            {{ Form::text($lang->locale.'[title]', $contents[$lang->locale]->title, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
+            {{ Form::text($lang->locale.'[title]', $discount->translate($lang->locale)->title, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
             @if($errors->has('title'))
                 <span class="invalid-feedback">{{ $errors->first('title') }}</span>
             @endif

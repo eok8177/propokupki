@@ -24,18 +24,36 @@ class DiscountsController extends Controller
      */
     public function index(Request $request)
     {
+        $status = NULL;
+        if ($request->get('status') == 'on') {
+            $status = 1;
+        } elseif($request->get('status') == 'off') {
+            $status = 0;
+        }
 
-        $status = $request->get('status',1);
+//        $status = $request->get('status',NULL);
         $shops = $request->get('shops', []);
-        $limit = $request->get('status', 50);
+        $limit = $request->get('limit', 50);
         $locale = env('APP_LOCALE', 'ua');
 
-        if (count($shops)){
-            $discounts = Discount::whereHas('shops', function($q) use($shops){
-                $q->whereIn('shop_id', $shops);
-            })->where('status', $status);
+
+
+        if (count($shops)) {
+            if ($status !== NULL){
+                $discounts = Discount::whereHas('shops', function ($q) use ($shops) {
+                    $q->whereIn('shop_id', $shops);
+                })->where('status', $status);
+            } else {
+                $discounts = Discount::whereHas('shops', function ($q) use ($shops) {
+                    $q->whereIn('shop_id', $shops);
+                });
+            }
         } else {
-            $discounts = Discount::where('status', $status);
+            if ($status !== NULL){
+                $discounts = Discount::where('status', $status);
+            } else {
+                $discounts = Discount::query();
+            }
         }
 
         return view('backend.discounts.index', [
@@ -120,13 +138,12 @@ class DiscountsController extends Controller
      */
     public function edit($id)
     {
-        $discount = Discount::find($id)->forAdmin();
+        $discount = Discount::find($id);
 
         if ($discount) {
             return view('backend.discounts.edit', [
                 'method'        => 'edit',
-                'discount'      => $discount['discount'],
-                'contents'      => $discount['contents'],
+                'discount'      => $discount,
                 'languages'     => Language::where('status', '1')->get()
             ]);
         }
@@ -175,6 +192,7 @@ class DiscountsController extends Controller
                 $old_product = DB::table('discount_product')->where('discount_id', $discount->id)->pluck('product_id');
                 DB::table('products')->whereIn('id', $old_product)->delete();
                 DB::table('products_translations')->whereIn('product_id', $old_product)->delete();
+                DB::table('discount_product')->where('discount_id', $discount->id)->delete();
 
                 foreach ($request->product as $product){
                     $prod = Product::create($product);
