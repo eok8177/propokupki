@@ -2,144 +2,109 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Product;
+use App\Shop;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ActionController extends Controller
 {
-  public function index()
+  public function index(Request $request)
   {
-    $res = [
-      0 => [
-        'slug' => 'product-slug',
-        'title' => 'Крупа',
-        'image' => 'images/action-1.jpg',
-        'desc' => 'гречневая экстра ТМ Зерновита 1000 г',
-        'tara' => '1000 г / 19,79 грн за 1000 г',
-        'price' => '19,79',
-        'oldprice' => '32,99',
-        'count' => '13',
-        'shop' => [
-          'image' => 'images/shop-1.jpg',
-          'dates' => '14–27 марта ',
-          'discount' => '-50%'
-        ],
-      ],
-      1 => [
-        'slug' => 'product-slug',
-        'title' => 'Ананасы',
-        'image' => 'images/action-2.jpg',
-        'desc' => 'кусочками в легком сиропе ТМ Варто 565 г',
-        'tara' => '565 г / 43,98 грн за 1000 г',
-        'price' => '21,99',
-        'oldprice' => '34,99',
-        'count' => '30',
-        'shop' => [
-          'image' => 'images/shop-2.jpg',
-          'dates' => '8 марта – 7 апреля',
-          'discount' => '-34%'
-        ],
-      ],
-      2 => [
-        'slug' => 'product-slug',
-        'title' => 'Хлебцы',
-        'image' => 'images/action-3.jpg',
-        'desc' => 'многокомпонентные, ржаные с отрубями ТМ Финн Крисп 175 г',
-        'tara' => '1 шт / 31,99 грн за шт',
-        'price' => '31,99',
-        'oldprice' => '46,99',
-        'count' => '1',
-        'shop' => [
-          'image' => 'images/shop-3.jpg',
-          'dates' => '10–16 марта ',
-          'discount' => '-40%'
-        ],
-      ],
-      3 => [
-        'slug' => 'product-slug',
-        'title' => 'Вино',
-        'image' => 'images/action-4.jpg',
-        'desc' => 'Терре Сицилиане красное/белое сухое ТМ Кастелмарко 0,75 л',
-        'tara' => '0,75 л / 80,99 грн за 1 л',
-        'price' => '61,99',
-        'oldprice' => '89,99',
-        'count' => '10',
-        'shop' => [
-          'image' => 'images/shop-4.jpg',
-          'dates' => '14–23 марта ',
-          'discount' => '-31%'
-        ],
-      ],
 
-      4 => [
-        'slug' => 'product-slug',
-        'title' => 'Крупа',
-        'image' => 'images/action-1.jpg',
-        'desc' => 'гречневая экстра ТМ Зерновита 1000 г',
-        'tara' => '1000 г / 19,79 грн за 1000 г',
-        'price' => '19,79',
-        'oldprice' => '32,99',
-        'count' => '13',
-        'shop' => [
-          'image' => 'images/shop-1.jpg',
-          'dates' => '14–27 марта ',
-          'discount' => '-50%'
-        ],
-      ],
-      5 => [
-        'slug' => 'product-slug',
-        'title' => 'Ананасы',
-        'image' => 'images/action-2.jpg',
-        'desc' => 'кусочками в легком сиропе ТМ Варто 565 г',
-        'tara' => '565 г / 43,98 грн за 1000 г',
-        'price' => '21,99',
-        'oldprice' => '34,99',
-        'count' => '30',
-        'shop' => [
-          'image' => 'images/shop-2.jpg',
-          'dates' => '8 марта – 7 апреля',
-          'discount' => '-34%'
-        ],
-      ],
-      6 => [
-        'slug' => 'product-slug',
-        'title' => 'Хлебцы',
-        'image' => 'images/action-3.jpg',
-        'desc' => 'многокомпонентные, ржаные с отрубями ТМ Финн Крисп 175 г',
-        'tara' => '1 шт / 31,99 грн за шт',
-        'price' => '31,99',
-        'oldprice' => '46,99',
-        'count' => '1',
-        'shop' => [
-          'image' => 'images/shop-3.jpg',
-          'dates' => '10–16 марта ',
-          'discount' => '-40%'
-        ],
-      ],
-      7 => [
-        'slug' => 'product-slug',
-        'title' => 'Вино',
-        'image' => 'images/action-4.jpg',
-        'desc' => 'Терре Сицилиане красное/белое сухое ТМ Кастелмарко 0,75 л',
-        'tara' => '0,75 л / 80,99 грн за 1 л',
-        'price' => '61,99',
-        'oldprice' => '89,99',
-        'count' => '1',
-        'shop' => [
-          'image' => 'images/shop-4.jpg',
-          'dates' => '14–23 марта ',
-          'discount' => '-31%'
-        ],
-      ],
+      $city_id = $request->get('status', 314);
 
-    ];
+      $app_locale = env('APP_LOCALE', 'ua');
 
-    return response()->json($res, 200);
+      $products = Product::whereHas('discounts', function($q) use($city_id){
+          $q->whereHas('shops', function($q2) use ($city_id){
+              $q2->whereHas('cities', function ($q3) use ($city_id){
+                  $q3->where('city_id', $city_id);
+              });
+          });
+      })->get();
+
+      $data = array();
+
+      foreach ($products as $product){
+
+          $discount_id = $product->discounts->first()->id;
+
+          $data_shop = Shop::whereHas('discounts', function ($q) use ($discount_id){
+              $q->where('discount_id', $discount_id);
+          })->first();
+
+          $shop = array(
+              'image' => asset('/storage/'.$data_shop->image),
+              'dates' => $product->discounts->first()->date_start.' - '.$product->discounts->first()->date_end,
+              'discount' => $product->discount
+          );
+
+          $data[] = array(
+              'slug' => $product->slug,
+              'title' => $product->translate($app_locale)->title,
+              'image' => asset('/storage/'.$product->image),
+              'desc' => $product->translate($app_locale)->title,
+              'tara' => $product->quantity .' '. $product->unit .' / '. $product->price/1000 .' грн за 1000 '. $product->unit,
+              'price' => $product->price - $product->price * $product->discount/100,
+              'oldprice' => $product->price,
+              'count' => (strtotime($product->discounts->first()->date_end) - time())/86400,
+              'shop' => $shop
+          );
+
+      }
+
+
+    return response()->json($data, 200);
   }
 
 
   public function search(Request $request)
   {
+
+      $city_id = $request->get('status', 314);
+
+      $app_locale = env('APP_LOCALE', 'ua');
+
+      $products = Product::whereHas('discounts', function($q) use($city_id){
+          $q->whereHas('shops', function($q2) use ($city_id){
+              $q2->whereHas('cities', function ($q3) use ($city_id){
+                  $q3->where('city_id', $city_id);
+              });
+          });
+      })->get();
+
+      $data = array();
+
+      foreach ($products as $product){
+
+          $discount_id = $product->discounts->first()->id;
+
+          $data_shop = Shop::whereHas('discounts', function ($q) use ($discount_id){
+              $q->where('discount_id', $discount_id);
+          })->first();
+
+          $shop = array(
+              'image' => asset('/storage/'.$data_shop->image),
+              'dates' => $product->discounts->first()->date_start.' - '.$product->discounts->first()->date_end,
+              'discount' => $product->discount
+          );
+
+          $data[] = array(
+              'slug' => $product->slug,
+              'title' => $product->translate($app_locale)->title,
+              'image' => asset('/storage/'.$product->image),
+              'desc' => $product->translate($app_locale)->title,
+              'tara' => $product->quantity .' '. $product->unit .' / '. $product->price/1000 .' грн за 1000 '. $product->unit,
+              'price' => $product->price - $product->price * $product->discount/100,
+              'oldprice' => $product->price,
+              'count' => (strtotime($product->discounts->first()->date_end) - time())/86400,
+              'shop' => $shop
+          );
+
+      }
+
+
     $res = [
       'data' => $request->input('data'),
       'status' => true,
