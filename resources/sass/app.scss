@@ -413,6 +413,35 @@ button {
 .pagination-row {
   padding-top: 16px;
   text-align: center;
+  .pagination {
+    margin-top: 32px;
+    display: block;
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    li {
+      display: inline-block;
+      margin: 8px;
+      text-align: center;
+      a {
+        border: 1px solid #C4C9CC;
+        border-radius: 3px;
+        padding: 8px;
+        min-width: 40px;
+        text-decoration: none;
+      }
+      &.active a {
+        background-color: #F44E4E;
+        border-color: #F44E4E;
+        color: #fff;
+      }
+      &.disabled a {
+        background-color: #C4C9CC;
+        cursor: default;
+      }
+      &.prev.disabled, &.next.disabled {display: none;}
+    }
+  }
 }
 
 .product {
@@ -420,10 +449,13 @@ button {
   .image {
     width: 100%;
     text-align: center;
+    display: block;
+    height: 152px;
     img {
       object-fit: cover;
       object-position: center;
-      height: 152px;
+      height: 100%;
+      max-width: 100%;
     }
   }
   .title {
@@ -432,6 +464,8 @@ button {
     font-size: 18px;
     line-height: 21px;
     color: #242729;
+    max-height: 64px;
+    overflow: hidden;
   }
   .desc {
     padding: 0 16px;
@@ -501,6 +535,7 @@ button {
     border-radius: 3px;
     padding: 0;
     margin-bottom: 24px;
+    height: calc(100% - 24px);
     &:hover {box-shadow: 0px 4px 12px rgba(204, 202, 192, 0.25);}
     a:hover {text-decoration: none;}
     hr {

@@ -7,7 +7,7 @@
 
     <filter-top></filter-top>
 
-    <products :products="actions"></products>
+    <products :products="actions" :pages="pages" :count="count"></products>
 
   </div>
 </template>
@@ -26,6 +26,8 @@ export default {
     return {
       filter: '',
       actions: [],
+      pages: 10, //count pages in paginate
+      count: 12, //count items on page
     }
   },
   methods: {
@@ -42,6 +44,9 @@ export default {
         .catch(
           (error) => console.log(error)
         );
+    },
+    paginate: function(e) {
+      console.log(e);
     }
   },
   created: function() {
