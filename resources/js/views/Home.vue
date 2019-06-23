@@ -34,7 +34,7 @@
     </div>
 
     <h2 class="block-title">Лучшие акции Киева</h2>
-    <products :products="actions"></products>
+    <products :products="actions" homePage="true"></products>
 
   </div>
 </template>

@@ -108,7 +108,7 @@
       getSearch: function () {
         if (this.search.length < 3) return;
 
-        axios.post('/api/actions', {data: this.search})
+        axios.post('/api/actions?city='+localStorage.cityId, {data: this.search})
           .then(
             (response) => {
               this.answer = response.data;
