@@ -15,7 +15,7 @@ class ShopController extends Controller
   public function index(Request $request)
   {
 
-      $city_id = $request->get('status', 314);
+      $city_id = $request->get('city', 314);
 
       $app_locale = env('APP_LOCALE', 'ua');
 
@@ -26,7 +26,9 @@ class ShopController extends Controller
       $data = array();
 
       foreach ($shops as $shop){
+
           $shop_id = $shop->id;
+
           $discount_max = Product::whereHas('discounts', function($q) use($shop_id){
               $q->whereHas('shops', function($q2) use ($shop_id){
                   $q2->where('shop_id', $shop_id);
@@ -43,7 +45,7 @@ class ShopController extends Controller
               'actions' => count(Discount::whereHas('shops', function($q) use($shop_id){
                   $q->where('shop_id', $shop_id);
               })->where('status', 1)->get()),
-              'discount' => $discount_max->discount,
+              'discount' => $discount_max['discount'].' %',
           );
 
       }

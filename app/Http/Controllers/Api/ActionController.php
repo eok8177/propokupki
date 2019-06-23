@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Product;
+use App\ProductTranslate;
 use App\Shop;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Jenssegers\Date\Date;
 
 class ActionController extends Controller
 {
   public function index(Request $request)
   {
 
-      $city_id = $request->get('status', 314);
-
+      $city_id = $request->get('city', 314);
       $app_locale = env('APP_LOCALE', 'ua');
 
       $products = Product::whereHas('discounts', function($q) use($city_id){
@@ -28,6 +29,13 @@ class ActionController extends Controller
 
       foreach ($products as $product){
 
+
+          $date_now = Date::now();
+          $date_start = Date::parse($product->discounts->first()->date_start);
+          $date_end = Date::parse($product->discounts->first()->date_end);
+
+          $count = $date_end->diffInDays($date_now);
+
           $discount_id = $product->discounts->first()->id;
 
           $data_shop = Shop::whereHas('discounts', function ($q) use ($discount_id){
@@ -36,19 +44,35 @@ class ActionController extends Controller
 
           $shop = array(
               'image' => asset('/storage/'.$data_shop->image),
-              'dates' => $product->discounts->first()->date_start.' - '.$product->discounts->first()->date_end,
-              'discount' => $product->discount
+              'dates' => $date_start->format('d M').' - '.$date_end->format('d M'),
+              'discount' => $product->discount.' %'
           );
+
+
+          $result = explode(' ', $product->translate($app_locale)->title);
+          $title = $result[0];
+          unset($result[0]);
+          $description = implode(' ', $result);
+
+          if ($product->unit == 'kg'){
+              $unit = 'кг';
+          } elseif($product->unit == 'l'){
+              $unit = 'k';
+          } elseif($product->unit == 'st'){
+              $unit = 'шт';
+          } elseif($product->unit == 'up'){
+              $unit = 'уп';
+          }
 
           $data[] = array(
               'slug' => $product->slug,
-              'title' => $product->translate($app_locale)->title,
+              'title' => $title,
               'image' => asset('/storage/'.$product->image),
-              'desc' => $product->translate($app_locale)->title,
-              'tara' => $product->quantity .' '. $product->unit .' / '. $product->price/1000 .' грн за 1000 '. $product->unit,
-              'price' => $product->price - $product->price * $product->discount/100,
+              'desc' => $description,
+              'tara' => $product->quantity .' '. $unit .' / '. round($product->price/$product->quantity, 2) .' грн за 1 '. $unit,
+              'price' => round($product->price - $product->price * $product->discount/100, 2),
               'oldprice' => $product->price,
-              'count' => (strtotime($product->discounts->first()->date_end) - time())/86400,
+              'count' => $count,
               'shop' => $shop
           );
 
@@ -61,10 +85,23 @@ class ActionController extends Controller
 
   public function search(Request $request)
   {
+      if ($request->post('data')){
+          $city_id = $request->get('city', 314);
+          $data = $request->get('data', 314);
+          $app_locale = env('APP_LOCALE', 'ua');
+          $products_search = ProductTranslate::orderBy('id', 'desc')
+              ->where('title', 'LIKE', '%'.$request->post('data').'%')
+              ->pluck('product_id');
 
-      $city_id = $request->get('status', 314);
+          $products = Product::whereHas('products_translations', function($q) use ($data) {
+             $q->where('title', 'like', '%'. $data .'%');
+          });
+      }
 
-      $app_locale = env('APP_LOCALE', 'ua');
+
+      $products = ProductTranslate::orderBy('id', 'desc')
+          ->where('title', 'LIKE', '%'.$city.'%')
+          ->pluck('title', 'product_id');
 
       $products = Product::whereHas('discounts', function($q) use($city_id){
           $q->whereHas('shops', function($q2) use ($city_id){

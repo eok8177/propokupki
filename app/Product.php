@@ -58,4 +58,11 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Discount', 'discount_product', 'product_id', 'discount_id');
     }
+
+    public function searchProducts($locale, $search){
+
+//        return ProductTranslate::whre
+
+
+    }
 }
