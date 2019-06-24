@@ -12,8 +12,9 @@
         <div class="container">
             <div class="select">
                 <select name="" class="custom-select" name="" id="status">
-                    <option value="1" {{$status == 1 ? 'selected="selected"' : ''}}>Активные <span class="badge">{{ $count_on }}</span></option>
-                    <option value="0" {{$status == 0 ? 'selected="selected"' : ''}}>не активные <span class="badge">{{ $count_off }}</span></option>
+                    <option value="all" {{$status == 'all' ? 'selected="selected"' : ''}}>Все <span class="badge">{{ $header_discounts }}</span></option>
+                    <option value="on" {{$status == 'on' ? 'selected="selected"' : ''}}>Активные <span class="badge">{{ $count_on }}</span></option>
+                    <option value="off" {{$status == 'off' ? 'selected="selected"' : ''}}>не активные <span class="badge">{{ $count_off }}</span></option>
                 </select>
             </div>
 
@@ -45,7 +46,7 @@
                         <div class="block">
                             <a href="{{ route('admin.discounts.edit', $discount->id) }}">
                             <span class="date">14–27 марта </span>
-                            <span class="title">{{ $discount->translate($app_locale)->first()['title'] }}</span>
+                            <span class="title">{{ $discount->translate($app_locale)->title }}</span>
                             </a>
                         </div>
                         <div class="status">
