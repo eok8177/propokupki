@@ -35,7 +35,7 @@ class ShopController extends Controller
               });
           })->orderBy('discount', 'desc')->first();
 
-          $data[] = array(
+          $data[$shop->id] = array(
               'id' => $shop->id,
               'title' => $shop->translate($app_locale)->first()['title'],
               'image' => asset('/storage/'.$shop->image),

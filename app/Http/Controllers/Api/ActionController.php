@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Discount;
 use App\Product;
-use App\ProductTranslate;
 use App\Shop;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -83,137 +83,73 @@ class ActionController extends Controller
   }
 
 
-  public function search(Request $request)
-  {
-      if ($request->post('data')){
-          $city_id = $request->get('city', 314);
-          $data = $request->get('data', 314);
-          $app_locale = env('APP_LOCALE', 'ua');
-          $products_search = ProductTranslate::orderBy('id', 'desc')
-              ->where('title', 'LIKE', '%'.$request->post('data').'%')
-              ->pluck('product_id');
+    public function search(Request $request)
+    {
+        $app_locale = env('APP_LOCALE', 'ua');
 
-          $products = Product::whereHas('products_translations', function($q) use ($data) {
-             $q->where('title', 'like', '%'. $data .'%');
-          });
-      }
+        $results = Product::query();
 
-
-      $products = ProductTranslate::orderBy('id', 'desc')
-          ->where('title', 'LIKE', '%'.$city.'%')
-          ->pluck('title', 'product_id');
-
-      $products = Product::whereHas('discounts', function($q) use($city_id){
-          $q->whereHas('shops', function($q2) use ($city_id){
-              $q2->whereHas('cities', function ($q3) use ($city_id){
-                  $q3->where('city_id', $city_id);
+        $results->when($request->get('city', 314), function ($query, $city_id) {
+          return $query->whereHas('discounts', function ($q) use ($city_id) {
+              $q->whereHas('shops', function($q2) use ($city_id){
+                  $q2->whereHas('cities', function ($q3) use ($city_id){
+                      $q3->where('city_id', $city_id);
+                  });
               });
           });
-      })->get();
+        });
 
-      $data = array();
+        $results->when($request->get('data'), function ($query, $data) {
+          return $query->whereHas('translations', function ($q) use ($data) {
+             $q->where('title', 'LIKE', '%'.$data.'%');
+          });
+        });
 
-      foreach ($products as $product){
+        $products = $results->get();
 
-          $discount_id = $product->discounts->first()->id;
+        foreach ($products as $product) {
 
-          $data_shop = Shop::whereHas('discounts', function ($q) use ($discount_id){
-              $q->where('discount_id', $discount_id);
-          })->first();
-
-          $shop = array(
-              'image' => asset('/storage/'.$data_shop->image),
-              'dates' => $product->discounts->first()->date_start.' - '.$product->discounts->first()->date_end,
-              'discount' => $product->discount
-          );
-
-          $data[] = array(
+          $data_action[] = array(
               'slug' => $product->slug,
               'title' => $product->translate($app_locale)->title,
-              'image' => asset('/storage/'.$product->image),
-              'desc' => $product->translate($app_locale)->title,
-              'tara' => $product->quantity .' '. $product->unit .' / '. $product->price/1000 .' грн за 1000 '. $product->unit,
-              'price' => $product->price - $product->price * $product->discount/100,
-              'oldprice' => $product->price,
-              'count' => (strtotime($product->discounts->first()->date_end) - time())/86400,
-              'shop' => $shop
+              'image' => asset('/storage/' . $product->image),
           );
+        }
 
+        $product_arr = $results->pluck('id');
+
+        $discounts = Discount::whereHas('products', function($q) use ($product_arr){
+            $q->whereIn('product_id', $product_arr);
+        })->get();
+
+dd($discounts);
+        $res = [
+          'data' => $request->input('data'),
+          'status' => true,
+          'count_actions' => 10,
+          'count_shops' => 4,
+          'actions' => $data_action,
+          'shops' => [
+            0 => [
+              'image' => 'images/shop-1.jpg',
+              'url' => '/actions',
+            ],
+            1 => [
+              'image' => 'images/shop-2.jpg',
+              'url' => '/actions',
+            ],
+            2 => [
+              'image' => 'images/shop-3.jpg',
+              'url' => '/actions',
+            ],
+            2 => [
+              'image' => 'images/shop-4.jpg',
+              'url' => '/actions',
+            ],
+          ],
+        ];
+
+        return response()->json($res, 200);
       }
-
-
-    $res = [
-      'data' => $request->input('data'),
-      'status' => true,
-      'count_actions' => 10,
-      'count_shops' => 4,
-      'actions' => [
-        0 => [
-          'title' => 'Молоко 2,5% ТМ Галичина 900 г',
-          'image' => 'images/action-1.jpg',
-          'url' => '/actions',
-        ],
-        1 => [
-          'title' => 'Молоко с сахаром сгущенное, 8,5% ТМ Ичня 300 г',
-          'image' => 'images/action-2.jpg',
-          'url' => '/actions',
-        ],
-        2 => [
-          'title' => 'Молоко пастеризованное 3.6% ТМ Молокия Доброй ночи 900 г',
-          'image' => 'images/action-3.jpg',
-          'url' => '/actions',
-        ],
-        3 => [
-          'title' => 'Молоко овсяное 1% ТМ Союзпищепром 1000 г',
-          'image' => 'images/action-4.jpg',
-          'url' => '/actions',
-        ],
-        4 => [
-          'title' => 'Молоко пастеризованное 3.6% ТМ Молокия Доброй ночи 900 г',
-          'image' => 'images/action-3.jpg',
-          'url' => '/actions',
-        ],
-        5 => [
-          'title' => 'Молоко овсяное 1% ТМ Союзпищепром 1000 г',
-          'image' => 'images/action-4.jpg',
-          'url' => '/actions',
-        ],
-        6 => [
-          'title' => 'Молоко пастеризованное 3.6% ТМ Молокия Доброй ночи 900 г',
-          'image' => 'images/action-3.jpg',
-          'url' => '/actions',
-        ],
-        7 => [
-          'title' => 'Молоко овсяное 1% ТМ Союзпищепром 1000 г',
-          'image' => 'images/action-4.jpg',
-          'url' => '/actions',
-        ],
-      ],
-      'shops' => [
-        0 => [
-          'title' => 'Молоко 2,5% ТМ Галичина 900 г',
-          'image' => 'images/shop-1.jpg',
-          'url' => '/actions',
-        ],
-        1 => [
-          'title' => 'Молоко с сахаром сгущенное, 8,5% ТМ Ичня 300 г',
-          'image' => 'images/shop-2.jpg',
-          'url' => '/actions',
-        ],
-        2 => [
-          'title' => 'Молоко пастеризованное 3.6% ТМ Молокия Доброй ночи 900 г',
-          'image' => 'images/shop-3.jpg',
-          'url' => '/actions',
-        ],
-        2 => [
-          'title' => 'Молоко овсяное 1% ТМ Союзпищепром 1000 г',
-          'image' => 'images/shop-4.jpg',
-          'url' => '/actions',
-        ],
-      ],
-    ];
-
-    return response()->json($res, 200);
-  }
 
 }
