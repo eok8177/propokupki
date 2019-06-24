@@ -95,7 +95,7 @@
                         {{ Form::text('product['.$prodId.'][quantity]', $product->quantity, ['class' => $errors->has('quantity') ? 'form-control is-invalid' : 'form-control', 'placeholder'=>'Количество или вес']) }}
 
                         <div class="select">
-                            {{ Form::select('['.$prodId.']product[unit]', ['sht' => 'шт', 'kg' => 'кг', 'l' => 'л', 'up' => 'уп'], $product->unit, ['class' => $errors->has('category') ? 'form-control is-invalid' : 'form-control']) }}
+                            {{ Form::select('product['.$prodId.'][unit]', ['sht' => 'шт', 'kg' => 'кг', 'l' => 'л', 'up' => 'уп'], $product->unit, ['class' => $errors->has('category') ? 'form-control is-invalid' : 'form-control']) }}
                         </div>
                     </div>
                 </div>

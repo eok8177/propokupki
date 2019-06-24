@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Product;
 
 class ProductController extends Controller
 {
-  public function index()
+  public function index(Product $product)
   {
+    dd($product);
+
     $res = [
       'slug' => 'product-slug',
       'title' => 'Крупа',
