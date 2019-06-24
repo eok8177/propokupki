@@ -5,8 +5,9 @@
         <div class="left-menu">
           <router-link :to="{ name: 'Home' }" exact class="nav-link">Главная</router-link>
           <router-link :to="{ name: 'Actions' }" class="nav-link">Акции</router-link>
-          <a href="#">О проекте</a>
-          <a href="#">Личный кабинет</a>
+          <router-link :to="{ name: 'About' }" class="nav-link">О проекте</router-link>
+          <router-link :to="{ name: 'Cabinet' }" class="nav-link">Личный кабинет</router-link>
+          <router-link :to="{ name: 'Contact' }" class="nav-link">Помощь</router-link>
         </div>
         <div class="socials">
           <p>Следи за нами</p>
