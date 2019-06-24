@@ -39,8 +39,26 @@
           </div>
         </div>
 
-        <div class="pagination-row">
-          <button class="btn btn-red">Все акции</button>
+        <div v-if="homePage" class="pagination-row">
+          <router-link :to="{ name: 'Actions' }" class="btn btn-red">Все акции</router-link>
+        </div>
+
+        <div v-if="!homePage" class="pagination-row">
+          <button @click="clickMore()" class="btn btn-red">Загрузить</button>
+
+          <paginate
+            :page-count="pages"
+            :page-range="3"
+            :margin-pages="1"
+            :click-handler="clickCallback"
+            :prev-text="'Предыдущая'"
+            :next-text="'Следующая'"
+            :container-class="'pagination'"
+            :page-class="'page-item'"
+            :prev-class="'prev'"
+            :next-class="'next'"
+            >
+          </paginate>
         </div>
       </div>
     </div>
@@ -50,7 +68,7 @@
 import axios from 'axios';
 export default {
   name: 'Products',
-  props: ['products'],
+  props: ['products', 'pages', 'count', 'homePage'],
   data() {
     return {
         actions: this.products,
@@ -59,6 +77,20 @@ export default {
   watch: {
     products: function (newVal) {
       this.actions = newVal
+    }
+  },
+  methods: {
+    clickCallback: function (pageNum) {
+      this.$parent.paginate({
+        method: 'next',
+        page: pageNum
+      });
+    },
+    clickMore: function () {
+      this.$parent.paginate({
+        method: 'more',
+        page: this.count + 12
+      });
     }
   }
 }

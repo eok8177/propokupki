@@ -6,6 +6,9 @@ Vue.use(Router)
 import Home from '@/views/Home'
 import Actions from '@/views/Actions'
 import Product from '@/views/Product'
+import About from '@/views/About'
+import Cabinet from '@/views/Cabinet'
+import Contact from '@/views/Contact'
 
 import ErrorPage from '@/views/ErrorPage'
 
@@ -14,6 +17,9 @@ const routes = [
   {path: '/', name: 'Home', component: Home},
   {path: '/actions', name: 'Actions', component: Actions},
   {path: '/product/:slug', name: 'Product', component: Product, props: true},
+  {path: '/about', name: 'About', component: About},
+  {path: '/cabinet', name: 'Cabinet', component: Cabinet},
+  {path: '/contact', name: 'Contact', component: Contact},
   {path: '/404', name: '404', component: ErrorPage},
 
 
