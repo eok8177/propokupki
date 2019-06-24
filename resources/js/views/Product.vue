@@ -45,51 +45,11 @@
           </div>
         </div>
 
-        <h1 class="block-title">Похожие акции</h1>
-
-        <div class="row">
-          <div class="col-sm-6 col-md-4 col-lg-3" v-for="action in actions">
-            <div class="item">
-              <div class="shop">
-                <div class="image">
-                  <img :src="'/'+action.shop.image" :alt="action.title">
-                </div>
-                <div class="right">
-                  <div class="discount">Скидка <span>{{action.shop.discount}}</span></div>
-                  <div class="dates">{{action.shop.dates}}</div>
-                </div>
-              </div>
-              <div class="product">
-                <router-link :to="{ name: 'Product', params: {slug: action.slug} }" exact class="logo">
-                  <hr>
-                  <div class="image">
-                    <img :src="'/'+action.image" :alt="action.title">
-                  </div>
-                  <span class="title">{{action.title}}</span>
-                  <span class="desc">{{action.desc}}</span>
-                  <span class="tara">{{action.tara}}</span>
-                  <hr>
-                  <div class="prices">
-                    <span class="new">{{action.price}}</span>
-                    <span class="old">{{action.oldprice}}</span>
-                  </div>
-                  <div v-if="action.count > 1" class="sticker">
-                    Осталось {{action.count}} дней
-                  </div>
-                  <div v-if="action.count == 1" class="sticker last">
-                    Последний день
-                  </div>
-                </router-link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pagination-row">
-          <button class="btn btn-red">Загрузить еще</button>
-        </div>
+        <h2 class="block-title">Похожие акции</h2>
       </div>
     </div>
+
+    <products :products="actions" homePage="true"></products>
 
 
   </div>
@@ -97,9 +57,11 @@
 
 <script>
 import axios from 'axios';
+import Products from '@/views/components/Products';
 export default {
   name: 'Product',
   components: {
+    Products
   },
   data() {
     return {
@@ -120,26 +82,34 @@ export default {
       actions: [],
     }
   },
-  created: function() {
-    axios.get('/api/product/slug')
-    .then(
-      (response) => {
-        this.product = response.data;
-      }
-    )
-    .catch(
-      (error) => console.log(error)
-    );
-
-    axios.get('/api/product-related/slug/?city='+localStorage.cityId)
-    .then(
-      (response) => {
-        this.actions = response.data;
-      }
-    )
-    .catch(
-      (error) => console.log(error)
-    );
+  methods: {
+    getContent (slug) {
+      axios.get('/api/product/'+slug)
+      .then(
+        (response) => {
+          this.product = response.data;
+        }
+      )
+      .catch(
+        (error) => console.log(error)
+      );
+      axios.get('/api/product-related/'+slug+'/?city='+localStorage.cityId)
+      .then(
+        (response) => {
+          this.actions = response.data;
+        }
+      )
+      .catch(
+        (error) => console.log(error)
+      );
+    }
   },
+  created: function() {
+    this.getContent(this.$route.params.slug);
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.getContent(to.params.slug);
+    next();
+  }
 }
 </script>
