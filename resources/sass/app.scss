@@ -577,9 +577,10 @@ button {
 
 .product-page {
   .block-title {
-    padding: 50px 0 34px;
+    padding: 50px 0 0;
     text-align: left;
     font-size: 18px;
+    margin-bottom: -30px;
   }
   .product-item {
     background: #fff;
