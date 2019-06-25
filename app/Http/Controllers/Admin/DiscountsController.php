@@ -162,7 +162,6 @@ class DiscountsController extends Controller
     {
 
         $discount = Discount::find($id);
-//dd($request->product);
         if ($discount) {
             $request->validate([
                 'slug' => Rule::unique('discounts')->ignore($discount->id),
@@ -170,7 +169,7 @@ class DiscountsController extends Controller
             ]);
 
             $discount->fill($request->all())->save();
-            $discount->shops()->attach($request->shop);
+            $discount->shops()->synс($request->shop);
 
             $languages = Language::where('status', '1')->get();
 
