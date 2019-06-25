@@ -23,7 +23,7 @@
         @foreach ($languages as $lang)
             {{ Form::label('title', 'Название') }}
             <p>Укажите название акции </p>
-            {{ Form::text($lang->locale.'[title]', $discount->translate($lang->locale)->title, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
+            {{ Form::text($lang->locale.'[title]', $discount->translate($lang->locale)->title, ['class' => $errors->has('title') ? 'post-title form-control is-invalid' : 'post-title form-control']) }}
             @if($errors->has('title'))
                 <span class="invalid-feedback">{{ $errors->first('title') }}</span>
             @endif
@@ -58,8 +58,8 @@
         @php ($prodId = 0)
         @forelse($discount->products as $product)
             @php ($content = $product->forAdmin())
-        <div class="item row">
-            <span class="gray-title">Товар </span><button class="btn-delete"></button>
+        <div class="item row delete-block" id="product_{{ $prodId }}">
+            <span class="gray-title">Товар </span><button class="btn-delete product-delete"></button>
             <div class="col-md-4 col-xl-6">
                 <div class="form-group">
                     <label>Фото</label>
@@ -77,7 +77,11 @@
                     @foreach ($languages as $lang)
                         {{ Form::label('title', 'Название') }}
                         <p>Укажите название товара </p>
-                        {{ Form::text('product['.$prodId.']['.$lang->locale.'][title]', optional($content['product']->translate($lang->locale))->title, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
+                        {{ Form::textarea(
+                          'product['.$prodId.']['.$lang->locale.'][title]', 
+                          optional($content['product']->translate($lang->locale))->title, 
+                          ['class' => $errors->has('title') ? 'product-title form-control is-invalid' : 'product-title  form-control', 
+                            'data-id' => $prodId]) }}
                         @if($errors->has('title'))
                             <span class="invalid-feedback">{{ $errors->first('title') }}</span>
                         @endif
@@ -86,7 +90,7 @@
                 <div class="form-group col-xl-8 pl-0">
                     {{ Form::label('title', 'Url') }}
                     <p>Укажите Url товара </p>
-                    {{ Form::text('product['.$prodId.'][slug]', $product->slug, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control']) }}
+                    {{ Form::text('product['.$prodId.'][slug]', $product->slug, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control', 'id' => 'slug_'.$prodId]) }}
                 </div>
                 <div class="form-group col-xl-8 pl-0 units-select">
                     {{ Form::label('quantity', 'Количество и вес') }}
@@ -112,7 +116,8 @@
                         @if($errors->has('price'))
                             <span class="invalid-feedback">{{ $errors->first('discount') }}</span>
                         @endif
-                        <span class="new-price">Новая цена: <span class="result"></span></span>
+                        <span class="new-price">Новая цена: <span class="result">{{$product->new_price}} грн</span></span>
+                        {{-- {{ Form::text('product['.$prodId.'][new_price]', $product->new_price, ['class' => $errors->has('new_price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Новая цена грн']) }} --}}
                     </div>
                 </div>
             </div>
@@ -151,25 +156,25 @@
       language: "ru"
     });
     //calculate discount
-    $('body').on('change', '.price, .discount', function(){
-      var fields = $(this).parent();
-      var price = fields.find('.price').val();
-      var discount = fields.find('.discount').val();
-      fields.find('.result').text(price - price*discount/100);
-    });
+    // $('body').on('change', '.price, .discount', function(){
+    //   var fields = $(this).parent();
+    //   var price = fields.find('.price').val();
+    //   var discount = fields.find('.discount').val();
+    //   fields.find('.result').text(price - price*discount/100);
+    // });
 
     $('body').on('change', '.input-img', function(e) {
       handleImage(e);
     });
 
-    $('.discount').on('chenge', function () {
+    $('body').on('change', '.discount', function () {
         var newPrice,
             oldPrice,
             discount;
         oldPrice = parseInt($(this).prev('.price').val());
-        discount = parseInt($(this).prev('.discount').val());
+        discount = parseInt($(this).val());
         newPrice = oldPrice - (oldPrice*discount/100);
-        $('.new-price span').text(newPrice);
+        $('.new-price span').text(newPrice + ' грн');
     });
 
   });
@@ -186,8 +191,8 @@
   //add product
   function addProduct() {
       $('.not-product').remove();
-      var htmlProduct = '<div class="item row">';
-      htmlProduct += '<span class="gray-title">Товар </span><button class="btn-delete"></button>';
+      var htmlProduct = '<div class="item row delete-block" id="prod_'+productId+'">';
+      htmlProduct += '<span class="gray-title">Товар </span><button class="btn-delete product-delete"></button>';
       htmlProduct += '<div class="col-md-4 col-xl-6">';
       htmlProduct += '<div class="form-group">';
       htmlProduct += '<label>Фото</label>';
@@ -203,18 +208,18 @@
       htmlProduct += '<div class="col-md-8 col-xl-6">';
       htmlProduct += '<div class="form-group col-xl-8 pl-0">';
       @foreach ($languages as $lang)
-          htmlProduct += '<label for="title">Название</lebel>';
+          htmlProduct += '<label for="title">Название</label>';
       htmlProduct += '<p>Укажите название товара </p>';
-      htmlProduct += '<input type="text" name="product['+productId+'][{{ $lang->locale }}][title]" class="form-control">';
+      htmlProduct += '<textarea name="product['+productId+'][{{ $lang->locale }}][title]" class="form-control product-title" data-id="'+productId+'"></textarea>';
       @endforeach
           htmlProduct += '</div>';
       htmlProduct += '<div class="form-group col-xl-8 pl-0">';
-      htmlProduct += '<label for="title">Url</lebel>';
+      htmlProduct += '<label for="title">Url</label>';
       htmlProduct += '<p>Укажите Url товара </p>';
-      htmlProduct += '<input type="text" name="product['+productId+'][slug]" class="form-control">';
+      htmlProduct += '<input type="text" name="product['+productId+'][slug]" class="form-control" id="slug_'+productId+'">';
       htmlProduct += '</div>';
       htmlProduct += '<div class="form-group col-xl-8 pl-0 units-select">';
-      htmlProduct += '<label for="quantity">Количество и вес</lebel>';
+      htmlProduct += '<label for="quantity">Количество и вес</label>';
       htmlProduct += '<p>Укажите количество или вес продукта (шт, л, кг)</p>';
       htmlProduct += '<div class="fields">';
       htmlProduct += '<input type="text" name="product['+productId+'][quantity]"  class="form-control" placeholder="Количество или вес">';
@@ -234,7 +239,7 @@
       htmlProduct += '<div class="fields">';
       htmlProduct += '<input type="text" name="product['+productId+'][price]"  class="form-control price" placeholder="Старая цена грн">';
       htmlProduct += '<input type="text" name="product['+productId+'][discount]"  class="form-control discount" placeholder="Размер скидки %">';
-      htmlProduct += '<span class="new-price">Новая цена: <span class="result"></span></span>';
+      htmlProduct += '<span class="new-price">Новая цена: <span class="result">грн</span></span>';
       htmlProduct += '</div>';
       htmlProduct += '</div>';
       htmlProduct += '</div>';
@@ -244,5 +249,49 @@
       console.log(productId);
       productId++;
   }
+
+  function seoUrlFill(string, lang='ua', keyword){
+      var delimiter = '-',
+          keyword = keyword,
+          abc={'ß':'ss','à':'a','á':'a','â':'a','ã':'a','ä':'a','å':'a','æ':'ae','ç':'c','è':'e','é':'e','ê':'e','ë':'e','ì':'i','í':'i','î':'i','ï':'i','ð':'d','ñ':'n','ò':'o','ó':'o','ô':'o','õ':'o','ö':'o','ő':'o','ø':'o','ù':'u','ú':'u','û':'u','ü':'u','ű':'u','ý':'y','þ':'th','ÿ':'y','α':'a','β':'b','γ':'g','δ':'d','ε':'e','ζ':'z','η':'h','θ':'8','ι':'i','κ':'k','λ':'l','μ':'m','ν':'n','ξ':'3','ο':'o','π':'p','ρ':'r','σ':'s','τ':'t','υ':'y','φ':'f','χ':'x','ψ':'ps','ω':'w','ά':'a','έ':'e','ί':'i','ό':'o','ύ':'y','ή':'h','ώ':'w','ς':'s','ϊ':'i','ΰ':'y','ϋ':'y','ΐ':'i','ş':'s','ı':'i','ç':'c','ü':'u','ö':'o','ğ':'g','а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z','и':'i','й':'j','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'sh','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya','є':'ye','і':'i','ї':'yi','ґ':'g','č':'c','ď':'d','ě':'e','ň':'n','ř':'r','š':'s','ť':'t','ů':'u','ž':'z','ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ź':'z','ż':'z','ā':'a','č':'c','ē':'e','ģ':'g','ī':'i','ķ':'k','ļ':'l','ņ':'n','š':'s','ū':'u','ž':'z','ө':'o','ң':'n','ү':'u','ә':'a','ғ':'g','қ':'q','ұ':'u','ა':'a','ბ':'b','გ':'g','დ':'d','ე':'e','ვ':'v','ზ':'z','თ':'th','ი':'i','კ':'k','ლ':'l','მ':'m','ნ':'n','ო':'o','პ':'p','ჟ':'zh','რ':'r','ს':'s','ტ':'t','უ':'u','ფ':'ph','ქ':'q','ღ':'gh','ყ':'qh','შ':'sh','ჩ':'ch','ც':'ts','ძ':'dz','წ':'ts','ჭ':'tch','ხ':'kh','ჯ':'j','ჰ':'h'};
+      console.clear();
+      console.log(keyword);
+      switch(lang){
+          case'bg':
+              abc['щ']='sht';abc['ъ']='a';
+              break;
+          case'ua'
+          :abc['и']='y';
+              break;
+      }
+      string = string.toLowerCase();
+      for(var k in abc){
+          string = string.replace(RegExp(k,'g'),abc[k]);
+      }
+      var alnum = (typeof(XRegExp)==='undefined') ? RegExp('[^a-z0-9]+','ig'): XRegExp('[^\\p{L}\\p{N}]+','ig');
+      string = string.replace(alnum,delimiter);
+      string = string.replace(RegExp('['+delimiter+']{2,}','g'),delimiter);
+      string = string.replace(RegExp('(^'+delimiter+'|'+delimiter+'$)','g'),'');
+      // if(keyword.length && keyword.val() == ''){
+      keyword.val(string);
+      // }
+  }
+
+  $(function() {
+      $('body').on('change', '.post-title', function(e) {
+          seoUrlFill($(this).val(), 'ua', $('input[name="slug"]'));
+      });
+
+      $('body').on('change', '.product-title', function(e) {
+          var id = $(this).data('id');
+          seoUrlFill($(this).val(), 'ua', $('#slug_'+id));
+      });
+
+      // $('.product-delete').on('click', function (e) {
+      //     e.preventDefault();
+      //
+      // })
+  });
+
 </script>
 @endpush

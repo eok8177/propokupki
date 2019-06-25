@@ -11,7 +11,7 @@
         <div class="product-item">
           <div class="shop">
             <div class="image">
-              <img :src="'/'+product.shop.image" :alt="product.title">
+              <img :src="product.shop.image" :alt="product.title">
             </div>
             <div class="right">
               <div class="discount">Скидка <span>{{product.shop.discount}}</span></div>
@@ -22,7 +22,7 @@
             <hr>
             <div class="row">
               <div class="col-sm-4">
-                <img :src="'/'+product.image" :alt="product.title">
+                <img :src="product.image" :alt="product.title">
               </div>
               <div class="col-sm-8">
                 <span class="title">{{product.title}}</span>

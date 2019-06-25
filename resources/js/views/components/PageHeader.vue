@@ -22,7 +22,7 @@
         <span class="count">{{answer.count_actions}}</span> Акций
         <ul class="actions">
           <li v-for="action in answer.actions">
-            <router-link :to="'/action/'+action.url">
+            <router-link :to="'/product/'+action.slug">
               <span class="image"><img :src="action.image" :alt="action.title"></span>
               <span class="title">{{action.title}}</span>
             </router-link>
@@ -31,7 +31,7 @@
         <span class="count">{{answer.count_shops}}</span> Магазинов
         <ul class="shops">
           <li v-for="shop in answer.shops">
-            <router-link :to="'/shop/'+shop.url">
+            <router-link :to="'/actions'+shop.slug">
               <span class="image"><img :src="shop.image" :alt="shop.title"></span>
             </router-link>
           </li>
@@ -108,7 +108,7 @@
       getSearch: function () {
         if (this.search.length < 3) return;
 
-        axios.post('/api/actions?city='+localStorage.cityId, {data: this.search})
+        axios.post('/api/actions-search?city='+localStorage.cityId, {data: this.search})
           .then(
             (response) => {
               this.answer = response.data;

@@ -54,6 +54,7 @@ class ActionController extends Controller
           unset($result[0]);
           $description = implode(' ', $result);
 
+          $unit = '';
           if ($product->unit == 'kg'){
               $unit = 'кг';
           } elseif($product->unit == 'l'){
@@ -64,13 +65,18 @@ class ActionController extends Controller
               $unit = 'уп';
           }
 
+          $taraPrice = '';
+          if ($product->quantity > 0) {
+            $taraPrice = round($product->new_price/$product->quantity, 2);
+          }
+
           $data[] = array(
               'slug' => $product->slug,
               'title' => $title,
               'image' => asset('/storage/'.$product->image),
               'desc' => $description,
-              'tara' => $product->quantity .' '. $unit .' / '. round($product->price/$product->quantity, 2) .' грн за 1 '. $unit,
-              'price' => round($product->price - $product->price * $product->discount/100, 2),
+              'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
+              'price' => $product->new_price,
               'oldprice' => $product->price,
               'count' => $count,
               'shop' => $shop
@@ -107,9 +113,11 @@ class ActionController extends Controller
 
         $products = $results->get();
 
+        $data_product = array();
+
         foreach ($products as $product) {
 
-          $data_action[] = array(
+            $data_product[] = array(
               'slug' => $product->slug,
               'title' => $product->translate($app_locale)->title,
               'image' => asset('/storage/' . $product->image),
@@ -122,29 +130,39 @@ class ActionController extends Controller
             $q->whereIn('product_id', $product_arr);
         })->get();
 
-dd($discounts);
+        $shops =
+
+        $data_discount = array();
+        foreach ($discounts as $discount) {
+            $data_discount[] = array(
+                'image' => $discount->shops(), // ???
+                'slug' => asset('/storage/' . $product->image),
+            );
+        }
+
+
         $res = [
           'data' => $request->input('data'),
           'status' => true,
-          'count_actions' => 10,
+          'count_actions' => count($discounts),
           'count_shops' => 4,
-          'actions' => $data_action,
+          'actions' => $data_product,
           'shops' => [
             0 => [
-              'image' => 'images/shop-1.jpg',
-              'url' => '/actions',
+              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
+              'slug' => '?city=1500648&shops=0',
             ],
             1 => [
-              'image' => 'images/shop-2.jpg',
-              'url' => '/actions',
+              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
+              'slug' => '?city=1500648&shops=1',
             ],
             2 => [
-              'image' => 'images/shop-3.jpg',
-              'url' => '/actions',
+              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
+              'slug' => '?city=1500648&shops=2',
             ],
-            2 => [
-              'image' => 'images/shop-4.jpg',
-              'url' => '/actions',
+            3 => [
+              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
+              'slug' => '?city=1500648&shops=3',
             ],
           ],
         ];
