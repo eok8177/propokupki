@@ -125,7 +125,7 @@ export default {
     },
     searchShops: function () {
       if (this.search_shops.length < 3) return;
-      axios.post('/api/shops', {
+      axios.post('/api/shops-search', {
           search: this.search_shops,
           city: localStorage.cityId
         })

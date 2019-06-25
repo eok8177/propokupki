@@ -65,4 +65,8 @@ class Product extends Model
 
 
     }
+
+    public function getNewPriceAttribute() {
+        return round($this->attributes['price'] - $this->attributes['price'] * $this->attributes['discount'] / 100, 2);
+    }
 }
