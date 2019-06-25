@@ -40,7 +40,9 @@
                     <div class="action-item">
                         <button data-href="{{ route('admin.discounts.destroy', $discount->id) }}" class="btn-delete"></button>
                         <a href="{{ route('admin.discounts.edit', $discount->id) }}">
-                            <div class="image"><img src="{{ $discount->image ? asset('/storage/'.$discount->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
+                            @foreach($discount->shops as $shop)
+                            <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
+                            @endforeach
                         </a>
 
                         <div class="block">
