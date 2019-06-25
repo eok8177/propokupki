@@ -54,6 +54,7 @@ class ActionController extends Controller
           unset($result[0]);
           $description = implode(' ', $result);
 
+          $unit = '';
           if ($product->unit == 'kg'){
               $unit = 'кг';
           } elseif($product->unit == 'l'){
@@ -64,12 +65,17 @@ class ActionController extends Controller
               $unit = 'уп';
           }
 
+          $taraPrice = '';
+          if ($product->quantity > 0) {
+            $taraPrice = round($product->new_price/$product->quantity, 2);
+          }
+
           $data[] = array(
               'slug' => $product->slug,
               'title' => $title,
               'image' => asset('/storage/'.$product->image),
               'desc' => $description,
-              'tara' => $product->quantity .' '. $unit .' / '. round($product->new_price/$product->quantity, 2) .' грн за 1 '. $unit,
+              'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
               'price' => $product->new_price,
               'oldprice' => $product->price,
               'count' => $count,
@@ -129,8 +135,8 @@ class ActionController extends Controller
         $data_discount = array();
         foreach ($discounts as $discount) {
             $data_discount[] = array(
-                'image' => $discount->shops()->image,
-                'url' => asset('/storage/' . $product->image),
+                'image' => $discount->shops(), // ???
+                'slug' => asset('/storage/' . $product->image),
             );
         }
 
@@ -143,20 +149,20 @@ class ActionController extends Controller
           'actions' => $data_product,
           'shops' => [
             0 => [
-              'image' => 'images/shop-1.jpg',
-              'url' => '/actions',
+              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
+              'slug' => '?city=1500648&shops=0',
             ],
             1 => [
-              'image' => 'images/shop-2.jpg',
-              'url' => '/actions',
+              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
+              'slug' => '?city=1500648&shops=1',
             ],
             2 => [
-              'image' => 'images/shop-3.jpg',
-              'url' => '/actions',
+              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
+              'slug' => '?city=1500648&shops=2',
             ],
-            2 => [
-              'image' => 'images/shop-4.jpg',
-              'url' => '/actions',
+            3 => [
+              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
+              'slug' => '?city=1500648&shops=3',
             ],
           ],
         ];

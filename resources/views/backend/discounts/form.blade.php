@@ -162,7 +162,7 @@
       handleImage(e);
     });
 
-    $('.discount').on('chenge', function () {
+    $('.discount').on('change', function () {
         var newPrice,
             oldPrice,
             discount;
