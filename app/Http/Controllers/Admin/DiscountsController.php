@@ -162,7 +162,7 @@ class DiscountsController extends Controller
     {
 
         $discount = Discount::find($id);
-
+//dd($request->product);
         if ($discount) {
             $request->validate([
                 'slug' => Rule::unique('discounts')->ignore($discount->id),

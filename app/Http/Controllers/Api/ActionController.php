@@ -69,8 +69,8 @@ class ActionController extends Controller
               'title' => $title,
               'image' => asset('/storage/'.$product->image),
               'desc' => $description,
-              'tara' => $product->quantity .' '. $unit .' / '. round($product->price/$product->quantity, 2) .' грн за 1 '. $unit,
-              'price' => round($product->price - $product->price * $product->discount/100, 2),
+              'tara' => $product->quantity .' '. $unit .' / '. round($product->new_price/$product->quantity, 2) .' грн за 1 '. $unit,
+              'price' => $product->new_price,
               'oldprice' => $product->price,
               'count' => $count,
               'shop' => $shop
@@ -107,9 +107,11 @@ class ActionController extends Controller
 
         $products = $results->get();
 
+        $data_product = array();
+
         foreach ($products as $product) {
 
-          $data_action[] = array(
+            $data_product[] = array(
               'slug' => $product->slug,
               'title' => $product->translate($app_locale)->title,
               'image' => asset('/storage/' . $product->image),
@@ -122,13 +124,23 @@ class ActionController extends Controller
             $q->whereIn('product_id', $product_arr);
         })->get();
 
-dd($discounts);
+        $shops =
+
+        $data_discount = array();
+        foreach ($discounts as $discount) {
+            $data_discount[] = array(
+                'image' => $discount->shops()->image,
+                'url' => asset('/storage/' . $product->image),
+            );
+        }
+
+
         $res = [
           'data' => $request->input('data'),
           'status' => true,
-          'count_actions' => 10,
+          'count_actions' => count($discounts),
           'count_shops' => 4,
-          'actions' => $data_action,
+          'actions' => $data_product,
           'shops' => [
             0 => [
               'image' => 'images/shop-1.jpg',
