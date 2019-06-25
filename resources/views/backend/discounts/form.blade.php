@@ -77,7 +77,11 @@
                     @foreach ($languages as $lang)
                         {{ Form::label('title', 'Название') }}
                         <p>Укажите название товара </p>
-                        {{ Form::text('product['.$prodId.']['.$lang->locale.'][title]', optional($content['product']->translate($lang->locale))->title, ['class' => $errors->has('title') ? 'product-title form-control is-invalid' : 'product-title  form-control', 'data-id' => $prodId, 'size' => 40]) }}
+                        {{ Form::textarea(
+                          'product['.$prodId.']['.$lang->locale.'][title]', 
+                          optional($content['product']->translate($lang->locale))->title, 
+                          ['class' => $errors->has('title') ? 'product-title form-control is-invalid' : 'product-title  form-control', 
+                            'data-id' => $prodId]) }}
                         @if($errors->has('title'))
                             <span class="invalid-feedback">{{ $errors->first('title') }}</span>
                         @endif
@@ -112,7 +116,8 @@
                         @if($errors->has('price'))
                             <span class="invalid-feedback">{{ $errors->first('discount') }}</span>
                         @endif
-                        {{ Form::text('product['.$prodId.'][new_price]', $product->new_price, ['class' => $errors->has('new_price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Новая цена грн']) }}
+                        <span class="new-price">Новая цена: <span class="result">{{$product->new_price}} грн</span></span>
+                        {{-- {{ Form::text('product['.$prodId.'][new_price]', $product->new_price, ['class' => $errors->has('new_price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Новая цена грн']) }} --}}
                     </div>
                 </div>
             </div>
@@ -162,14 +167,14 @@
       handleImage(e);
     });
 
-    $('.discount').on('change', function () {
+    $('body').on('change', '.discount', function () {
         var newPrice,
             oldPrice,
             discount;
         oldPrice = parseInt($(this).prev('.price').val());
-        discount = parseInt($(this).prev('.discount').val());
+        discount = parseInt($(this).val());
         newPrice = oldPrice - (oldPrice*discount/100);
-        $('.new-price span').text(newPrice);
+        $('.new-price span').text(newPrice + ' грн');
     });
 
   });
@@ -203,18 +208,18 @@
       htmlProduct += '<div class="col-md-8 col-xl-6">';
       htmlProduct += '<div class="form-group col-xl-8 pl-0">';
       @foreach ($languages as $lang)
-          htmlProduct += '<label for="title">Название</lebel>';
+          htmlProduct += '<label for="title">Название</label>';
       htmlProduct += '<p>Укажите название товара </p>';
-      htmlProduct += '<input type="text" name="product['+productId+'][{{ $lang->locale }}][title]" class="form-control" data-id="'+productId+'">';
+      htmlProduct += '<textarea name="product['+productId+'][{{ $lang->locale }}][title]" class="form-control product-title" data-id="'+productId+'"></textarea>';
       @endforeach
           htmlProduct += '</div>';
       htmlProduct += '<div class="form-group col-xl-8 pl-0">';
-      htmlProduct += '<label for="title">Url</lebel>';
+      htmlProduct += '<label for="title">Url</label>';
       htmlProduct += '<p>Укажите Url товара </p>';
       htmlProduct += '<input type="text" name="product['+productId+'][slug]" class="form-control" id="slug_'+productId+'">';
       htmlProduct += '</div>';
       htmlProduct += '<div class="form-group col-xl-8 pl-0 units-select">';
-      htmlProduct += '<label for="quantity">Количество и вес</lebel>';
+      htmlProduct += '<label for="quantity">Количество и вес</label>';
       htmlProduct += '<p>Укажите количество или вес продукта (шт, л, кг)</p>';
       htmlProduct += '<div class="fields">';
       htmlProduct += '<input type="text" name="product['+productId+'][quantity]"  class="form-control" placeholder="Количество или вес">';
@@ -234,7 +239,7 @@
       htmlProduct += '<div class="fields">';
       htmlProduct += '<input type="text" name="product['+productId+'][price]"  class="form-control price" placeholder="Старая цена грн">';
       htmlProduct += '<input type="text" name="product['+productId+'][discount]"  class="form-control discount" placeholder="Размер скидки %">';
-      htmlProduct += '<input type="text" name="product['+productId+'][new_price]"  class="form-control price" placeholder="Новая цена грн">';
+      htmlProduct += '<span class="new-price">Новая цена: <span class="result">грн</span></span>';
       htmlProduct += '</div>';
       htmlProduct += '</div>';
       htmlProduct += '</div>';
@@ -273,11 +278,11 @@
   }
 
   $(function() {
-      $('.post-title').on('change', function(e) {
+      $('body').on('change', '.post-title', function(e) {
           seoUrlFill($(this).val(), 'ua', $('input[name="slug"]'));
       });
 
-      $('.product-title').on('change', function(e) {
+      $('body').on('change', '.product-title', function(e) {
           var id = $(this).data('id');
           seoUrlFill($(this).val(), 'ua', $('#slug_'+id));
       });
