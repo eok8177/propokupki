@@ -110,6 +110,11 @@ export default {
   beforeRouteUpdate (to, from, next) {
     this.getContent(to.params.slug);
     next();
-  }
+  },
+  mounted() {
+    this.$root.$on('cityChanged', () => {
+      this.getContent(this.$route.params.slug);
+    })
+  },
 }
 </script>

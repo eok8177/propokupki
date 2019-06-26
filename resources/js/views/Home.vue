@@ -55,24 +55,34 @@ export default {
     }
   },
   created: function() {
-    axios.get('/api/shops/?city='+localStorage.cityId)
-      .then(
-        (response) => {
-          this.shops = response.data;
-        }
-      )
-      .catch(
-        (error) => console.log(error)
-      );
-      axios.get('/api/actions/?city='+localStorage.cityId)
+    this.getAll();
+  },
+  mounted() {
+    this.$root.$on('cityChanged', () => {
+      this.getAll();
+    })
+  },
+  methods: {
+    getAll: function() {
+      axios.get('/api/shops/?city='+localStorage.cityId)
         .then(
           (response) => {
-            this.actions = response.data.slice(0, 5);
+            this.shops = response.data;
           }
         )
         .catch(
           (error) => console.log(error)
         );
-  },
+        axios.get('/api/actions/?city='+localStorage.cityId)
+          .then(
+            (response) => {
+              this.actions = response.data.slice(0, 5);
+            }
+          )
+          .catch(
+            (error) => console.log(error)
+          );
+    }
+  }
 }
 </script>

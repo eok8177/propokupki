@@ -47,5 +47,10 @@ export default {
   created: function() {
     this.getActions(this.filter);
   },
+  mounted() {
+    this.$root.$on('cityChanged', () => {
+      this.getActions(this.filter);
+    })
+  },
 }
 </script>

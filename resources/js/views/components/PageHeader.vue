@@ -156,6 +156,7 @@
         this.showModalCity = false;
         this.searchCity = '';
         this.cities = [];
+        this.$root.$emit('cityChanged');
       }
     },
 
