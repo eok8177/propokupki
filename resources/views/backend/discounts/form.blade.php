@@ -5,8 +5,9 @@
         <p>Выберите магазин в котором будет акция</p>
 
         <div class="search">
-            <input type="text" id="shop_search" data-href="{{route('admin.shops.ajaxShops')}}" placeholder="Введите название">
+            <input type="text" id="shop_search" data-href="{{route('admin.shops.ajaxShops')}}" autocomplete="off" placeholder="Введите название">
             <button class="btn-search"></button>
+            <div class="search-result"></div>
         </div>
     </div>
 
@@ -14,6 +15,7 @@
         @foreach($discount->shops as $shop)
             <div class="item">
                 <button class="btn-delete" onclick="$(this).parent().remove()"></button>
+                {{ Form::hidden('shop[]', $shop->id, []) }}
                 <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
             </div>
         @endforeach

@@ -13,19 +13,45 @@ class ActionController extends Controller
 {
   public function index(Request $request)
   {
-
-      $city_id = $request->get('city', 314);
+//      dd($request->all());
+//      $city_id = $request->get('city', 314);
       $app_locale = env('APP_LOCALE', 'ua');
 
-      $products = Product::whereHas('discounts', function($q) use($city_id){
-          $q->whereHas('shops', function($q2) use ($city_id){
-              $q2->whereHas('cities', function ($q3) use ($city_id){
-                  $q3->where('city_id', $city_id);
+      $results = Product::query();
+
+      $results->when($request->get('shops'), function ($query, $shop_id){
+         return $query->whereHas('discounts', function ($q) use ($shop_id) {
+             $q->whereHas('shops', function ($q2) use ($shop_id){
+                 $q2->whereIn('shop_id', $shop_id);
+             });
+         });
+      });
+
+      $results->when($request->get('city', 314), function ($query, $city_id) {
+          return $query->whereHas('discounts', function ($q) use ($city_id) {
+              $q->whereHas('shops', function($q2) use ($city_id){
+                  $q2->whereHas('cities', function ($q3) use ($city_id){
+                      $q3->where('city_id', $city_id);
+                  });
               });
           });
-      })->get();
+      });
+
+      $results->when($request->get('data'), function ($query, $data) {
+          return $query->whereHas('translations', function ($q) use ($data) {
+              $q->where('title', 'LIKE', '%'.$data.'%');
+          });
+      });
+
+      $results->when($request->get('short'), function ($query, $order) {
+          return $query->orderBy('price', $order);
+      }, function ($query) {
+        return $query->orderBy('updated_at', 'asc');
+      });
 
       $data = array();
+
+      $products = $results->get();
 
       foreach ($products as $product){
 
@@ -130,13 +156,21 @@ class ActionController extends Controller
             $q->whereIn('product_id', $product_arr);
         })->get();
 
-        $shops =
+        $discount_arr = $discounts->pluck('id');
 
-        $data_discount = array();
-        foreach ($discounts as $discount) {
-            $data_discount[] = array(
-                'image' => $discount->shops(), // ???
-                'slug' => asset('/storage/' . $product->image),
+        $city_id = $request->get('city');
+
+        $shops = Shop::whereHas('discounts', function ($q) use ($discount_arr){
+            $q->whereIn('discount_id', $discount_arr);
+        })->whereHas('cities', function($q) use ($city_id){
+            $q->where('city_id', $city_id);
+        })->get();
+
+        $data_shops = array();
+        foreach ($shops as $shop) {
+            $data_shops[] = array(
+                'image' => asset('/storage/' . $shop->image), // ???
+                'slug' => '?shop='.$shop->id,
             );
         }
 
@@ -145,26 +179,9 @@ class ActionController extends Controller
           'data' => $request->input('data'),
           'status' => true,
           'count_actions' => count($discounts),
-          'count_shops' => 4,
+          'count_shops' => count($shops),
           'actions' => $data_product,
-          'shops' => [
-            0 => [
-              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
-              'slug' => '?city=1500648&shops=0',
-            ],
-            1 => [
-              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
-              'slug' => '?city=1500648&shops=1',
-            ],
-            2 => [
-              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
-              'slug' => '?city=1500648&shops=2',
-            ],
-            3 => [
-              'image' => 'http://propokupki.ari.in.ua/storage/uploads/2/mk31TX9OI3d0gx5SMDsWWgMI15rEz1UWpCt6Iz5C.png',
-              'slug' => '?city=1500648&shops=3',
-            ],
-          ],
+          'shops' => $data_shops,
         ];
 
         return response()->json($res, 200);
