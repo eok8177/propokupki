@@ -159,12 +159,13 @@ class DiscountsController extends Controller
      */
     public function update(Request $request, $id)
     {
+//        dd($request->all());
         $discount = Discount::find($id);
         if ($discount) {
             $request->validate([
                 'slug' => Rule::unique('discounts')->ignore($discount->id),
                 'slug' => 'required|max:255',
-                'product.*.slug' => 'required|unique:products,slug|max:255',
+//                'product.*.slug' => 'required|unique:products,slug|max:255',
             ]);
 
             $discount->fill($request->all())->save();
@@ -194,27 +195,63 @@ class DiscountsController extends Controller
 
                 foreach ($request->product as $product){
 
+                    $product_save = Product::find($product['product_id']);
+
+//                    dd($product_save, $product);
+
+                    if ($product_save){
 
 
-                    $prod = Product::create($product);
+//                        $product_save->slug = $product['slug'];
+//                        $product_save->old_price = $product['old_price'];
+//                        $product_save->price = $product['price'];
+//                        $product_save->discount = $product['discount'];
+//                        $product_save->quantity = $product['quantity'];
+//                        $product_save->unit = $product['unit'];
+//                        $product_save->save();
 
-                    if (!empty($product['image'])) {
-                        $img = $product['image'];
-                        $image = $img->store('uploads/'.$prod->id, 'public');
-                        $prod->image = $image;
-                        $prod->status = 1;
-                        $prod->save();
-                    }
+                        if (!empty($product['image'])) {
+                            $img = $product['image'];
+                            $product['image'] = $img->store('uploads/' . $product_save->id, 'public');
+                        }
 
-                    $prod->discounts()->attach($id);
+                        //dd($product);
 
-                    foreach ($languages as $lang) {
-                        $locale = $lang->locale;
-                        $prod_translate = new ProductTranslate();
-                        $prod_translate->product_id = $prod->id;
-                        $prod_translate->locale = $locale;
-                        $prod_translate->title = $product[$locale]['title'];
-                        $prod_translate->save();
+                        $product_save->update($product);
+
+                        $translate = [];
+
+                        foreach ($languages as $lang) {
+                            $locale = $lang->locale;
+                            $prod_translate = ProductTranslate::where('product_id', $product_save->id);
+                            $translate['locale']  = $locale;
+                            $translate['title'] = $product[$locale]['title'];
+                            $prod_translate->update($translate);
+                        }
+
+                    } else {
+
+                        $prod = Product::create($product);
+
+                        if (!empty($product['image'])) {
+                            $img = $product['image'];
+                            $image = $img->store('uploads/' . $prod->id, 'public');
+                            $prod->image = $image;
+                            dd($prod);
+                            // $prod->status = 1;
+                            $prod->save();
+                        }
+
+                        $prod->discounts()->attach($id);
+
+                        foreach ($languages as $lang) {
+                            $locale = $lang->locale;
+                            $prod_translate = new ProductTranslate();
+                            $prod_translate->product_id = $prod->id;
+                            $prod_translate->locale = $locale;
+                            $prod_translate->title = $product[$locale]['title'];
+                            $prod_translate->save();
+                        }
                     }
 
                 }

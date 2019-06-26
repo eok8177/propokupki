@@ -62,7 +62,6 @@
             @php ($content = $product->forAdmin())
         <div class="item row delete-block" id="product_{{ $prodId }}">
             <span class="gray-title">Товар </span><button class="btn-delete product-delete"></button>
-            {{ Form::hidden('product['.$prodId.'][slug]', $product->slug, ['class' => $errors->has('title') ? 'form-control is-invalid' : 'form-control', 'id' => 'slug_'.$prodId]) }}
             <div class="col-md-4 col-xl-6">
                 <div class="form-group">
                     <label>Фото</label>
@@ -90,6 +89,7 @@
                         @endif
                     @endforeach
                 </div>
+                {{ Form::hidden('product['.$prodId.'][product_id]', $product->id, []) }}
                 <div class="form-group col-xl-8 pl-0">
                     {{ Form::label('title', 'Url') }}
                     <p>Укажите Url товара </p>
