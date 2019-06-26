@@ -13,19 +13,20 @@ class ActionController extends Controller
 {
   public function index(Request $request)
   {
-//      dd($request->all());
-//      $city_id = $request->get('city', 314);
+
       $app_locale = env('APP_LOCALE', 'ua');
 
       $results = Product::query();
 
-      $results->when($request->get('shops'), function ($query, $shop_id){
-         return $query->whereHas('discounts', function ($q) use ($shop_id) {
-             $q->whereHas('shops', function ($q2) use ($shop_id){
-                 $q2->whereIn('shop_id', $shop_id);
-             });
-         });
-      });
+
+      if (!empty($request->get('shops', ''))){
+          $shops_id = explode(',', $request->get('shops'));
+          $results->whereHas('discounts', function ($q) use ($shops_id) {
+              $q->whereHas('shops', function ($q2) use ($shops_id){
+                  $q2->whereIn('shop_id', $shops_id);
+              });
+          });
+      }
 
       $results->when($request->get('city', 314), function ($query, $city_id) {
           return $query->whereHas('discounts', function ($q) use ($city_id) {
@@ -37,17 +38,58 @@ class ActionController extends Controller
           });
       });
 
+      $dates = $request->get('dates', '');
+      $date_now = Date::now();
+
+      switch ($dates){
+          case 'all':
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                      $q->where('date_end', '>=', $date_now);
+                  });
+              break;
+          case 'now':
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_start', '<=', $date_now)->where('date_end', '>=', $date_now);
+              });
+              break;
+          case 'feature':
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_start', '>', $date_now);
+              });
+              break;
+          case 'post':
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_end', '<', $date_now);
+              });
+              break;
+          default :
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_end', '>', $date_now);
+              });
+      }
+
+
       $results->when($request->get('data'), function ($query, $data) {
           return $query->whereHas('translations', function ($q) use ($data) {
               $q->where('title', 'LIKE', '%'.$data.'%');
           });
       });
 
-      $results->when($request->get('short'), function ($query, $order) {
-          return $query->orderBy('price', $order);
-      }, function ($query) {
-        return $query->orderBy('updated_at', 'asc');
-      });
+      $sort = $request->get('sort', 'new');
+
+      switch ($sort){
+          case 'asc' :
+              $results->orderBy('price', 'asc');
+              break;
+          case 'desc' :
+              $results->orderBy('price', 'desc');
+              break;
+          default:
+              $results->orderBy('updated_at', 'asc');
+
+      }
+
+//      dd($results->pluck('price'));
 
       $data = array();
 
@@ -93,7 +135,7 @@ class ActionController extends Controller
 
           $taraPrice = '';
           if ($product->quantity > 0) {
-            $taraPrice = round($product->new_price/$product->quantity, 2);
+            $taraPrice = round($product->price/$product->quantity, 2);
           }
 
           $data[] = array(
@@ -102,8 +144,8 @@ class ActionController extends Controller
               'image' => asset('/storage/'.$product->image),
               'desc' => $description,
               'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
-              'price' => $product->new_price,
-              'oldprice' => $product->price,
+              'price' => $product->price,
+              'oldprice' => $product->old_price,
               'count' => $count,
               'shop' => $shop
           );

@@ -8,7 +8,7 @@ class Product extends Model
 {
     protected $table = 'products';
 
-    protected $fillable = ['slug', 'price', 'discount', 'quantity', 'unit'];
+    protected $fillable = ['slug', 'old_price', 'price', 'discount', 'quantity', 'unit'];
 
     public function langs($status = 1)
     {
@@ -66,7 +66,7 @@ class Product extends Model
 
     }
 
-    public function getNewPriceAttribute() {
-        return round($this->attributes['price'] - $this->attributes['price'] * $this->attributes['discount'] / 100, 2);
-    }
+//    public function getNewPriceAttribute() {
+//        return round($this->attributes['price'] - $this->attributes['price'] * $this->attributes['discount'] / 100, 2);
+//    }
 }

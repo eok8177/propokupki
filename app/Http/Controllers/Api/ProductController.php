@@ -46,7 +46,7 @@ class ProductController extends Controller
 
     $taraPrice = '';
     if ($product->quantity > 0) {
-      $taraPrice = round($product->new_price/$product->quantity, 2);
+      $taraPrice = round($product->price/$product->quantity, 2);
     }
 
     $result = explode(' ', $product->translate($app_locale)->title);
@@ -60,8 +60,8 @@ class ProductController extends Controller
       'image' => asset('/storage/'.$product->image),
       'desc' => $description,
       'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
-      'price' => $product->new_price,
-      'oldprice' => $product->price,
+      'price' => $product->price,
+      'oldprice' => $product->old_price,
       'count' => $date_end->diffInDays($date_now),
       'shop' => $shop,
     ];
@@ -144,7 +144,7 @@ class ProductController extends Controller
 
               $taraPrice = '';
               if ($product->quantity > 0) {
-                  $taraPrice = round($product->new_price/$product->quantity, 2);
+                  $taraPrice = round($product->price/$product->quantity, 2);
               }
 
               $data[] = array(
@@ -153,8 +153,8 @@ class ProductController extends Controller
                   'image' => asset('/storage/'.$product->image),
                   'desc' => $description,
                   'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
-                  'price' => $product->new_price,
-                  'oldprice' => $product->price,
+                  'price' => $product->price,
+                  'oldprice' => $product->old_price,
                   'count' => $count,
                   'shop' => $shop
               );
