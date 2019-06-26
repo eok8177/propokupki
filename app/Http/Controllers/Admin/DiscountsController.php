@@ -162,7 +162,7 @@ class DiscountsController extends Controller
     {
 
         $discount = Discount::find($id);
-
+//dd($request->product);
         if ($discount) {
             $request->validate([
                 'slug' => Rule::unique('discounts')->ignore($discount->id),
@@ -195,11 +195,13 @@ class DiscountsController extends Controller
                 DB::table('discount_product')->where('discount_id', $discount->id)->delete();
 
                 foreach ($request->product as $product){
+//                    dd($product);
                     $prod = Product::create($product);
                     if (isset($product['image'])) {
                         $img = $product['image'];
                         $image = $img->store('uploads/'.$prod->id, 'public');
                         $prod->image = $image;
+                        $prod->status = 1;
                         $prod->save();
                     }
                     $prod->discounts()->attach($id);

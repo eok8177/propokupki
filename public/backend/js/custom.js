@@ -8,16 +8,20 @@ $(document).ready(function () {
     $('.btn-delete').on('click', function (e) {
         if (!confirm('Are you sure you want to delete?')) return false;
         e.preventDefault();
+
         console.log($(this).attr('href'));
         // return;
-
-        $.ajax({
-            type: 'DELETE',  // destroy Method
-            url: $(this).data('href')
-        }).done(function (data) {
-            console.log(data);
-            location.reload(true);
-        });
+        if($(this).attr('href')){
+            $.ajax({
+                type: 'DELETE',  // destroy Method
+                url: $(this).data('href')
+            }).done(function (data) {
+                console.log(data);
+                location.reload(true);
+            });
+        } else {
+            $(this).parent('.delete-block').remove();
+        }
     });
 
     //Change status of record
@@ -83,7 +87,6 @@ $(document).ready(function () {
                 html_code += data;
                 html_code += '</ul>';
                 html_code += '</div>';
-                $('.search-result').remove();
                $('#shop_search').after(html_code);
                console.log(html_code);
                // if (status == 1) {
@@ -94,6 +97,5 @@ $(document).ready(function () {
            });
        }
     });
-
 
 });

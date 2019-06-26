@@ -28,7 +28,7 @@ class CityController extends Controller
     $cities = CityTranslate::orderBy('id', 'desc')
         ->where('title', 'LIKE', '%'.$city.'%')
         ->pluck('title', 'city_id')
-        ->take(10);;
+        ->take(10);
 
     return response()->json($cities, 200);
   }

@@ -8,7 +8,7 @@ class Product extends Model
 {
     protected $table = 'products';
 
-    protected $fillable = ['slug', 'price', 'discount', 'quantity', 'unit', 'status'];
+    protected $fillable = ['slug', 'price', 'discount', 'quantity', 'unit'];
 
     public function langs($status = 1)
     {
@@ -57,5 +57,16 @@ class Product extends Model
     public function discounts()
     {
         return $this->belongsToMany('App\Discount', 'discount_product', 'product_id', 'discount_id');
+    }
+
+    public function searchProducts($locale, $search){
+
+//        return ProductTranslate::whre
+
+
+    }
+
+    public function getNewPriceAttribute() {
+        return round($this->attributes['price'] - $this->attributes['price'] * $this->attributes['discount'] / 100, 2);
     }
 }
