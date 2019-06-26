@@ -2,8 +2,8 @@
   <div class="home-page">
 
     <div class="container page-title">
-      <h1 class="title">Акции и скидки Киева</h1>
-      <p class="sub-title">230+ магазинов с лучшими предложениями</p>
+      <h1 class="title">Акції та знижки Києва</h1>
+      <p class="sub-title">230+ магазинів з кращими пропозиціями</p>
     </div>
 
     <div class="slider">
@@ -15,25 +15,25 @@
               <div class="image">
                 <img :src="shop.image" :alt="shop.title">
               </div>
-              <p><span class="count">{{shop.shops}}</span> Магазинов</p>
-              <p><span class="count">{{shop.actions}}</span> Акций</p>
-              <p class="discount">Скидки до <span class="number">{{shop.discount}}</span></p>
+              <p><span class="count">{{shop.shops}}</span> Магазинів</p>
+              <p><span class="count">{{shop.actions}}</span> Акцій</p>
+              <p class="discount">Знижки до <span class="number">{{shop.discount}}</span></p>
             </router-link>
           </div>
 
           <div class="shop">
             <div class="ico ico-bag"></div>
-            <p class="title">Более 230</p>
-            <p class="gray">Магазинов</p>
+            <p class="title">Більше 230</p>
+            <p class="gray">Магазинів</p>
             <hr>
-            <button class="btn btn-red">Все магазины</button>
+            <button class="btn btn-red">Усі магазини</button>
           </div>
 
         </div>
       </div>
     </div>
 
-    <h2 class="block-title">Лучшие акции Киева</h2>
+    <h2 class="block-title">Кращі акції Києва</h2>
     <products :products="actions" homePage="true"></products>
 
   </div>

@@ -2,7 +2,7 @@
   <div class="product-page">
 
     <div class="container page-title">
-      <h1 class="title">Личный кабинет</h1>
+      <h1 class="title">Особистий кабінет</h1>
     </div>
 
     <div class="form">
@@ -16,7 +16,7 @@
               v-model="name"
               type="text"
               name="name"
-              placeholder="Имя"
+              placeholder="Ім'я"
             >
             <p class="error" v-if="errors.name">{{errors.name}}</p>
           </div>
@@ -57,7 +57,7 @@
           </div>
 
           <div class="form-field">
-            <button type="submit">Отправить</button>
+            <button type="submit">Відправити</button>
           </div>
 
         </form>

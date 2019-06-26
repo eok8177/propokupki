@@ -2,7 +2,7 @@
   <div class="product-page">
 
     <div class="container page-title">
-      <h1 class="title">О нас</h1>
+      <h1 class="title">Про нас</h1>
     </div>
 
     <div class="text-page">

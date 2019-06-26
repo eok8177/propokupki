@@ -2,10 +2,10 @@
   <div class="actions-page">
 
     <div class="container page-title left">
-      <h1 class="title">Акции и скидки Киева</h1>
+      <h1 class="title">Акції та знижки Київа</h1>
     </div>
 
-    <filter-top></filter-top>
+    <filter-top :shop="this.shop"></filter-top>
 
     <products :products="actions"></products>
 
@@ -26,6 +26,7 @@ export default {
     return {
       filter: '',
       actions: [],
+      shop: ''
     }
   },
   methods: {
@@ -45,6 +46,9 @@ export default {
     }
   },
   created: function() {
+    if(this.$route.query.shop) {
+        this.shop = this.$route.query.shop;
+    }
     this.getActions(this.filter);
   },
   mounted() {
