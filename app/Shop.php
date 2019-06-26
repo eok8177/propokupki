@@ -71,4 +71,9 @@ class Shop extends Model
     {
         return $this->belongsToMany('App\Discount', 'discount_shop', 'shop_id', 'discount_id');
     }
+
+    public function translations()
+    {
+        return $this->hasMany(ShopTranslate::class);
+    }
 }

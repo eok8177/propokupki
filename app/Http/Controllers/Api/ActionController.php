@@ -42,14 +42,9 @@ class ActionController extends Controller
       $date_now = Date::now();
 
       switch ($dates){
-          case 'all':
-              $results->whereHas('discounts', function ($q) use ($date_now) {
-                      $q->where('date_end', '>=', $date_now);
-                  });
-              break;
           case 'now':
               $results->whereHas('discounts', function ($q) use ($date_now) {
-                  $q->where('date_start', '<=', $date_now)->where('date_end', '>=', $date_now);
+                  $q->where('date_start', '<=', $date_now);
               });
               break;
           case 'feature':
@@ -57,7 +52,7 @@ class ActionController extends Controller
                   $q->where('date_start', '>', $date_now);
               });
               break;
-          case 'post':
+          case 'past':
               $results->whereHas('discounts', function ($q) use ($date_now) {
                   $q->where('date_end', '<', $date_now);
               });
@@ -67,7 +62,6 @@ class ActionController extends Controller
                   $q->where('date_end', '>', $date_now);
               });
       }
-
 
       $results->when($request->get('data'), function ($query, $data) {
           return $query->whereHas('translations', function ($q) use ($data) {
@@ -88,8 +82,6 @@ class ActionController extends Controller
               $results->orderBy('updated_at', 'asc');
 
       }
-
-//      dd($results->pluck('price'));
 
       $data = array();
 

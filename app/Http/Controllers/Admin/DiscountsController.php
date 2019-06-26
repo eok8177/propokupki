@@ -187,16 +187,18 @@ class DiscountsController extends Controller
                 $discount_translate->save();
             }
             if ($request->product){
-                $old_product = DB::table('discount_product')->where('discount_id', $discount->id)->pluck('product_id');
-                DB::table('products')->whereIn('id', $old_product)->delete();
-                DB::table('products_translations')->whereIn('product_id', $old_product)->delete();
-                DB::table('discount_product')->where('discount_id', $discount->id)->delete();
+//                $old_product = DB::table('discount_product')->where('discount_id', $discount->id)->pluck('product_id');
+//                DB::table('products')->whereIn('id', $old_product)->delete();
+//                DB::table('products_translations')->whereIn('product_id', $old_product)->delete();
+//                DB::table('discount_product')->where('discount_id', $discount->id)->delete();
 
                 foreach ($request->product as $product){
 
+
+
                     $prod = Product::create($product);
 
-                    if (isset($product['image'])) {
+                    if (!empty($product['image'])) {
                         $img = $product['image'];
                         $image = $img->store('uploads/'.$prod->id, 'public');
                         $prod->image = $image;

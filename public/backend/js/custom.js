@@ -4,20 +4,24 @@ $(document).ready(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
     //Delete record
     $('.btn-delete').on('click', function (e) {
         if (!confirm('Are you sure you want to delete?')) return false;
         e.preventDefault();
         console.log($(this).attr('href'));
         // return;
-
-        $.ajax({
-            type: 'DELETE',  // destroy Method
-            url: $(this).data('href')
-        }).done(function (data) {
-            console.log(data);
-            location.reload(true);
-        });
+        if($(this).attr('href')){
+            $.ajax({
+                type: 'DELETE',  // destroy Method
+                url: $(this).data('href')
+            }).done(function (data) {
+                console.log(data);
+                location.reload(true);
+            });
+        } else {
+            $(this).parent('.delete-block').remove();
+        }
     });
 
     //Change status of record
