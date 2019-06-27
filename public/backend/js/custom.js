@@ -9,9 +9,9 @@ $(document).ready(function () {
     $('.btn-delete').on('click', function (e) {
         if (!confirm('Are you sure you want to delete?')) return false;
         e.preventDefault();
-        console.log($(this).attr('href'));
+        console.log($(this));
         // return;
-        if($(this).attr('href')){
+        if($(this).data('href')){
             $.ajax({
                 type: 'DELETE',  // destroy Method
                 url: $(this).data('href')

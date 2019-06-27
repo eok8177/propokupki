@@ -187,35 +187,21 @@ class DiscountsController extends Controller
                 $discount_translate->title = $request->$locale['title'];
                 $discount_translate->save();
             }
+            $product_not_delete = [];
+
             if ($request->product){
-//                $old_product = DB::table('discount_product')->where('discount_id', $discount->id)->pluck('product_id');
-//                DB::table('products')->whereIn('id', $old_product)->delete();
-//                DB::table('products_translations')->whereIn('product_id', $old_product)->delete();
-//                DB::table('discount_product')->where('discount_id', $discount->id)->delete();
 
                 foreach ($request->product as $product){
-
-                    $product_save = Product::find($product['product_id']);
-
-//                    dd($product_save, $product);
+                    $product_save = isset($product['product_id']) ? Product::find($product['product_id']) : '';
 
                     if ($product_save){
 
-
-//                        $product_save->slug = $product['slug'];
-//                        $product_save->old_price = $product['old_price'];
-//                        $product_save->price = $product['price'];
-//                        $product_save->discount = $product['discount'];
-//                        $product_save->quantity = $product['quantity'];
-//                        $product_save->unit = $product['unit'];
-//                        $product_save->save();
+                        array_push($product_not_delete, $product_save->id);
 
                         if (!empty($product['image'])) {
                             $img = $product['image'];
                             $product['image'] = $img->store('uploads/' . $product_save->id, 'public');
                         }
-
-                        //dd($product);
 
                         $product_save->update($product);
 
@@ -233,12 +219,12 @@ class DiscountsController extends Controller
 
                         $prod = Product::create($product);
 
+                        array_push($product_not_delete, $prod->id);
+
                         if (!empty($product['image'])) {
                             $img = $product['image'];
                             $image = $img->store('uploads/' . $prod->id, 'public');
                             $prod->image = $image;
-                            dd($prod);
-                            // $prod->status = 1;
                             $prod->save();
                         }
 
@@ -255,6 +241,13 @@ class DiscountsController extends Controller
                     }
 
                 }
+            }
+
+            if (count($product_not_delete)){
+                $old_product = DB::table('discount_product')->where('discount_id', $discount->id)->whereNotIn('product_id', $product_not_delete)->pluck('product_id');
+                DB::table('products')->whereIn('id', $old_product)->delete();
+                DB::table('products_translations')->whereIn('product_id', $old_product)->delete();
+                DB::table('discount_product')->where('discount_id', $discount->id)->whereNotIn('product_id', $product_not_delete)->delete();
             }
 
             return redirect()
@@ -274,14 +267,14 @@ class DiscountsController extends Controller
 
     public function destroy(Discount $discount)
     {
-        $old_products = DB::table('product_discount')->where('discount_id', $discount->id)->pluck('product_id');
+        $old_products = DB::table('discount_product')->where('discount_id', $discount->id)->pluck('product_id');
         DB::table('products')->whereIn('id', $old_products)->delete();
         DB::table('products_translations')->whereIn('product_id', $old_products)->delete();
-        DB::table('city_discount')->where('discount_id', $discount->id)->delete();
-        DB::table('category_discount')->where('discount_id', $discount->id)->delete();
-        DB::table('product_discount')->where('discount_id', $discount->id)->delete();
         DB::table('discounts_translations')->where('discount_id', $discount->id)->delete();
-        $discount->delete();
+        DB::table('discount_shop')->where('discount_id', $discount->id)->delete();
+        DB::table('discount_product')->where('discount_id', $discount->id)->delete();
+        DB::table('discounts')->where('id', $discount->id)->delete();
+
         return response()->json('success', 200);
     }
 
