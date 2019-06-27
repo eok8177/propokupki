@@ -44,10 +44,11 @@
         </div>
 
         <div v-if="!homePage" class="pagination-row">
-          <button @click="clickMore()" class="btn btn-red">Загрузить</button>
+          <button v-if="(this.products.length - this.firstCut - this.actions.length) > 0" @click="clickMore()" class="btn btn-red">Загрузить</button>
 
           <paginate
-            :page-count="pages"
+            v-if="(this.products.length - this.firstCut - this.actions.length) > 0 || pageNum > 0"
+            :page-count="pageCount"
             :page-range="3"
             :margin-pages="1"
             :click-handler="clickCallback"
@@ -65,33 +66,44 @@
 </template>
 
 <script>
+  var PAGE_COUNT = 4; // количество товаров на странице
 import axios from 'axios';
 export default {
   name: 'Products',
-  props: ['products', 'pages', 'count', 'homePage'],
+  props: ['products', 'homePage'],
   data() {
     return {
-        actions: this.products,
+      actions: [],
+      pageNum: 1, // текущая страница
+      pageSize: PAGE_COUNT, // количество товаров на странице
+      pageCount: 0, // количество страниц
+      firstCut: 0, // количество товаров скрытых слева
     }
   },
   watch: {
     products: function (newVal) {
-      this.actions = newVal
+      this.actions = this.paginate(newVal, this.pageSize, 1);
+      this.pageCount = Math.round(newVal.length / this.pageSize);
     }
   },
   methods: {
     clickCallback: function (pageNum) {
-      this.$parent.paginate({
-        method: 'next',
-        page: pageNum
-      });
+      this.pageNum = pageNum;
+      this.firstCut = (pageNum - 1) * this.pageSize;
+      this.actions = this.paginate(this.products, this.pageSize, this.pageNum);
     },
     clickMore: function () {
-      this.$parent.paginate({
-        method: 'more',
-        page: this.count + 12
-      });
+      this.pageSize += PAGE_COUNT;
+      this.pageCount = this.products.length / this.pageSize;
+      this.actions = this.products.slice(this.firstCut, this.pageSize + this.firstCut);
+
+      console.log(this.products.length - this.firstCut - this.actions.length);
+    },
+    paginate: function(array, page_size, page_number) {
+      --page_number; // because pages logically start with 1, but technically with 0
+      return array.slice(page_number * page_size, (page_number + 1) * page_size);
     }
+
   }
 }
 </script>

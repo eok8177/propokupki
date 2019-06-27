@@ -10,7 +10,7 @@
       <div class="container">
         <div class="wrap">
 
-          <div class="shop" v-for="shop in shops.slice(0, 5)">
+          <div class="shop" v-for="shop in shops">
             <router-link :to="{ name: 'Product', params: {slug: shop.slug} }" exact>
               <div class="image">
                 <img :src="shop.image" :alt="shop.title">
@@ -67,7 +67,7 @@ export default {
       axios.get('/api/actions/?city='+localStorage.cityId)
         .then(
           (response) => {
-            this.actions = response.data;
+            this.actions = response.data.slice(0, 5);
           }
         )
         .catch(

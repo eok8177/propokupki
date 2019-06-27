@@ -4,20 +4,24 @@ $(document).ready(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
     //Delete record
     $('.btn-delete').on('click', function (e) {
         if (!confirm('Are you sure you want to delete?')) return false;
         e.preventDefault();
-        console.log($(this).attr('href'));
+        console.log($(this));
         // return;
-
-        $.ajax({
-            type: 'DELETE',  // destroy Method
-            url: $(this).data('href')
-        }).done(function (data) {
-            console.log(data);
-            location.reload(true);
-        });
+        if($(this).data('href')){
+            $.ajax({
+                type: 'DELETE',  // destroy Method
+                url: $(this).data('href')
+            }).done(function (data) {
+                console.log(data);
+                location.reload(true);
+            });
+        } else {
+            $(this).parent('.delete-block').remove();
+        }
     });
 
     //Change status of record
@@ -78,12 +82,11 @@ $(document).ready(function () {
                dataType: 'json'
            }).done(function (data) {
                console.log(data);
-               var html_code = '<div class="search-result">';
-                html_code += '<ul class="actions">';
+               var html_code = '<ul class="actions">';
                 html_code += data;
                 html_code += '</ul>';
-                html_code += '</div>';
-               $('#shop_search').after(html_code);
+
+               $('.search-result').html(html_code);
                console.log(html_code);
                // if (status == 1) {
                //     item.attr( 'checked', true );

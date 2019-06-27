@@ -14,18 +14,78 @@ class ActionController extends Controller
   public function index(Request $request)
   {
 
-      $city_id = $request->get('city', 314);
       $app_locale = env('APP_LOCALE', 'ua');
 
-      $products = Product::whereHas('discounts', function($q) use($city_id){
-          $q->whereHas('shops', function($q2) use ($city_id){
-              $q2->whereHas('cities', function ($q3) use ($city_id){
-                  $q3->where('city_id', $city_id);
+      $results = Product::query();
+
+
+      if (!empty($request->get('shops', ''))){
+          $shops_id = explode(',', $request->get('shops'));
+          $results->whereHas('discounts', function ($q) use ($shops_id) {
+              $q->whereHas('shops', function ($q2) use ($shops_id){
+                  $q2->whereIn('shop_id', $shops_id);
               });
           });
-      })->get();
+      }
+
+      $results->when($request->get('city', 314), function ($query, $city_id) {
+          return $query->whereHas('discounts', function ($q) use ($city_id) {
+              $q->whereHas('shops', function($q2) use ($city_id){
+                  $q2->whereHas('cities', function ($q3) use ($city_id){
+                      $q3->where('city_id', $city_id);
+                  });
+              });
+          });
+      });
+
+      $dates = $request->get('dates', '');
+      $date_now = Date::now();
+
+      switch ($dates){
+          case 'now':
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_start', '<=', $date_now);
+              });
+              break;
+          case 'feature':
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_start', '>', $date_now);
+              });
+              break;
+          case 'past':
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_end', '<', $date_now);
+              });
+              break;
+          default :
+              $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_end', '>', $date_now);
+              });
+      }
+
+      $results->when($request->get('data'), function ($query, $data) {
+          return $query->whereHas('translations', function ($q) use ($data) {
+              $q->where('title', 'LIKE', '%'.$data.'%');
+          });
+      });
+
+      $sort = $request->get('sort', 'new');
+
+      switch ($sort){
+          case 'asc' :
+              $results->orderBy('price', 'asc');
+              break;
+          case 'desc' :
+              $results->orderBy('price', 'desc');
+              break;
+          default:
+              $results->orderBy('updated_at', 'asc');
+
+      }
 
       $data = array();
+
+      $products = $results->get();
 
       foreach ($products as $product){
 
@@ -54,6 +114,7 @@ class ActionController extends Controller
           unset($result[0]);
           $description = implode(' ', $result);
 
+          $unit = '';
           if ($product->unit == 'kg'){
               $unit = 'кг';
           } elseif($product->unit == 'l'){
@@ -64,14 +125,19 @@ class ActionController extends Controller
               $unit = 'уп';
           }
 
+          $taraPrice = '';
+          if ($product->quantity > 0) {
+            $taraPrice = round($product->price/$product->quantity, 2);
+          }
+
           $data[] = array(
               'slug' => $product->slug,
               'title' => $title,
               'image' => asset('/storage/'.$product->image),
               'desc' => $description,
-              'tara' => $product->quantity .' '. $unit .' / '. round($product->price/$product->quantity, 2) .' грн за 1 '. $unit,
-              'price' => round($product->price - $product->price * $product->discount/100, 2),
-              'oldprice' => $product->price,
+              'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
+              'price' => $product->price,
+              'oldprice' => $product->old_price,
               'count' => $count,
               'shop' => $shop
           );
@@ -107,9 +173,11 @@ class ActionController extends Controller
 
         $products = $results->get();
 
+        $data_product = array();
+
         foreach ($products as $product) {
 
-          $data_action[] = array(
+            $data_product[] = array(
               'slug' => $product->slug,
               'title' => $product->translate($app_locale)->title,
               'image' => asset('/storage/' . $product->image),
@@ -122,31 +190,32 @@ class ActionController extends Controller
             $q->whereIn('product_id', $product_arr);
         })->get();
 
-dd($discounts);
+        $discount_arr = $discounts->pluck('id');
+
+        $city_id = $request->get('city');
+
+        $shops = Shop::whereHas('discounts', function ($q) use ($discount_arr){
+            $q->whereIn('discount_id', $discount_arr);
+        })->whereHas('cities', function($q) use ($city_id){
+            $q->where('city_id', $city_id);
+        })->get();
+
+        $data_shops = array();
+        foreach ($shops as $shop) {
+            $data_shops[] = array(
+                'image' => asset('/storage/' . $shop->image), // ???
+                'slug' => '?shop='.$shop->id,
+            );
+        }
+
+
         $res = [
           'data' => $request->input('data'),
           'status' => true,
-          'count_actions' => 10,
-          'count_shops' => 4,
-          'actions' => $data_action,
-          'shops' => [
-            0 => [
-              'image' => 'images/shop-1.jpg',
-              'url' => '/actions',
-            ],
-            1 => [
-              'image' => 'images/shop-2.jpg',
-              'url' => '/actions',
-            ],
-            2 => [
-              'image' => 'images/shop-3.jpg',
-              'url' => '/actions',
-            ],
-            2 => [
-              'image' => 'images/shop-4.jpg',
-              'url' => '/actions',
-            ],
-          ],
+          'count_actions' => count($discounts),
+          'count_shops' => count($shops),
+          'actions' => $data_product,
+          'shops' => $data_shops,
         ];
 
         return response()->json($res, 200);
