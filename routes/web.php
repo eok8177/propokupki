@@ -11,9 +11,8 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Auth::routes();
+Route::redirect('/register', '/login'); //Block register
 
 Route::group([
     'as' => 'admin.',
