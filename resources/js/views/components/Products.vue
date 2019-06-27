@@ -9,7 +9,7 @@
                   <img :src="action.shop.image" :alt="action.title">
                 </div>
                 <div class="right">
-                  <div class="discount">Скидка <span>{{action.shop.discount}}</span></div>
+                  <div class="discount">Знижка <span>{{action.shop.discount}}</span></div>
                   <div class="dates">{{action.shop.dates}}</div>
                 </div>
               </div>
@@ -28,10 +28,10 @@
                     <span class="old">{{action.oldprice}}</span>
                   </div>
                   <div v-if="action.count > 1" class="sticker">
-                    Осталось {{action.count}} дней
+                    Залишилось {{action.count}} днів
                   </div>
                   <div v-if="action.count == 1" class="sticker last">
-                    Последний день
+                    Останній день
                   </div>
                 </router-link>
               </div>
@@ -40,11 +40,11 @@
         </div>
 
         <div v-if="homePage" class="pagination-row">
-          <router-link :to="{ name: 'Actions' }" class="btn btn-red">Все акции</router-link>
+          <router-link :to="{ name: 'Actions' }" class="btn btn-red">Усі акції</router-link>
         </div>
 
         <div v-if="!homePage" class="pagination-row">
-          <button v-if="(this.products.length - this.firstCut - this.actions.length) > 0" @click="clickMore()" class="btn btn-red">Загрузить</button>
+          <button v-if="(this.products.length - this.firstCut - this.actions.length) > 0" @click="clickMore()" class="btn btn-red">Загрузити</button>
 
           <paginate
             v-if="(this.products.length - this.firstCut - this.actions.length) > 0 || pageNum > 0"
@@ -52,8 +52,8 @@
             :page-range="3"
             :margin-pages="1"
             :click-handler="clickCallback"
-            :prev-text="'Предыдущая'"
-            :next-text="'Следующая'"
+            :prev-text="'Попередня'"
+            :next-text="'Наступна'"
             :container-class="'pagination'"
             :page-class="'page-item'"
             :prev-class="'prev'"

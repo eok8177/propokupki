@@ -16,8 +16,8 @@
           </ul>
         </div>
 
-        <button class="btn" @click="toggle('shops')">Магазины <span>{{shops.length}}</span></button>
-        <button class="btn">Все категории</button>
+        <button class="btn" @click="toggle('shops')">Магазини <span>{{shops.length}}</span></button>
+        <button class="btn">Всі категорії</button>
 
         <div class="select">
           <button class="dropdown btn-select" @click="toggle('dates')" v-bind:class="{'open' : dropDowns.dates}">
@@ -37,7 +37,7 @@
         <div class="shops" v-bind:class="{'open' : dropDowns.shops}">
           <div class="inner">
             <div class="search">
-              <input type="text" placeholder="Введите название" v-model.trim="search_shops">
+              <input type="text" placeholder="Введіть назву" v-model.trim="search_shops">
               <button class="ico ico-delete" @click="allShops"></button>
             </div>
             <ul>
@@ -58,7 +58,7 @@
         <span class="btn-delete" @click="removeShop(item)"></span>
       </span>
 
-      <button class="btn btn-red" v-if="shopsSelected.length" @click="resetFilter">Очистить</button>
+      <button class="btn btn-red" v-if="shopsSelected.length" @click="resetFilter">Очистити</button>
     </div>
   </div>
 
@@ -68,6 +68,7 @@
 
 export default {
   name: 'FilterTop',
+  props: ['shop'],
   data() {
     return {
       shops: [],
@@ -75,15 +76,15 @@ export default {
       categories: [],
       select: {
         sort: {
-          'new': 'Новые',
-          'asc': 'От дешевых к дорогим',
-          'desc': 'От дорогих к дешевым'
+          'new': 'Нові',
+          'asc': 'Від дешевих до дорогих',
+          'desc': 'Від дорогих до дешевих'
         },
         dates: {
-          'all': 'Текушие и будущие',
-          'now': 'Текушие',
-          'feature': 'Будущие',
-          'past': 'Прошедшие',
+          'all': 'Поточні та майбутні',
+          'now': 'Поточні',
+          'feature': 'Майбутні',
+          'past': 'Минулі',
         }
       },
       dropDowns: {
@@ -94,7 +95,7 @@ export default {
       },
       filter: {
         sort: 'new',
-        shops: '',
+        shops: this.shop,
         categories: '',
         dates: 'all',
       },
@@ -113,6 +114,7 @@ export default {
   created: function () {
     this.debouncedSearchShops = _.debounce(this.searchShops, 500);
     this.allShops();
+    this.filter.shops = this.shop;
   },
   methods: {
     toggle: function(name) {

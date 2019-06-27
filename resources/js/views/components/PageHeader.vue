@@ -3,23 +3,23 @@
     <div class="container">
       <div class="left">
         <router-link :to="{ name: 'Home' }" exact class="logo"></router-link>
-        <router-link :to="{ name: 'Actions' }" class="nav-link">Акции</router-link>
+        <router-link :to="{ name: 'Actions' }" class="nav-link">Акції</router-link>
       </div>
 
       <div class="search">
         <input type="text" placeholder="Поиск по товарам и магазинам" v-model.trim="search">
-        <button type="button" class="btn btn-red">Найти</button>
+        <button type="button" class="btn btn-red">Знайти</button>
       </div>
 
       <div class="righ">
         <button class="city-select" @click="showModalCity = true">{{city.name}}</button>
 
-        <a href="/cutup-login" class="login"><span class="ico ico-login"></span> Войти</a>
+        <a href="/cutup-login" class="login"><span class="ico ico-login"></span> Увійти</a>
       </div>
 
 
       <div class="search-result" v-if="resultOK">
-        <span class="count">{{answer.count_actions}}</span> Акций
+        <span class="count">{{answer.count_actions}}</span> Акцій
         <ul class="actions">
           <li v-for="action in answer.actions">
             <router-link :to="'/product/'+action.slug">
@@ -28,12 +28,12 @@
             </router-link>
           </li>
         </ul>
-        <span class="count">{{answer.count_shops}}</span> Магазинов
+        <span class="count">{{answer.count_shops}}</span> Магазинів
         <ul class="shops">
           <li v-for="shop in answer.shops">
-            <router-link :to="'/actions'+shop.slug">
-              <span class="image"><img :src="shop.image" :alt="shop.title"></span>
-            </router-link>
+            <!-- <a href="/actions{{shop.slug}}"> -->
+            <span class="image" @click="selectShop(shop.slug)"><img :src="shop.image" :alt="shop.title"></span>
+            <!-- </a> -->
           </li>
         </ul>
       </div>
@@ -41,15 +41,15 @@
     </div>
 
     <modal v-if="showModalCity" @close="showModalCity = false" class="city-modal">
-      <h3 slot="header">Ваш город {{city.name}}?</h3>
+      <h3 slot="header">Ваше місто {{city.name}}?</h3>
       <span slot="body">
-        <input type="text" placeholder="Изменить город" v-model.trim="searchCity">
+        <input type="text" placeholder="Змінити місто" v-model.trim="searchCity">
         <div class="cities">
           <span class="city" v-for="(city, id) in cities" @click="setCity(id, city)">{{city}}</span>
         </div>
       </span>
       <div slot="footer">
-        <button class="btn btn-red" @click="showModalCity = false">Да</button>
+        <button class="btn btn-red" @click="showModalCity = false">Так</button>
       </div>
     </modal>
 
@@ -156,6 +156,12 @@
         this.showModalCity = false;
         this.searchCity = '';
         this.cities = [];
+        this.$root.$emit('cityChanged');
+      },
+
+      selectShop: function(slug) {
+        // this.$router.push({ name: 'Actions', params: { shop: slug }});
+        window.location.href = "/actions"+slug;
       }
     },
 

@@ -2,7 +2,7 @@
   <div class="product-page">
 
     <div class="container page-title left">
-      <h1 class="title">Карточка товара</h1>
+      <h1 class="title">Картка товару</h1>
     </div>
 
     <div class="products">
@@ -14,7 +14,7 @@
               <img :src="product.shop.image" :alt="product.title">
             </div>
             <div class="right">
-              <div class="discount">Скидка <span>{{product.shop.discount}}</span></div>
+              <div class="discount">Знижка <span>{{product.shop.discount}}</span></div>
               <div class="dates">{{product.shop.dates}}</div>
             </div>
           </div>
@@ -34,10 +34,10 @@
                   <span class="old">{{product.oldprice}}</span>
                 </div>
                 <div v-if="product.count > 1" class="sticker">
-                  Осталось {{product.count}} дней
+                  Залишилось {{product.count}} днів
                 </div>
                 <div v-if="product.count == 1" class="sticker last">
-                  Последний день
+                  Останній день
                 </div>
               </div>
             </div>
@@ -45,7 +45,7 @@
           </div>
         </div>
 
-        <h2 class="block-title">Похожие акции</h2>
+        <h2 class="block-title">Схожі акції</h2>
       </div>
     </div>
 
@@ -110,6 +110,11 @@ export default {
   beforeRouteUpdate (to, from, next) {
     this.getContent(to.params.slug);
     next();
-  }
+  },
+  mounted() {
+    this.$root.$on('cityChanged', () => {
+      this.getContent(this.$route.params.slug);
+    })
+  },
 }
 </script>

@@ -2,7 +2,7 @@
   <div class="product-page">
 
     <div class="container page-title">
-      <h1 class="title">Связаться с нами</h1>
+      <h1 class="title">Зв'язатися з нами</h1>
     </div>
 
     <div class="form">
@@ -16,7 +16,7 @@
               v-model="name"
               type="text"
               name="name"
-              placeholder="Имя"
+              placeholder="Ім'я"
             >
             <p class="error" v-if="errors.name">{{errors.name}}</p>
           </div>
@@ -34,12 +34,12 @@
           </div>
 
           <div class="form-field">
-            <textarea v-model="message" name="message" placeholder="Сообщение…"></textarea>
+            <textarea v-model="message" name="message" placeholder="Повідомлення…"></textarea>
             <p class="error" v-if="errors.message">{{errors.message}}</p>
           </div>
 
           <div class="form-field">
-            <button type="submit">Отправить</button>
+            <button type="submit">Відправити</button>
           </div>
 
         </form>
