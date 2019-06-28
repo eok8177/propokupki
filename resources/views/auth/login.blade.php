@@ -9,6 +9,7 @@
         <div class="body">
             <h1 class="title">Авторизация</h1>
             <form method="POST" action="{{ route('login') }}">
+                @csrf
                 <input id="email" placeholder="Email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
                 @if ($errors->has('email'))
                     <span class="invalid-feedback" role="alert">

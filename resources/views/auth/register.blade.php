@@ -8,8 +8,9 @@
         </div>
         <div class="body">
             <h1 class="title">Регистрация</h1>
-            <form action="">
-                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
 
                 @if ($errors->has('name'))
                     <span class="invalid-feedback" role="alert">
