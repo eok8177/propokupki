@@ -5,8 +5,9 @@
         <p>Выберите магазин в котором будет акция</p>
 
         <div class="search">
-            <input type="text" id="shop_search" data-href="{{route('admin.shops.ajaxShops')}}" placeholder="Введите название">
+            <input type="text" id="shop_search" data-href="{{route('admin.shops.ajaxShops')}}" autocomplete="off" placeholder="Введите название">
             <button class="btn-search"></button>
+            <div class="search-result"></div>
         </div>
     </div>
 
@@ -14,6 +15,7 @@
         @foreach($discount->shops as $shop)
             <div class="item">
                 <button class="btn-delete" onclick="$(this).parent().remove()"></button>
+                {{ Form::hidden('shop[]', $shop->id, []) }}
                 <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
             </div>
         @endforeach
@@ -87,6 +89,7 @@
                         @endif
                     @endforeach
                 </div>
+                {{ Form::hidden('product['.$prodId.'][product_id]', $product->id, []) }}
                 <div class="form-group col-xl-8 pl-0">
                     {{ Form::label('title', 'Url') }}
                     <p>Укажите Url товара </p>
@@ -108,16 +111,15 @@
                     <label>Цена</label>
                     <p>Укажите старую цену и размер скидки, новая цена посчитается автоматически</p>
                     <div class="fields">
-                        {{ Form::text('product['.$prodId.'][price]', $product->price, ['class' => $errors->has('price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Старая цена грн']) }}
+                        {{ Form::text('product['.$prodId.'][old_price]', $product->old_price, ['class' => $errors->has('old_price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Старая цена грн']) }}
                         @if($errors->has('price'))
                             <span class="invalid-feedback">{{ $errors->first('price') }}</span>
                         @endif
-                        {{ Form::text('product['.$prodId.'][discount]', $product->discount, ['class' => $errors->has('price') ? 'form-control discount is-invalid' : 'form-control discount', 'placeholder' => 'Размер скидки %']) }}
+                        {{ Form::text('product['.$prodId.'][discount]', $product->discount, ['class' => $errors->has('discount') ? 'form-control discount is-invalid' : 'form-control discount', 'placeholder' => 'Размер скидки %']) }}
                         @if($errors->has('price'))
                             <span class="invalid-feedback">{{ $errors->first('discount') }}</span>
                         @endif
-                        <span class="new-price">Новая цена: <span class="result">{{$product->new_price}} грн</span></span>
-                        {{-- {{ Form::text('product['.$prodId.'][new_price]', $product->new_price, ['class' => $errors->has('new_price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Новая цена грн']) }} --}}
+                         {{ Form::text('product['.$prodId.'][price]', $product->price, ['class' => $errors->has('price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Новая цена грн']) }}
                     </div>
                 </div>
             </div>
@@ -155,26 +157,9 @@
     $('.date input').datepicker({
       language: "ru"
     });
-    //calculate discount
-    // $('body').on('change', '.price, .discount', function(){
-    //   var fields = $(this).parent();
-    //   var price = fields.find('.price').val();
-    //   var discount = fields.find('.discount').val();
-    //   fields.find('.result').text(price - price*discount/100);
-    // });
 
     $('body').on('change', '.input-img', function(e) {
       handleImage(e);
-    });
-
-    $('body').on('change', '.discount', function () {
-        var newPrice,
-            oldPrice,
-            discount;
-        oldPrice = parseInt($(this).prev('.price').val());
-        discount = parseInt($(this).val());
-        newPrice = oldPrice - (oldPrice*discount/100);
-        $('.new-price span').text(newPrice + ' грн');
     });
 
   });
@@ -237,9 +222,9 @@
       htmlProduct += '<label>Цена</label>';
       htmlProduct += '<p>Укажите старую цену и размер скидки, новая цена посчитается автоматически</p>';
       htmlProduct += '<div class="fields">';
-      htmlProduct += '<input type="text" name="product['+productId+'][price]"  class="form-control price" placeholder="Старая цена грн">';
+      htmlProduct += '<input type="text" name="product['+productId+'][old_price]"  class="form-control price" placeholder="Старая цена грн">';
       htmlProduct += '<input type="text" name="product['+productId+'][discount]"  class="form-control discount" placeholder="Размер скидки %">';
-      htmlProduct += '<span class="new-price">Новая цена: <span class="result">грн</span></span>';
+      htmlProduct += '<input type="text" name="product['+productId+'][price]"  class="form-control price" placeholder="Новая цена грн">';
       htmlProduct += '</div>';
       htmlProduct += '</div>';
       htmlProduct += '</div>';
@@ -272,9 +257,7 @@
       string = string.replace(alnum,delimiter);
       string = string.replace(RegExp('['+delimiter+']{2,}','g'),delimiter);
       string = string.replace(RegExp('(^'+delimiter+'|'+delimiter+'$)','g'),'');
-      // if(keyword.length && keyword.val() == ''){
       keyword.val(string);
-      // }
   }
 
   $(function() {
@@ -287,10 +270,6 @@
           seoUrlFill($(this).val(), 'ua', $('#slug_'+id));
       });
 
-      // $('.product-delete').on('click', function (e) {
-      //     e.preventDefault();
-      //
-      // })
   });
 
 </script>
