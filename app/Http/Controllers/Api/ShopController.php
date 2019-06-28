@@ -45,7 +45,7 @@ class ShopController extends Controller
               'actions' => count(Discount::whereHas('shops', function($q) use($shop_id){
                   $q->where('shop_id', $shop_id);
               })->where('status', 1)->get()),
-              'discount' => $discount_max['discount'].' %',
+              'discount' => $discount_max['discount'],
           );
 
       }
@@ -96,7 +96,7 @@ class ShopController extends Controller
               'actions' => count(Discount::whereHas('shops', function($q) use($shop_id){
                   $q->where('shop_id', $shop_id);
               })->where('status', 1)->get()),
-              'discount' => $discount_max['discount'].' %',
+              'discount' => $discount_max['discount'],
           );
 
       }
