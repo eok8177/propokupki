@@ -16,8 +16,8 @@
           </ul>
         </div>
 
-        <button class="btn" @click="toggle('shops')">Магазини <span>{{shops.length}}</span></button>
-        <button class="btn">Всі категорії</button>
+        <button class="btn" @click="toggle('shops')" v-bind:class="{ active: dropDowns.shops }">Магазини <span>{{shopCount}}</span></button>
+        <!-- <button class="btn">Всі категорії</button> -->
 
         <div class="select">
           <button class="dropdown btn-select" @click="toggle('dates')" v-bind:class="{'open' : dropDowns.dates}">
@@ -38,7 +38,7 @@
           <div class="inner">
             <div class="search">
               <input type="text" placeholder="Введіть назву" v-model.trim="search_shops">
-              <button class="ico ico-delete" @click="allShops"></button>
+              <button class="ico ico-delete" @click="allShops(true)"></button>
             </div>
             <ul>
               <li v-for="shop in shops" class="checkbox">
@@ -54,7 +54,7 @@
 
     <div class="result">
       <span class="shop-selected" v-for="item in shopsSelected">
-        <img :src="shops[item].image" :alt="shops[item].title">
+        <img :src="shopsAll[item].image" :alt="shopsAll[item].title">
         <span class="btn-delete" @click="removeShop(item)"></span>
       </span>
 
@@ -72,6 +72,8 @@ export default {
   data() {
     return {
       shops: [],
+      shopsAll: [],
+      shopCount: '',
       search_shops: '',
       categories: [],
       select: {
@@ -95,7 +97,7 @@ export default {
       },
       filter: {
         sort: 'new',
-        shops: this.shop,
+        shops: '',
         categories: '',
         dates: 'all',
       },
@@ -114,7 +116,6 @@ export default {
   created: function () {
     this.debouncedSearchShops = _.debounce(this.searchShops, 500);
     this.allShops();
-    this.filter.shops = this.shop;
   },
   methods: {
     toggle: function(name) {
@@ -134,20 +135,28 @@ export default {
         .then(
           (response) => {
             this.shops = response.data;
+            this.shopCount = Object.keys(this.shops).length;
           }
         )
         .catch(
           (error) => console.log(error)
         );
     },
-    allShops: function() {
+    allShops: function(reset) {
       axios.get('/api/shops/?city='+localStorage.cityId)
         .then(
           (response) => {
+            this.shopsAll = response.data;
             this.shops = response.data;
+            this.shopCount = Object.keys(this.shopsAll).length;
             this.search_shops = '';
-            this.filter.shops = '';
-            this.$parent.filtered(this.filter);
+            this.filter.shops = this.shop;
+            if (this.shop && !reset) {
+              this.shopsSelected = [this.shop];
+            } else {
+              this.shopsSelected = [];
+              this.$parent.filtered(this.filter);
+            }
           }
         )
         .catch(

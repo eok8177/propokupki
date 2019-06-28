@@ -37,6 +37,7 @@
           </li>
         </ul>
       </div>
+      <div class="search-result-bg" v-if="resultOK" @click="closeSearch"></div>
 
     </div>
 
@@ -162,6 +163,10 @@
       selectShop: function(slug) {
         // this.$router.push({ name: 'Actions', params: { shop: slug }});
         window.location.href = "/actions"+slug;
+      },
+
+      closeSearch: function() {
+        this.resultOK = false;
       }
     },
 

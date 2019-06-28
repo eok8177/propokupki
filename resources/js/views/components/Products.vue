@@ -37,6 +37,8 @@
               </div>
             </div>
           </div>
+
+          <div v-if="actions.length < 1" class="sorry">Акцій не знайдено</div>
         </div>
 
         <div v-if="homePage" class="pagination-row">
@@ -66,7 +68,7 @@
 </template>
 
 <script>
-  var PAGE_COUNT = 4; // количество товаров на странице
+  var PAGE_COUNT = 28; // количество товаров на странице
 import axios from 'axios';
 export default {
   name: 'Products',
