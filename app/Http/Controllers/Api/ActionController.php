@@ -105,7 +105,7 @@ class ActionController extends Controller
           $shop = array(
               'image' => asset('/storage/'.$data_shop->image),
               'dates' => $date_start->format('d M').' - '.$date_end->format('d M'),
-              'discount' => $product->discount.' %'
+              'discount' => $product->discount
           );
 
 
