@@ -17,7 +17,7 @@
               </div>
               <p><span class="count">{{shop.shops}}</span> Магазинів</p>
               <p><span class="count">{{shop.actions}}</span> Акцій</p>
-              <p class="discount" v-if="shop.discount > 0">Знижки до <span class="number">{{shop.discount}}%</span></p>
+              <p class="discount" v-if="shop.discount > 0">Знижки до <span class="number">-{{shop.discount}}%</span></p>
             </router-link>
           </div>
 
@@ -26,7 +26,19 @@
             <p class="title">Більше {{shopCount}}</p>
             <p class="gray">Магазинів</p>
             <hr>
-            <button class="btn btn-red">Усі магазини</button>
+
+            <div class="dropdown">
+              <button class="btn btn-red" @click="toggle('shops')" v-bind:class="{'open' : dropDowns.shops}">
+                Усі магазини
+              </button>
+              <ul class="dropdown-block">
+                <li v-for="shop in shops">
+                  <router-link :to="{ name: 'Actions', query: {shop: shop.id} }">{{shop.title}}</router-link>
+                </li>
+              </ul>
+            </div>
+
+
           </div>
 
         </div>
@@ -54,6 +66,9 @@ export default {
         actions: [],
         cityName: '',
         shopCount: '230',
+        dropDowns: {
+          shops: false,
+        },
     }
   },
   created: function() {
@@ -90,6 +105,10 @@ export default {
     selectShop: function(slug) {
       this.$router.push({ name: 'Actions', params: { shop: slug }});
       // window.location.href = "/actions"+slug;
+    },
+
+    toggle: function(name) {
+       this.dropDowns[name] = !this.dropDowns[name];
     },
   }
 }

@@ -49,6 +49,7 @@ export default {
   mounted() {
     this.$root.$on('cityChanged', () => {
       this.getActions(this.filter);
+      this.cityName = localStorage.cityName;
     });
     if(this.$route.query.shop) {
         this.shop = this.$route.query.shop;

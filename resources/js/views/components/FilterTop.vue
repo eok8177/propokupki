@@ -53,12 +53,25 @@
 
 
     <div class="result">
+      <span class="shop-selected" v-if="filter.sort == 'asc' || filter.sort == 'desc'">
+        {{select.sort[filter.sort]}}
+        <span class="btn-delete" @click="removeSort('sort')"></span>
+      </span>
+
       <span class="shop-selected" v-for="item in shopsSelected">
         <img :src="shopsAll[item].image" :alt="shopsAll[item].title">
         <span class="btn-delete" @click="removeShop(item)"></span>
       </span>
 
-      <button class="btn btn-red" v-if="shopsSelected.length" @click="resetFilter">Очистити</button>
+      <span class="shop-selected" v-if="filter.dates == 'now' || filter.dates == 'feature' || filter.dates == 'past'">
+        {{select.dates[filter.dates]}}
+        <span class="btn-delete" @click="removeSort('dates')"></span>
+      </span>
+
+      <button class="btn btn-red" 
+        v-if="shopsSelected.length || filter.sort == 'asc' || filter.sort == 'desc' || filter.dates == 'now' || filter.dates == 'feature' || filter.dates == 'past'" 
+        @click="resetFilter"
+      >Очистити</button>
     </div>
   </div>
 
@@ -166,6 +179,15 @@ export default {
     removeShop: function(item) {
       var index = this.shopsSelected.indexOf(item);
       if (index > -1) this.shopsSelected.splice(index, 1);
+    },
+    removeSort: function(filter) {
+      if (filter == 'sort') {
+        this.filter.sort = 'new';
+      }
+      if (filter == 'dates') {
+        this.filter.dates = 'all';
+      }
+      this.$parent.filtered(this.filter);
     },
     resetFilter: function() {
       this.filter = {

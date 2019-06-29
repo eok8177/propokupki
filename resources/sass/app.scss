@@ -329,6 +329,21 @@ button {
     .ico {margin-bottom: 2px;}
   }
 }
+.city-select {
+  padding-right: 16px;
+  text-align: left;
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 18px;
+    width: 10px;
+    height: 6px;
+    background: url('../img/ico-down.svg') no-repeat center;
+    background-size: contain;
+  }
+}
 
 
 .home-page {
@@ -341,13 +356,27 @@ button {
     background-size: cover;
     padding-top: 80px;
     .container {
-      overflow-x: auto;
+      // overflow-x: auto;
       padding: 0;
     }
     .wrap {
-      width: 1224px;
+      // width: 1224px;
       display: flex;
       justify-content: space-between;
+      @media (max-width: 1199px) {
+        .shop:nth-of-type(5) {display: none;}
+      }
+      @media (max-width: 991px) {
+        .shop:nth-of-type(4) {display: none;}
+        .shop:nth-of-type(3) {display: none;}
+      }
+      @media (max-width: 767px) {
+        .shop:nth-of-type(2) {display: none;}
+      }
+      @media (max-width: 400px) {
+        .shop:nth-of-type(1) {display: none;}
+        justify-content: center;
+      }
     }
     a {
       width: 100%;
@@ -503,14 +532,20 @@ button {
       line-height: 28px;
       color: #242729;
       padding-left: 16px;
+      sup {font-size: 14px;}
     }
     .old {
       display: inline-block;
-      width: 48%;
+      // width: 48%;
       font-size: 18px;
       line-height: 21px;
       color: #677075;
       text-decoration: line-through;
+    }
+    .old-price {
+      font-size: 10px;
+      line-height: 21px;
+      color: #677075;
     }
   }
   .sticker {
@@ -783,17 +818,20 @@ button {
       background: #FFFFFF;
       border: 1px solid #EBF1F5;
       border-radius: 3px;
-      padding: 8px 36px 8px 16px;
+      padding: 2px 36px 2px 8px;
+      height: 46px;
+      line-height: 44px;
       img {
-        width: 120px;
-        height: 40px;
+        width: 100px;
+        height: 36px;
         object-fit: cover;
         object-position: center;
+        margin-bottom: 4px;
       }
       .btn-delete {
         position: absolute;
-        right: 9px;
-        top: 13px;
+        right: 6px;
+        top: 10px;
       }
     }
     .btn-red {
@@ -924,4 +962,34 @@ footer {
   text-align: center;
   font-size: 18px;
   width: 100%;
+}
+
+.dropdown {
+  position: relative;
+  .dropdown-block {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 12;
+    display: none;
+    background: #FFFFFF;
+    border: 1px solid #F0EFEB;
+    box-shadow: 0px 4px 12px rgba(204, 202, 192, 0.25);
+    border-radius: 3px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    height: 158px;
+    overflow-y: auto;
+    li {
+      a {
+        width: 100%;
+        padding: 5px 14px;
+      }
+    }
+  }
+  .btn {
+    &.open + .dropdown-block {display: block;}
+  }
 }
