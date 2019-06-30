@@ -8,6 +8,7 @@ use App\ProductTranslate;
 use App\Discount;
 use App\Language;
 use App\DiscountTranslate;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,7 @@ class DiscountsController extends Controller
         }
 
 //        $status = $request->get('status',NULL);
-        $shops = $request->get('shops', []);
+        $shops = $request->get('shops') ? explode(',', $request->get('shops')) : [];
         $limit = $request->get('limit', 50);
         $locale = env('APP_LOCALE', 'ua');
 
@@ -57,7 +58,7 @@ class DiscountsController extends Controller
         }
 
         return view('backend.discounts.index', [
-            'discounts'         => $discounts->paginate($limit),
+            'discounts'         => $discounts->orderBy('id', 'desc')->paginate($limit),
             'app_locale'        => $locale,
             'count_on'          => count(Discount::where('status', 1)->get()),
             'count_off'         => count(Discount::where('status', 0)->get()),
@@ -166,6 +167,7 @@ class DiscountsController extends Controller
                 'slug' => Rule::unique('discounts')->ignore($discount->id),
                 'slug' => 'required|max:255',
 //                'product.*.slug' => 'required|unique:products,slug|max:255',
+                'product.*.price' => 'required',
             ]);
 
             $discount->fill($request->all())->save();
@@ -256,6 +258,18 @@ class DiscountsController extends Controller
         }
 
         return redirect()->route('admin.posts.index');
+    }
+
+    public function status($id)
+    {
+        $discounts = Discount::find($id);
+        if(!$discounts)
+            return response()->json(['error'=> 'not found any page'], 400);
+
+        $discounts->status = 1 - $discounts->status;
+        $discounts->save();
+
+        return response()->json($discounts->status, 200);
     }
 
     /**

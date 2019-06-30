@@ -69,7 +69,6 @@ class ShopsController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->image);
         $request->validate([
             'slug' => 'required|unique:pages|max:255',
             'import_file' => 'required',

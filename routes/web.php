@@ -30,6 +30,8 @@ Route::group([
     Route::put('shops/status/{id}', ['as' => 'shops.status', 'uses' => 'ShopsController@status']);
     //      Discounts
     Route::resource('/discounts', 'DiscountsController');
+    Route::put('discounts/status/{id}', ['as' => 'discounts.status', 'uses' => 'DiscountsController@status']);
+
 
 //      Categories
 //    Route::resource('/categories', 'CategoriesController');

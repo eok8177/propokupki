@@ -43,7 +43,7 @@ class Shop extends Model
 
     public function getCategoriesForSelectAttribute()
     {
-        return Category::pluck('slug', 'id')->toArray();
+        return CategoryTranslate::where('locale', 'ua')->pluck('title', 'category_id')->toArray();
     }
 
     public function categories()

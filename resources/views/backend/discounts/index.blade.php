@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container">
-        <h1 class="title-page">Акции <span class="badge badge-pill badge-secondary">238</span></h1>
+        <h1 class="title-page">Акции <span class="badge badge-pill badge-secondary">{{ count($discounts) }}</span></h1>
         <a href="{{ route('admin.discounts.create') }}" class="btn-noborder"><span class="ico ico-big ico-plus"></span> Новая акция</a>
     </div>
     <hr>
@@ -22,6 +22,7 @@
             <div class="search">
                 <input name="search" id="shop_search" type="text" data-href="{{route('admin.shops.ajaxShops')}}" placeholder="Введите название" value="{{app('request')->input('search')}}">
                 <button type="submit" class="btn-search"></button>
+                <div class="search-result"></div>
             </div>
             {!! Form::close() !!}
 
@@ -47,14 +48,14 @@
 
                         <div class="block">
                             <a href="{{ route('admin.discounts.edit', $discount->id) }}">
-                            <span class="date">14–27 марта </span>
+                            <span class="date">{{ Date::parse($discount->date_start)->format('d M') }} - {{ Date::parse($discount->date_end)->format('d M') }} </span>
                             <span class="title">{{ $discount->translate($app_locale)->title }}</span>
                             </a>
                         </div>
                         <div class="status">
                             <span>Активный</span>
                             <label class="checkbox">
-                                <input data-href="{{route('admin.shops.status', $discount->id)}}" type="checkbox" {!! $discount->status ? 'checked="checked" ' : '' !!}>
+                                <input data-href="{{route('admin.discounts.status', $discount->id)}}" type="checkbox" {!! $discount->status ? 'checked="checked" ' : '' !!}>
                                 <input type="checkbox">
                                 <span class="chk"></span>
                             </label>
@@ -89,7 +90,7 @@
         '            <div class="image"><img src="'+imgShop+'" alt=""></div>\n' +
         '        </div>';
 
-    $('.filtered').append(addHtml);
+        $('.filtered').append(addHtml);
     }
     $(function() {
         $("body").on('DOMSubtreeModified', ".filtered", function() {
@@ -98,7 +99,7 @@
                 $(document).find('.shop-id').each(function () {
                     IDs.push($(this).val());
                 });
-                window.location.href = window.location.href.split('?')[0] + "?shops[]=" + IDs;
+                window.location.href = window.location.href.split('?')[0] + "?shops=" + IDs;
             }, 2000);
         });
     });
