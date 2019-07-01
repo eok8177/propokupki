@@ -2,10 +2,10 @@
   <div class="actions-page">
 
     <div class="container page-title left">
-      <h1 class="title">Акції та знижки Київа</h1>
+      <h1 class="title">Акції та знижки {{cityName}}</h1>
     </div>
 
-    <filter-top :shop="this.shop"></filter-top>
+    <filter-top :shop="shop"></filter-top>
 
     <products :products="actions"></products>
 
@@ -26,7 +26,8 @@ export default {
     return {
       filter: '',
       actions: [],
-      shop: ''
+      shop: '',
+      cityName: '',
     }
   },
   methods: {
@@ -45,16 +46,15 @@ export default {
         );
     }
   },
-  created: function() {
-    if(this.$route.query.shop) {
-        this.shop = this.$route.query.shop;
-    }
-    this.getActions(this.filter);
-  },
   mounted() {
     this.$root.$on('cityChanged', () => {
       this.getActions(this.filter);
-    })
+      this.cityName = localStorage.cityName;
+    });
+    if(this.$route.query.shop) {
+        this.shop = this.$route.query.shop;
+    }
+    this.cityName = localStorage.cityName;
   },
 }
 </script>

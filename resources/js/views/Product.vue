@@ -2,7 +2,7 @@
   <div class="product-page">
 
     <div class="container page-title left">
-      <h1 class="title">Картка товару</h1>
+      <router-link :to="{ name: 'Actions' }" class="btn">Акції та знижки {{cityName}}</router-link>
     </div>
 
     <div class="products">
@@ -14,7 +14,7 @@
               <img :src="product.shop.image" :alt="product.title">
             </div>
             <div class="right">
-              <div class="discount">Знижка <span>{{product.shop.discount}}</span></div>
+              <div class="discount" v-if="product.shop.discount > 0">Знижка <span>-{{product.shop.discount}}%</span></div>
               <div class="dates">{{product.shop.dates}}</div>
             </div>
           </div>
@@ -30,8 +30,8 @@
                 <span class="tara">{{product.tara}}</span>
                 <hr>
                 <div class="prices">
-                  <span class="new">{{product.price}}</span>
-                  <span class="old">{{product.oldprice}}</span>
+                  <span class="new">{{product.price}} <sup>грн</sup></span>
+                  <span class="old">{{product.oldprice}}</span> <sup class="old-price">грн</sup>
                 </div>
                 <div v-if="product.count > 1" class="sticker">
                   Залишилось {{product.count}} днів
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <products :products="actions" homePage="true"></products>
+    <products :products="actions"></products>
 
 
   </div>
@@ -80,6 +80,7 @@ export default {
         }
       },
       actions: [],
+      cityName: '',
     }
   },
   methods: {
@@ -106,6 +107,7 @@ export default {
   },
   created: function() {
     this.getContent(this.$route.params.slug);
+    this.cityName = localStorage.cityName;
   },
   beforeRouteUpdate (to, from, next) {
     this.getContent(to.params.slug);
@@ -114,6 +116,7 @@ export default {
   mounted() {
     this.$root.$on('cityChanged', () => {
       this.getContent(this.$route.params.slug);
+      this.cityName = localStorage.cityName;
     })
   },
 }

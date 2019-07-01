@@ -2,8 +2,8 @@
   <div class="home-page">
 
     <div class="container page-title">
-      <h1 class="title">Акції та знижки Києва</h1>
-      <p class="sub-title">230+ магазинів з кращими пропозиціями</p>
+      <h1 class="title">Акції та знижки {{cityName}}</h1>
+      <p class="sub-title">{{shopCount}}+ магазинів з кращими пропозиціями</p>
     </div>
 
     <div class="slider">
@@ -11,29 +11,41 @@
         <div class="wrap">
 
           <div class="shop" v-for="shop in shops">
-            <router-link :to="{ name: 'Product', params: {slug: shop.slug} }" exact>
+            <router-link :to="{ name: 'Actions', query: {shop: shop.id} }">
               <div class="image">
                 <img :src="shop.image" :alt="shop.title">
               </div>
               <p><span class="count">{{shop.shops}}</span> Магазинів</p>
               <p><span class="count">{{shop.actions}}</span> Акцій</p>
-              <p class="discount">Знижки до <span class="number">{{shop.discount}}</span></p>
+              <p class="discount" v-if="shop.discount > 0">Знижки до <span class="number">-{{shop.discount}}%</span></p>
             </router-link>
           </div>
 
           <div class="shop">
             <div class="ico ico-bag"></div>
-            <p class="title">Більше 230</p>
+            <p class="title">Більше {{shopCount}}</p>
             <p class="gray">Магазинів</p>
             <hr>
-            <button class="btn btn-red">Усі магазини</button>
+
+            <div class="dropdown">
+              <button class="btn btn-red" @click="toggle('shops')" v-bind:class="{'open' : dropDowns.shops}">
+                Усі магазини
+              </button>
+              <ul class="dropdown-block">
+                <li v-for="shop in shops">
+                  <router-link :to="{ name: 'Actions', query: {shop: shop.id} }">{{shop.title}}</router-link>
+                </li>
+              </ul>
+            </div>
+
+
           </div>
 
         </div>
       </div>
     </div>
 
-    <h2 class="block-title">Кращі акції Києва</h2>
+    <h2 class="block-title">Кращі акції {{cityName}}</h2>
     <products :products="actions" homePage="true"></products>
 
   </div>
@@ -52,6 +64,11 @@ export default {
     return {
         shops: [],
         actions: [],
+        cityName: '',
+        shopCount: '230',
+        dropDowns: {
+          shops: false,
+        },
     }
   },
   created: function() {
@@ -68,6 +85,7 @@ export default {
         .then(
           (response) => {
             this.shops = response.data;
+            this.cityName = localStorage.cityName;
           }
         )
         .catch(
@@ -82,7 +100,16 @@ export default {
           .catch(
             (error) => console.log(error)
           );
-    }
+    },
+
+    selectShop: function(slug) {
+      this.$router.push({ name: 'Actions', params: { shop: slug }});
+      // window.location.href = "/actions"+slug;
+    },
+
+    toggle: function(name) {
+       this.dropDowns[name] = !this.dropDowns[name];
+    },
   }
 }
 </script>

@@ -9,7 +9,7 @@
                   <img :src="action.shop.image" :alt="action.title">
                 </div>
                 <div class="right">
-                  <div class="discount">Знижка <span>{{action.shop.discount}}</span></div>
+                  <div class="discount">Знижка <span>-{{action.shop.discount}}%</span></div>
                   <div class="dates">{{action.shop.dates}}</div>
                 </div>
               </div>
@@ -24,8 +24,8 @@
                   <span class="tara">{{action.tara}}</span>
                   <hr>
                   <div class="prices">
-                    <span class="new">{{action.price}}</span>
-                    <span class="old">{{action.oldprice}}</span>
+                    <span class="new">{{action.price}} <sup>грн</sup></span>
+                    <span class="old">{{action.oldprice}}</span> <sup class="old-price">грн</sup>
                   </div>
                   <div v-if="action.count > 1" class="sticker">
                     Залишилось {{action.count}} днів
@@ -37,6 +37,8 @@
               </div>
             </div>
           </div>
+
+          <div v-if="actions.length < 1" class="sorry">Акцій не знайдено</div>
         </div>
 
         <div v-if="homePage" class="pagination-row">
@@ -66,7 +68,7 @@
 </template>
 
 <script>
-  var PAGE_COUNT = 4; // количество товаров на странице
+  var PAGE_COUNT = 28; // количество товаров на странице
 import axios from 'axios';
 export default {
   name: 'Products',
