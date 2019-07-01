@@ -14,7 +14,7 @@
       <div class="righ">
         <button class="city-select" @click="showModalCity = true">{{city.name}}</button>
 
-        <a href="/cutup-login" class="login"><span class="ico ico-login"></span> Увійти</a>
+        <a href="/login" class="login"><span class="ico ico-login"></span> Увійти</a>
       </div>
 
 

@@ -324,9 +324,28 @@ button {
     line-height: 40px;
     vertical-align: middle;
     margin-right: 50px;
+    @media(max-width:991px) {margin-right: 20px;}
   }
   .login {
     .ico {margin-bottom: 2px;}
+  }
+  @media(max-width:767px) {
+    .left {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .search {
+      margin: auto;
+      max-width: 360px;
+    }
+    .righ {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
+    }
   }
 }
 .city-select {
@@ -376,6 +395,9 @@ button {
       @media (max-width: 400px) {
         .shop:nth-of-type(1) {display: none;}
         justify-content: center;
+      }
+      .shop:last-child {
+        display: block;
       }
     }
     a {
@@ -980,7 +1002,7 @@ footer {
     list-style: none;
     padding: 0;
     margin: 0;
-    height: 158px;
+    max-height: 158px;
     overflow-y: auto;
     li {
       a {
