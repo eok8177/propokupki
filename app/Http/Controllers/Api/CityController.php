@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\City;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // use App\City;
@@ -11,14 +12,13 @@ class CityController extends Controller
 {
   public function index(Request $request)
   {
-    $ip = $request->ip();
-    //ToDo add geoip service
+      $app_locale = env('APP_LOCALE', 'ua');
+      $city = CityTranslate::where('city_id', $request->get('city_id', 314))->where('locale', $app_locale)->first();
 
     $res = [
-        'ip' => $ip,
         'id' => 314,
-        'name' => 'Киев',
-        'name2' => 'Києва'
+        'name' => $city->title,
+        'name2' => $city->title2
     ];
 
     return response()->json($res, 200);

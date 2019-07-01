@@ -116,7 +116,7 @@ class ProductController extends Controller
               $discount_id = $product->discounts->first()->id;
 
               $data_shop = Shop::whereHas('discounts', function ($q) use ($discount_id){
-                  $q->where('discount_id', $discount_id)-where('status', 1);
+                  $q->where('discount_id', $discount_id)->where('status', 1);
               })->first();
 
               $shop = array(
