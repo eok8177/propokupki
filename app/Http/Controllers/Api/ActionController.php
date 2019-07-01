@@ -190,15 +190,23 @@ class ActionController extends Controller
             $q->whereIn('product_id', $product_arr);
         })->get();
 
-        $discount_arr = $discounts->pluck('id');
 
-        $city_id = $request->get('city');
+        $shops_get = Shop::query();
 
-        $shops = Shop::whereHas('discounts', function ($q) use ($discount_arr){
-            $q->whereIn('discount_id', $discount_arr);
-        })->whereHas('cities', function($q) use ($city_id){
-            $q->where('city_id', $city_id);
-        })->where('status', 1)->get();
+        $shops_get->when($request->get('city', 314), function ($query, $city_id) {
+            return $query->whereHas('cities', function ($q) use ($city_id){
+                    $q->where('city_id', $city_id);
+                });
+            });
+
+
+        $shops_get->when($request->get('data'), function ($query, $data) {
+            return $query->whereHas('translations', function ($q) use ($data) {
+                $q->where('title', 'LIKE', '%'.$data.'%');
+            });
+        });
+//        dd($shops_get->get());
+        $shops = $shops_get->where('status', 1)->get();
 
         $data_shops = array();
         foreach ($shops as $shop) {
