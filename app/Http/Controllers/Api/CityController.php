@@ -17,7 +17,8 @@ class CityController extends Controller
     $res = [
         'ip' => $ip,
         'id' => 314,
-        'name' => 'Киев'
+        'name' => 'Киев',
+        'name2' => 'Києва'
     ];
 
     return response()->json($res, 200);
@@ -25,11 +26,23 @@ class CityController extends Controller
 
   public function search($city)
   {
+      $app_locale = env('APP_LOCALE', 'ua');
+
     $cities = CityTranslate::orderBy('id', 'desc')
         ->where('title', 'LIKE', '%'.$city.'%')
-        ->pluck('title', 'city_id')
+        ->where('locale', $app_locale)
         ->take(10);
 
-    return response()->json($cities, 200);
+    $data = array();
+
+    foreach ($cities as $city){
+        $data = [
+            'id' => $city->city_id,
+            'name' => $city->title,
+            'name2' => $city->title2
+        ];
+    }
+
+    return response()->json($data, 200);
   }
 }

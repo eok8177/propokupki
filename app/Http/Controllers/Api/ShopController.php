@@ -72,6 +72,8 @@ class ShopController extends Controller
           });
       });
 
+      $results->where('status', 1);
+
       $shops = $results->get();
 
       $data = array();

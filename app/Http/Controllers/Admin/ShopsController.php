@@ -37,6 +37,7 @@ class ShopsController extends Controller
             'app_locale'        => $locale,
             'count_on'          => count(Shop::where('status', 1)->get()),
             'count_off'         => count(Shop::where('status', 0)->get()),
+            'not_discounts'         => count(Shop::where('status', 0)->get()),
             'status'            => $status,
             'limit'            => $limit,
             'search'            => $search,
@@ -73,6 +74,10 @@ class ShopsController extends Controller
             'slug' => 'required|unique:pages|max:255',
             'import_file' => 'required',
             'image' => 'required'
+        ],[
+            'slug.required' => 'введите урл магазина',
+            'import_file.required' => 'добавте файл импорта',
+            'image.required' => 'добавте картинку магазина',
         ]);
 
 
@@ -180,8 +185,6 @@ class ShopsController extends Controller
             $request->validate([
                 'slug' => Rule::unique('shops')->ignore($shop->id),
                 'slug' => 'required|max:255',
-//                'import_file' => 'required',
-//                'image' => 'required'
             ]);
 
             $shop->fill($request->all())->save();

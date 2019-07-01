@@ -23,51 +23,33 @@
 
             <div class="items">
                 <div class="row">
-                    <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                        <div class="item add">
-                            <span class="ico ico-plus"></span>
-                            <span class="title">Новый<br>город</span>
-                            <hr>
-                            <a href="{{ route('admin.cities.create') }}" class="btn btn-red">Добавить</a>
-                        </div>
-                    </div>
-                    @forelse ($cities as $city)
-                        <div class="col-6 col-md-4 col-lg-3 col-xl-2">
-                            <div class="item">
-                                <button class="btn-delete"></button>
-                                <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
-                                <span class="title">{{ $city->translate($app_locale)->first()['title'] }}</span>
-                                <span class="desc"></span>
-                                <hr>
-                                <div class="status">
-                                    <span>Активный</span>
-                                    <label class="checkbox">
-                                        <input type="checkbox">
-                                        <span class="chk"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse ($cities as $city)
+                            <tr>
+                                <th scope="row">{{ $city->id }}</th>
+                                <td>{{ $city->translate($app_locale)->title }}</td>
+                                <td>{{ $city->status }}</td>
+                            </tr>
+                        @empty
 
-                    @endforelse
+                        @endforelse
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
 
             <div class="pagination-row">
                 <nav aria-label="Page navigation">
-                {{ $cities->links() }}
-                    <ul class="pagination">
-                        <li class="page-item disabled"><span class="page-link">«</span></li>
-                        <li class="page-item active"><span class="page-link">1</span></li>
-                        <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=4">4</a></li>
-
-                        <li class="page-item"><a class="page-link" href="?page=11">11</a></li>
-                        <li class="page-item"><a class="page-link" href="?page=2" aria-label="Next">Следующая</a></li>
-                    </ul>
+                    {{ $cities->links() }}
                 </nav>
 
                 <div class="select">

@@ -23,8 +23,14 @@ class ShopTranslate extends Model
         if ($search) {
             $items = ShopTranslate::where('title','LIKE', '%'.$search.'%')->where('locale', $locale);
         } else {
-            if ($status == 3){
+            if ($status == 3) {
                 $items = ShopTranslate::query();
+            } elseif($status == 4){
+                $items = ShopTranslate::where(function ($query){
+                    $query->WhereHas('parent', function ($query){
+                        $query->where('status', 1);
+                    });
+                });
             } else {
                 $items = ShopTranslate::where(function ($query) use ($status) {
                     $query->WhereHas('parent', function ($query) use ($status) {
