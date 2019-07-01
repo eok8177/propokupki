@@ -30,9 +30,9 @@ class CityController extends Controller
 
     $cities = CityTranslate::orderBy('id', 'desc')
         ->where('title', 'LIKE', '%'.$city.'%')
-        ->where('locale', $app_locale)
-        ->take(10);
-
+//        ->where('locale', $app_locale)
+        ->take(10)->get();
+//    dd($cities->get());
     $data = array();
 
     foreach ($cities as $city){
