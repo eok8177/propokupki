@@ -46,7 +46,7 @@
       <span slot="body">
         <input type="text" placeholder="Змінити місто" v-model.trim="searchCity">
         <div class="cities">
-          <span class="city" v-for="(city, id) in cities" @click="setCity(id, city)">{{city}}</span>
+          <span class="city" v-for="city in cities" @click="setCity(city)">{{city.name}}</span>
         </div>
       </span>
       <div slot="footer">
@@ -73,8 +73,9 @@
         resultOK: false,
         answer: [],
         city: {
-          id: localStorage.cityId,
-          name: localStorage.cityName
+          id: '',
+          name: '',
+          name2: ''
         },
         searchCity: '',
         cities: []
@@ -104,6 +105,9 @@
         this.getCity();
         this.showModalCity = true;
       }
+      this.city.id = localStorage.cityId;
+      this.city.name = localStorage.cityName;
+      this.city.name2 = localStorage.cityName2;
     },
     methods: {
       getSearch: function () {
@@ -128,6 +132,8 @@
               this.city = response.data;
               localStorage.cityId = this.city.id;
               localStorage.cityName = this.city.name;
+              localStorage.cityName2 = this.city.name2;
+              this.$root.$emit('cityChanged');
             }
           )
           .catch(
@@ -149,11 +155,13 @@
           );
       },
 
-      setCity: function(id, city) {
-        localStorage.cityId = id;
-        localStorage.cityName = city;
-        this.city.id = id;
-        this.city.name = city;
+      setCity: function(city) {
+        localStorage.cityId = city.id;
+        localStorage.cityName = city.name;
+        localStorage.cityName2 = city.name2;
+        this.city.id = city.id;
+        this.city.name = city.name;
+        this.city.name2 = city.name2;
         this.showModalCity = false;
         this.searchCity = '';
         this.cities = [];

@@ -2,7 +2,7 @@
   <div class="home-page">
 
     <div class="container page-title">
-      <h1 class="title">Акції та знижки {{cityName}}</h1>
+      <h1 class="title">Акції та знижки {{cityName2}}</h1>
       <p class="sub-title">{{shopCount}}+ магазинів з кращими пропозиціями</p>
     </div>
 
@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <h2 class="block-title">Кращі акції {{cityName}}</h2>
+    <h2 class="block-title">Кращі акції {{cityName2}}</h2>
     <products :products="actions" homePage="true"></products>
 
   </div>
@@ -64,7 +64,7 @@ export default {
     return {
         shops: [],
         actions: [],
-        cityName: '',
+        cityName2: '',
         shopCount: '230',
         dropDowns: {
           shops: false,
@@ -85,7 +85,7 @@ export default {
         .then(
           (response) => {
             this.shops = response.data;
-            this.cityName = localStorage.cityName;
+            this.cityName2 = localStorage.cityName2;
           }
         )
         .catch(
