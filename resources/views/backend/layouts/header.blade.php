@@ -3,8 +3,8 @@
     <div class="container">
         <div class="left-nav">
             <a class="logo" href="/" target="_blank"><img src="{{ asset('img/admin/logo.svg') }}" alt=""></a>
-            <a href="/admin/shops" class="">Магазины <span class="badge badge-pill badge-warning">{{ $header_shops }}</span></a>
-            <a href="/admin/discounts" class="">Акции <span class="badge badge-pill badge-warning">{{ $header_discounts }}</span></a>
+            <a href="/admin/shops" class="{{ Request::is('admin/shops*') ? 'active' : '' }}">Магазины <span class="badge badge-pill badge-warning">{{ $header_shops }}</span></a>
+            <a href="/admin/discounts" class="{{ Request::is('admin/discounts*') ? 'active' : '' }}">Акции <span class="badge badge-pill badge-warning">{{ $header_discounts }}</span></a>
         </div>
 
         <div class="right-nav dropdown">
