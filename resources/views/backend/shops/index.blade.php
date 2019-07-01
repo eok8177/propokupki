@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container">
-        <h1 class="title-page">Города <span class="badge badge-pill badge-secondary">{{ count($shops)  }}</span></h1>
+        <h1 class="title-page">Магазины <span class="badge badge-pill badge-secondary">{{ count($shops)  }}</span></h1>
     </div>
     <hr>
 
@@ -11,14 +11,17 @@
         <div class="container">
             <div class="select">
                 <select class="custom-select" name="" id="status">
-                    <option {{ $status == 1 ?  'selected="selected"' : ''}} value="1">Активные <span class="badge">{{ $count_on }}</span></option>
-                    <option {{ $status == 0 ?  'selected="selected"' : ''}}value="0">не активные <span class="badge">{{ $count_off }}</span></option>
+                    <option {{ $status == 3 ?  'selected="selected"' : ''}} value="3">Все <span class="badge">({{ count($shops)  }})</span></option>
+                    <option {{ $status == 1 ?  'selected="selected"' : ''}} value="1">Активные <span class="badge">({{ $count_on }})</span></option>
+                    <option {{ $status == 0 ?  'selected="selected"' : ''}}value="0">не активные <span class="badge">({{ $count_off }})</span></option>
                 </select>
             </div>
 
             <div class="search">
-                <input type="text" id="search" value="{{ $search }}" placeholder="Введите название">
-                <button class="btn-search"></button>
+                <form action="#">
+                    <input type="text" id="search" value="{{ $search }}" placeholder="Введите название">
+                    <button class="btn-search"></button>
+                </form>
             </div>
 
             <div class="items">
