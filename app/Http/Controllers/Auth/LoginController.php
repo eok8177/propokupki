@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Laravel\Socialite\Facades\Socialite;
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -25,7 +28,13 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        if (auth()->user()->role == 'admin') {
+            return '/admin/discounts';
+        }
+        return '/';
+    }
 
     /**
      * Create a new controller instance.
@@ -35,5 +44,36 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Handle Social login request
+     *
+     * @return response
+     */
+    public function socialLogin($social)
+    {
+        return Socialite::driver($social)->redirect();
+    }
+    /**
+     * Obtain the user information from Social Logged in.
+     * @param $social
+     * @return Response
+     */
+
+    public function handleProviderCallback($social)
+    {
+        $userSocial = Socialite::driver($social)->user();
+        $user = User::where(['email' => $userSocial->getEmail()])->first();
+        if($user){
+            Auth::login($user);
+            if ($user->role == 'admin') return redirect('/admin/discounts');
+            return redirect('/');
+        }else{
+            return view('auth.register',[
+                'name' => $userSocial->getName(),
+                'email' => $userSocial->getEmail()
+            ]);
+        }
     }
 }

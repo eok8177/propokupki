@@ -12,7 +12,11 @@
 */
 
 Auth::routes();
-Route::redirect('/register', '/login'); //Block register
+// Route::redirect('/register', '/login'); //Block register
+
+// Social login
+Route::get('/login/{social}','Auth\LoginController@socialLogin')->where('social','twitter|facebook|linkedin|google|github|bitbucket');
+Route::get('/login/{social}/callback','Auth\LoginController@handleProviderCallback')->where('social','twitter|facebook|linkedin|google|github|bitbucket');
 
 Route::group([
     'as' => 'admin.',
