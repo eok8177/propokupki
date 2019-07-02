@@ -4,7 +4,7 @@
       <div class="first-line">
 
         <div class="select">
-          <button class="dropdown btn-select" @click="toggle('sort')" v-bind:class="{'open' : dropDowns.sort}">
+          <button class="dropdown btn-select" @click="toggle('sort')" v-bind:class="{'open active' : dropDowns.sort}">
             {{select.sort[filter.sort]}}
           </button>
           <ul>
@@ -20,7 +20,7 @@
         <!-- <button class="btn">Всі категорії</button> -->
 
         <div class="select">
-          <button class="dropdown btn-select" @click="toggle('dates')" v-bind:class="{'open' : dropDowns.dates}">
+          <button class="dropdown btn-select" @click="toggle('dates')" v-bind:class="{'open active' : dropDowns.dates}">
             {{select.dates[filter.dates]}}
           </button>
           <ul>
