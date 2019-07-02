@@ -94,7 +94,7 @@ export default {
         axios.get('/api/actions/?city='+localStorage.cityId)
           .then(
             (response) => {
-              this.actions = response.data.slice(0, 5);
+              this.actions = response.data;
             }
           )
           .catch(

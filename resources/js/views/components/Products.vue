@@ -85,7 +85,7 @@ export default {
   watch: {
     products: function (newVal) {
       this.actions = this.paginate(newVal, this.pageSize, 1);
-      this.pageCount = Math.round(newVal.length / this.pageSize);
+      this.pageCount = newVal.length / this.pageSize;
     }
   },
   methods: {
