@@ -39,12 +39,13 @@ class ActionController extends Controller
       });
 
       $dates = $request->get('dates', '');
+
       $date_now = Date::now();
 
       switch ($dates){
           case 'now':
               $results->whereHas('discounts', function ($q) use ($date_now) {
-                  $q->where('date_start', '<=', $date_now)->where('status', 1);
+                  $q->where('date_start', '<=', $date_now)->where('date_end', '>', $date_now)->where('status', 1);
               });
               break;
           case 'feature':
@@ -59,7 +60,7 @@ class ActionController extends Controller
               break;
           default :
               $results->whereHas('discounts', function ($q) use ($date_now) {
-                  $q->where('date_end', '>', $date_now)->where('status', 1);
+                  $q->where('date_end', '>=', $date_now)->where('status', 1);
               });
       }
 
@@ -79,13 +80,13 @@ class ActionController extends Controller
               $results->orderBy('price', 'desc');
               break;
           default:
-              $results->orderBy('updated_at', 'asc');
+              $results->orderBy('updated_at', 'desc');
 
       }
 
       $data = array();
 
-      $products = $results->orderBy('id', 'desc')->get();
+      $products = $results->get();
 
       foreach ($products as $product){
 
@@ -115,6 +116,7 @@ class ActionController extends Controller
           $description = implode(' ', $result);
 
           $unit = '';
+
           if ($product->unit == 'kg'){
               $unit = 'кг';
           } elseif($product->unit == 'l'){

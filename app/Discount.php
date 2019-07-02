@@ -80,9 +80,4 @@ class Discount extends Model
 
 
     }
-
-    public function translations()
-    {
-        return $this->hasMany(ProductTranslate::class);
-    }
 }

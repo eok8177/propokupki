@@ -38,7 +38,7 @@ class ProductController extends Controller
         $unit = 'кг';
     } elseif($product->unit == 'l'){
         $unit = 'k';
-    } elseif($product->unit == 'st'){
+    } elseif($product->unit == 'sht'){
         $unit = 'шт';
     } elseif($product->unit == 'up'){
         $unit = 'уп';
@@ -82,6 +82,7 @@ class ProductController extends Controller
 
           $get_title = $result = explode(' ', $get_product['title']);
           $title = $get_title[0];
+
           $results = Product::query();
 
           $results->when($request->get('city', 314), function ($query, $city_id) {
@@ -94,11 +95,13 @@ class ProductController extends Controller
               });
           });
 
-          $results->when($request->get('data'), function ($query, $title) {
+          $results->when($title, function ($query, $title) {
               return $query->whereHas('translations', function ($q) use ($title) {
                   $q->where('title', 'LIKE', '%'.$title.'%');
               });
           });
+
+          $results->where('id', '<>', $get_product['product_id']);
 
           $products = $results->get();
 
@@ -136,7 +139,7 @@ class ProductController extends Controller
                   $unit = 'кг';
               } elseif($product->unit == 'l'){
                   $unit = 'k';
-              } elseif($product->unit == 'st'){
+              } elseif($product->unit == 'sht'){
                   $unit = 'шт';
               } elseif($product->unit == 'up'){
                   $unit = 'уп';

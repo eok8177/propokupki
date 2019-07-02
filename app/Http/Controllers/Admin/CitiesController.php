@@ -30,7 +30,7 @@ class CitiesController extends Controller
         }
 
         return view('backend.cities.index', [
-            'cities' => $cities->paginate(50),
+            'cities' => $cities->paginate(10),
             'app_locale' => env('APP_LOCALE', 'ua')
         ]);
     }

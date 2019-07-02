@@ -72,14 +72,11 @@ class ShopsController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request->image);
         $request->validate([
             'slug' => 'required|unique:pages|max:255',
             'import_file' => 'required',
             'image' => 'required'
-        ],[
-            'slug.required' => 'введите урл магазина',
-            'import_file.required' => 'добавте файл импорта',
-            'image.required' => 'добавте картинку магазина',
         ]);
 
 
@@ -187,6 +184,8 @@ class ShopsController extends Controller
             $request->validate([
                 'slug' => Rule::unique('shops')->ignore($shop->id),
                 'slug' => 'required|max:255',
+//                'import_file' => 'required',
+//                'image' => 'required'
             ]);
 
             $shop->fill($request->all())->save();
@@ -301,7 +300,6 @@ class ShopsController extends Controller
 
     public function ajaxShops(Request $request)
     {
-//        dd($request->all());
         $search = $request->str;
         $locale = env('APP_LOCALE', 'ua');
         $status = 1;
@@ -310,7 +308,7 @@ class ShopsController extends Controller
         $hlml = '';
 
         foreach ($shops->get() as $shop) {
-            $hlml .= '<li><a class="shop_id" href="#" onclick="addIdShop('.$shop->parent->id.', \''. asset('/storage/'.$shop->parent->image).'\'); return false;">'. $shop->title .'</a></li>';
+            $hlml .= '<li><a class="shop_id" href="#" onclick="addIdShop('.$shop->parent->id.', \''. asset('/storage/'.$shop->parent->image).'\')">'. $shop->title .'</a></li>';
         }
         return response()->json($hlml, 200);
 

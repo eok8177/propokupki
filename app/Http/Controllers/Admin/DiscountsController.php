@@ -202,6 +202,12 @@ class DiscountsController extends Controller
                             $product['image'] = $img->store('uploads/' . $product_save->id, 'public');
                         }
 
+                        $slug = Product::where('slug', $product['slug'])->get();
+
+                        if (count($slug) > 0){
+                            $product['slug'] = '';
+                        }
+
                         $product_save->update($product);
 
                         $translate = [];
@@ -216,9 +222,17 @@ class DiscountsController extends Controller
 
                     } else {
 
+                        $slug = Product::where('slug', $product['slug'])->get();
+
+                        if (count($slug) > 0){
+                            $product['slug'] = '';
+                        }
+
                         $prod = Product::create($product);
 
                         array_push($product_not_delete, $prod->id);
+
+
 
                         if (!empty($product['image'])) {
                             $img = $product['image'];
