@@ -15,9 +15,9 @@ class ShopTranslate extends Model
         return $this->belongsTo(Shop::class, 'shop_id')->withDefault();
     }
 
-
-    public static function searchShops ($locale = null, $search, $status)
+    public static function searchShops ($locale = null, $search, $status, $shops_not_discounts)
     {
+
         $locale = $locale ?? app()->getLocale();
 
         if ($search) {
@@ -26,9 +26,9 @@ class ShopTranslate extends Model
             if ($status == 3) {
                 $items = ShopTranslate::query();
             } elseif($status == 4){
-                $items = ShopTranslate::where(function ($query){
-                    $query->WhereHas('parent', function ($query){
-                        $query->where('status', 1);
+                $items = ShopTranslate::where(function ($query) use ($shops_not_discounts){
+                    $query->WhereHas('parent', function ($query) use ($shops_not_discounts){
+                        $query->whereIn('shop_id', $shops_not_discounts);
                     });
                 });
             } else {

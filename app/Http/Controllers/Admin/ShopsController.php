@@ -30,14 +30,15 @@ class ShopsController extends Controller
         $limit = $request->input('limit', 50);
         $locale = env('APP_LOCALE', 'ua');
 
-        $shops = ShopTranslate::searchShops($locale, $search, $status);
+        $shops_not_discounts = Shop::doesntHave('discounts')->pluck('id');
+        $shops = ShopTranslate::searchShops($locale, $search, $status, $shops_not_discounts);
 
         return view('backend.shops.index', [
             'shops'             => $shops->paginate($limit),
             'app_locale'        => $locale,
             'count_on'          => count(Shop::where('status', 1)->get()),
             'count_off'         => count(Shop::where('status', 0)->get()),
-            'not_discounts'         => count(Shop::where('status', 0)->get()),
+            'not_discounts'     => count($shops_not_discounts),
             'status'            => $status,
             'limit'            => $limit,
             'search'            => $search,
