@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     getAll: function() {
-      axios.get('/api/shops/?city='+localStorage.cityId)
+      axios.get('/api/shops/?city='+localStorage.cityId+'&count=5')
         .then(
           (response) => {
             this.shops = response.data;
