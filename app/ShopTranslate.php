@@ -15,7 +15,7 @@ class ShopTranslate extends Model
         return $this->belongsTo(Shop::class, 'shop_id')->withDefault();
     }
 
-    public static function searchShops ($locale = null, $search, $status, $shops_not_discounts)
+    public static function searchShops ($locale = null, $search, $status, $shops_not_discounts=array())
     {
 
         $locale = $locale ?? app()->getLocale();

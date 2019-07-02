@@ -14,7 +14,7 @@
     <div class="filtered">
         @foreach($discount->shops as $shop)
             <div class="item">
-                <button class="btn-delete" onclick="$(this).parent().remove()"></button>
+                <button class="btn-delete delete-item" onclick="$(this).parent().remove()"></button>
                 {{ Form::hidden('shop[]', $shop->id, []) }}
                 <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
             </div>
@@ -165,7 +165,7 @@
   });
   function addIdShop(idShop, imgShop){
       var addHtml = '<div class="item">\n' +
-          '            <button class="btn-delete" onclick="$(this).parent().remove()"></button>\n' +
+          '            <button class="btn-delete delete-item" onclick="$(this).parent().remove()"></button>\n' +
           '              <input type="hidden" name="shop[]" value="'+idShop+'" >\n' +
           '            <div class="image"><img src="'+imgShop+'" alt=""></div>\n' +
           '        </div>';

@@ -301,6 +301,7 @@ class ShopsController extends Controller
 
     public function ajaxShops(Request $request)
     {
+//        dd($request->all());
         $search = $request->str;
         $locale = env('APP_LOCALE', 'ua');
         $status = 1;

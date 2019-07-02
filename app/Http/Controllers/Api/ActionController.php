@@ -85,7 +85,7 @@ class ActionController extends Controller
 
       $data = array();
 
-      $products = $results->get();
+      $products = $results->orderBy('id', 'desc')->get();
 
       foreach ($products as $product){
 
@@ -119,7 +119,7 @@ class ActionController extends Controller
               $unit = 'кг';
           } elseif($product->unit == 'l'){
               $unit = 'л';
-          } elseif($product->unit == 'st'){
+          } elseif($product->unit == 'sht'){
               $unit = 'шт';
           } elseif($product->unit == 'up'){
               $unit = 'уп';
