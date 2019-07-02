@@ -355,7 +355,11 @@ input {
         align-items: center;
         display: flex;
         a {
-            @media (min-width: 480px) {margin-right: 60px;}
+            @media (min-width: 480px) {
+                margin-right: 60px;
+                padding: 8px 14px;
+                &.active, &:hover {background: #F56767;}
+            }
         }
     }
     .right-nav {
@@ -662,7 +666,7 @@ input {
         max-width: 120px;
         //width: 100%;
         height: 100%;
-        img {max-width: 100%;}
+        img {max-width: 100px;}
     }
     .block {
         float: left;

@@ -22,18 +22,13 @@
                         <strong>{{ $errors->first('password') }}</strong>
                     </span>
                 @endif
-                <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                {{-- <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}> --}}
 
-                <label class="form-check-label" for="remember">
+                {{-- <label class="form-check-label" for="remember">
                     {{ __('Remember Me') }}
-                </label>
+                </label> --}}
                 <button type="submit" class="btn btn-red">Войти</button>
             </form>
-            @if (Route::has('password.request'))
-                <a class="btn btn-link" href="{{ route('password.request') }}">
-                    {{ __('Forgot Your Password?') }}
-                </a>
-            @endif
             <p>Войти с помощью соцсетей</p>
             <div class="inline-btns">
                 <a href=""><i class="ico ico-gp"></i>Google</a>
@@ -42,6 +37,13 @@
         </div>
         <div class="footer">
             <a href="/register" class="red-link">Зарегистрироваться</a>
+            @if (Route::has('password.request'))
+            <p>
+                <a class="red-link" href="{{ route('password.request') }}">
+                    {{ __('Forgot Your Password?') }}
+                </a>
+            </p>
+            @endif
         </div>
     </div>
 
