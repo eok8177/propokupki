@@ -36,6 +36,7 @@ class ShopsController extends Controller
         return view('backend.shops.index', [
             'shops'             => $shops->paginate($limit),
             'app_locale'        => $locale,
+            'count_all'         => count(Shop::query()->pluck('id')),
             'count_on'          => count(Shop::where('status', 1)->get()),
             'count_off'         => count(Shop::where('status', 0)->get()),
             'not_discounts'     => count($shops_not_discounts),

@@ -11,7 +11,7 @@
         <div class="container">
             <div class="select">
                 <select class="custom-select" name="" id="status">
-                    <option {{ $status == 3 ?  'selected="selected"' : ''}} value="3">Все <span class="badge">({{ count($shops)  }})</span></option>
+                    <option {{ $status == 3 ?  'selected="selected"' : ''}} value="3">Все <span class="badge">({{ $count_all }})</span></option>
                     <option {{ $status == 1 ?  'selected="selected"' : ''}} value="1">Активные <span class="badge">({{ $count_on }})</span></option>
                     <option {{ $status == 0 ?  'selected="selected"' : ''}}value="0">Не активные <span class="badge">({{ $count_off }})</span></option>
                     <option {{ $status == 4 ?  'selected="selected"' : ''}}value="4">Без акций <span class="badge">({{ $not_discounts }})</span></option>

@@ -18,7 +18,7 @@ class CityController extends Controller
     $res = [
         'id' => 314,
         'name' => $city->title,
-        'name2' => $city->title2
+        'name2' => $city->title3
     ];
 
     return response()->json($res, 200);
@@ -39,7 +39,7 @@ class CityController extends Controller
         $data[] = [
             'id' => $city->city_id,
             'name' => $city->title,
-            'name2' => $city->title2
+            'name2' => $city->title3
         ];
     }
 
