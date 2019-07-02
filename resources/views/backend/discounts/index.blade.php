@@ -1,7 +1,6 @@
 @extends('backend.layouts.admin')
 
 @section('content')
-
     <div class="container">
         <h1 class="title-page">Акции <span class="badge badge-pill badge-secondary">{{ count($discounts) }}</span></h1>
         <a href="{{ route('admin.discounts.create') }}" class="btn-noborder"><span class="ico ico-big ico-plus"></span> Новая акция</a>
@@ -11,25 +10,25 @@
     <div class="actions">
         <div class="container">
             <div class="select">
-                <select name="" class="custom-select" name="" id="status">
-                    <option value="all" {{$status == 'all' ? 'selected="selected"' : ''}}>Все <span class="badge">{{ $header_discounts }}</span></option>
-                    <option value="on" {{$status == 'on' ? 'selected="selected"' : ''}}>Активные <span class="badge">{{ $count_on }}</span></option>
-                    <option value="off" {{$status == 'off' ? 'selected="selected"' : ''}}>не активные <span class="badge">{{ $count_off }}</span></option>
+                <select class="custom-select" name="status" onchange="filter(); return false;">
+                    <option value="all" {{ request('status') === 'all' ? 'selected="selected"' : ''}}>Все <span class="badge">{{ $header_discounts }}</span></option>
+                    <option value="on" {{ request('status') === 'on' ? 'selected="selected"' : ''}}>Активные <span class="badge">{{ $count_on }}</span></option>
+                    <option value="off" {{ request('status') === 'off' ? 'selected="selected"' : ''}}>не активные <span class="badge">{{ $count_off }}</span></option>
                 </select>
             </div>
 
-            {!! Form::open(['route' => ['admin.discounts.index'], 'method' => 'GET']) !!}
+
             <div class="search">
-                <input name="search" id="shop_search" type="text" data-href="{{route('admin.shops.ajaxShops')}}" placeholder="Введите название" value="{{app('request')->input('search')}}">
-                <button type="submit" class="btn-search"></button>
+                <input name="search" id="shop_search" type="text" data-href="{{route('admin.shops.ajaxShops')}}" placeholder="Введите название">
+                <button type="button" class="btn-search" onclick="filter(); return false;"></button>
                 <div class="search-result"></div>
             </div>
-            {!! Form::close() !!}
+
 
             <div class="filtered">
                 @foreach($shops as $shop)
-                    <div class="item">
-                        <button class="btn-delete" onclick="$(this).parent().remove()"></button>
+                    <div class="item" data-id="{{ $shop->id }}">
+                        <button class="btn-delete" onclick="removeIdShop({{ $shop->id }}); return false;"></button>
                         <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
                     </div>
                 @endforeach
@@ -68,14 +67,13 @@
 
             <div class="pagination-row">
                 <nav aria-label="Page navigation">
-                    {{ $discounts->links() }}
+                    {{ $discounts->appends(request()->all())->links() }}
                 </nav>
 
                 <div class="select">
                     <label>Выводить по</label>
-                    {{ Form::select('status', [50 => 50, 100 => 100, 200 => 200], $limit, ['class' => 'custom-select', 'id' => 'limit']) }}
-                 </div>
-
+                    {{ Form::select('limit', [50 => 50, 100 => 100, 200 => 200], request('limit', 50), ['class' => 'custom-select', 'onchange' => 'filter(); return false;']) }}
+                </div>
             </div>
         </div>
     </div>
@@ -83,26 +81,52 @@
 
 @push('scripts')
 <script>
-    function addIdShop(idShop, imgShop){
-        var addHtml = '<div class="item">\n' +
-        '            <button class="btn-delete" onclick="$(this).parent().remove()"></button>\n' +
-        '              <input type="hidden" class="shop-id" name="shop[]" value="'+idShop+'" >\n' +
-        '            <div class="image"><img src="'+imgShop+'" alt=""></div>\n' +
-        '        </div>';
+    let shops = [];
 
-        $('.filtered').append(addHtml);
+    function init() {
+        if ($('.filtered > .item').length > 0) {
+            $('.filtered > .item').each(function () {
+               shops.push($(this).data('id'));
+            });
+        }
     }
-    $(function() {
-        $("body").on('DOMSubtreeModified', ".filtered", function() {
-            setTimeout(function () {
-                var IDs = [];
-                $(document).find('.shop-id').each(function () {
-                    IDs.push($(this).val());
-                });
-                window.location.href = window.location.href.split('?')[0] + "?shops=" + IDs;
-            }, 2000);
-        });
-    });
+
+    function addIdShop(idShop, imgShop){
+        if (shops.indexOf(idShop) < 0) {
+            shops.push(idShop);
+
+            let html = '<div class="item" data-id="' + idShop + '">\n' +
+                '            <button class="btn-delete" onclick="removeIdShop(' + idShop + '); return false;"></button>\n' +
+                '            <div class="image"><img src="' + imgShop + '" alt=""></div>\n' +
+                '        </div>';
+
+            $('.filtered').append(html);
+        }
+    }
+
+    function removeIdShop(idShop) {
+        shops.splice(shops.indexOf(idShop), 1);
+        $('.item[data-id="' + idShop + '"]').remove();
+    }
+
+    function filter() {
+        let params = {
+            shops: shops.join(','),
+            status: $('select[name="status"]').val(),
+            limit: $('select[name="limit"]').val(),
+            page: {{ request('page', 1) }}
+        };
+
+        let url = window.location.href.split('?')[0];
+
+        for (i in params) {
+            url += (i === 'shops' ? '?' : '&') + [i, params[i]].join('=');
+        }
+
+        window.location = url;
+    }
+
+    init();
 </script>
 
 @endpush

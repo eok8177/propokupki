@@ -62,8 +62,6 @@ class DiscountsController extends Controller
             'app_locale'        => $locale,
             'count_on'          => count(Discount::where('status', 1)->get()),
             'count_off'         => count(Discount::where('status', 0)->get()),
-            'status'            => $status,
-            'limit'             => $limit,
             'shops'             => Shop::whereIn('id', $shops)->get(),
         ]);
     }
