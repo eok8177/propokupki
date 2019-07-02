@@ -225,7 +225,7 @@ button {
   background: #fff;
   box-shadow: 0px 8px 12px rgba(178, 178, 178, 0.15);
   border-radius: 0px 0px 3px 3px;
-  z-index: 2;
+  z-index: 10;
   color: #242729;
   padding-top: 16px;
   padding-bottom: 20px;
@@ -324,9 +324,28 @@ button {
     line-height: 40px;
     vertical-align: middle;
     margin-right: 50px;
+    @media(max-width:991px) {margin-right: 20px;}
   }
   .login {
     .ico {margin-bottom: 2px;}
+  }
+  @media(max-width:767px) {
+    .left {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .search {
+      margin: auto;
+      max-width: 360px;
+    }
+    .righ {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
+    }
   }
 }
 .city-select {
@@ -376,6 +395,9 @@ button {
       @media (max-width: 400px) {
         .shop:nth-of-type(1) {display: none;}
         justify-content: center;
+      }
+      .shop:last-child {
+        display: block;
       }
     }
     a {
@@ -725,11 +747,11 @@ button {
       color: #677075;
       padding-left: 8px;
     }
-    &.active {
-      background: #31CC74;
-      border-color: #31CC74;
-      color: #fff;
-    }
+  }
+  button.active {
+    background: #31CC74;
+    border-color: #31CC74;
+    color: #fff;
   }
   .btn-select {
     width: 256px;
@@ -980,7 +1002,7 @@ footer {
     list-style: none;
     padding: 0;
     margin: 0;
-    height: 158px;
+    max-height: 158px;
     overflow-y: auto;
     li {
       a {

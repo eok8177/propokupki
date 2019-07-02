@@ -2,7 +2,7 @@
   <div class="actions-page">
 
     <div class="container page-title left">
-      <h1 class="title">Акції та знижки {{cityName}}</h1>
+      <h1 class="title">Акції та знижки {{cityName2}}</h1>
     </div>
 
     <filter-top :shop="shop"></filter-top>
@@ -27,7 +27,7 @@ export default {
       filter: '',
       actions: [],
       shop: '',
-      cityName: '',
+      cityName2: '',
     }
   },
   methods: {
@@ -49,12 +49,12 @@ export default {
   mounted() {
     this.$root.$on('cityChanged', () => {
       this.getActions(this.filter);
-      this.cityName = localStorage.cityName;
+      this.cityName2 = localStorage.cityName2;
     });
     if(this.$route.query.shop) {
         this.shop = this.$route.query.shop;
     }
-    this.cityName = localStorage.cityName;
+    this.cityName2 = localStorage.cityName2;
   },
 }
 </script>
