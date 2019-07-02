@@ -304,7 +304,7 @@ class ShopsController extends Controller
         $hlml = '';
 
         foreach ($shops->get() as $shop) {
-            $hlml .= '<li><a class="shop_id" href="#" onclick="addIdShop('.$shop->parent->id.', \''. asset('/storage/'.$shop->parent->image).'\')">'. $shop->title .'</a></li>';
+            $hlml .= '<li><a class="shop_id" href="#" onclick="addIdShop('.$shop->parent->id.', \''. asset('/storage/'.$shop->parent->image).'\'); return false;">'. $shop->title .'</a></li>';
         }
         return response()->json($hlml, 200);
 

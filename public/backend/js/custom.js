@@ -6,23 +6,23 @@ $(document).ready(function () {
     });
 
     //Delete record
-    $('.btn-delete').on('click', function (e) {
-        if (!confirm('Are you sure you want to delete?')) return false;
-        e.preventDefault();
-        console.log($(this));
-        // return;
-        if($(this).data('href')){
-            $.ajax({
-                type: 'DELETE',  // destroy Method
-                url: $(this).data('href')
-            }).done(function (data) {
-                console.log(data);
-                location.reload(true);
-            });
-        } else {
-            $(this).parent('.delete-block').remove();
-        }
-    });
+    // $('.btn-delete').on('click', function (e) {
+    //     if (!confirm('Are you sure you want to delete?')) return false;
+    //     e.preventDefault();
+    //     console.log($(this));
+    //     // return;
+    //     if($(this).data('href')){
+    //         $.ajax({
+    //             type: 'DELETE',  // destroy Method
+    //             url: $(this).data('href')
+    //         }).done(function (data) {
+    //             console.log(data);
+    //             location.reload(true);
+    //         });
+    //     } else {
+    //         $(this).parent('.delete-block').remove();
+    //     }
+    // });
 
     //Change status of record
     $('.checkbox').on('click', function (e) {
@@ -43,28 +43,28 @@ $(document).ready(function () {
     });
 
     //Select limit
-    $('#limit').on('change', function (e) {
-        e.preventDefault();
-        var item = $(this).val();
-        console.log(item);
-        window.location.href = window.location.href.split('?')[0] + "?limit="+item;
-    });
+    // $('#limit').on('change', function (e) {
+    //     e.preventDefault();
+    //     var item = $(this).val();
+    //     console.log(item);
+    //     window.location.href = window.location.href.split('?')[0] + "?limit="+item;
+    // });
 
     //Select status
-    $('#status').on('change', function (e) {
-        e.preventDefault();
-        var item = $(this).val();
-        console.log(item);
-        window.location.href = window.location.href.split('?')[0] + "?status="+item;
-    });
+    // $('#status').on('change', function (e) {
+    //     e.preventDefault();
+    //     var item = $(this).val();
+    //     console.log(item);
+    //     window.location.href = window.location.href.split('?')[0] + "?status="+item;
+    // });
 
     //Change search
-    $('.btn-search').on('click', function (e) {
-        e.preventDefault();
-        var item = $('#search').val();
-        console.log(item);
-        window.location.href = window.location.href.split('?')[0] + "?search="+item;
-    });
+    // $('.btn-search').on('click', function (e) {
+    //     e.preventDefault();
+    //     var item = $('#search').val();
+    //     console.log(item);
+    //     window.location.href = window.location.href.split('?')[0] + "?search="+item;
+    // });
 
 
     //Live search shops
