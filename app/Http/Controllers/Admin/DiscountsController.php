@@ -256,18 +256,20 @@ class DiscountsController extends Controller
 
                         $slug = Product::where('slug', $product['slug'])->where('id', '<>', $prod->id)->get();
 
-                        while (count($slug) > 0) {
-                            $product['slug'] = $product['slug'].'-'.rand(1, 15);
+                        if (count($slug) == 0) {
                             $prod->slug = $product['slug'];
                             $prod->save();
-                            $slug2 = Product::where('slug', $prod->slug)->where('id', '<>', $prod->id)->get();
-                            if (count($slug2) == 0 ) {
-                                break;
+                        } else {
+                            while (count($slug) > 0) {
+                                $product['slug'] = $product['slug'].'-'.rand(1, 15);
+                                $prod->slug = $product['slug'];
+                                $prod->save();
+                                $slug2 = Product::where('slug', $prod->slug)->where('id', '<>', $prod->id)->get();
+                                if (count($slug2) == 0 ) {
+                                    break;
+                                }
                             }
                         }
-
-
-                        $prod->save();
 
                     }
 
