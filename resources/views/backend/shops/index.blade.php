@@ -10,10 +10,11 @@
     <div class="shops">
         <div class="container">
             <div class="select">
-                <select class="custom-select" name="" id="status">
-                    <option {{ $status == 3 ?  'selected="selected"' : ''}} value="3">Все <span class="badge">({{ count($shops)  }})</span></option>
+                <select class="custom-select" name="status" id="status" onchange="filter(); return false;">
+                    <option {{ $status == 3 ?  'selected="selected"' : ''}} value="3">Все <span class="badge">({{ $count_all }})</span></option>
                     <option {{ $status == 1 ?  'selected="selected"' : ''}} value="1">Активные <span class="badge">({{ $count_on }})</span></option>
-                    <option {{ $status == 0 ?  'selected="selected"' : ''}}value="0">не активные <span class="badge">({{ $count_off }})</span></option>
+                    <option {{ $status == 0 ?  'selected="selected"' : ''}} value="0">Не активные <span class="badge">({{ $count_off }})</span></option>
+                    <option {{ $status == 4 ?  'selected="selected"' : ''}} value="4">Без акций <span class="badge">({{ $not_discounts }})</span></option>
                 </select>
             </div>
 
@@ -37,7 +38,7 @@
                     @forelse ($shops as $shop)
                         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
                             <div class="shop-item">
-                                <button data-href="{{ route('admin.shops.destroy', $shop->parent->id) }}" class="btn-delete"></button>
+                                <button data-href="{{ route('admin.shops.destroy', $shop->parent->id) }}" class="btn-delete delete-item"></button>
                                 <div class="image"><img src="{{ $shop->parent->image ? asset('/storage/'.$shop->parent->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
                                 <a href="{{ route('admin.shops.edit', $shop->parent->id) }}"><span class="title">{{ $shop->title }}</span></a>
                                 <span class="desc"></span>
@@ -65,7 +66,7 @@
 
                 <div class="select">
                     <label>Выводить по</label>
-                    {{ Form::select('status', [50 => 50, 100 => 100, 200 => 200], $limit, ['class' => 'custom-select', 'id' => 'limit']) }}
+                    {{ Form::select('limit', [50 => 50, 100 => 100, 200 => 200], $limit, ['class' => 'custom-select', 'id' => 'limit', 'onchange' => 'filter(); return false;']) }}
                 </div>
 
             </div>
@@ -74,3 +75,24 @@
 
 
 @endsection
+
+@push('scripts')
+    <script>
+        function filter() {
+            let params = {
+                status: $('select[name="status"]').val(),
+                limit: $('select[name="limit"]').val(),
+                page: {{ request('page', 1) }}
+            };
+            console.log(params);
+            let url = window.location.href.split('?')[0];
+
+            for (i in params) {
+                url += (i === 'status' ? '?' : '&') + [i, params[i]].join('=');
+            }
+
+            window.location = url;
+        }
+
+    </script>
+@endpush

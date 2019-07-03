@@ -14,7 +14,8 @@
       <div class="righ">
         <button class="city-select" @click="showModalCity = true">{{city.name}}</button>
 
-        <a href="/login" class="login"><span class="ico ico-login"></span> Увійти</a>
+        <a v-if="!userName" href="/login" class="login"><span class="ico ico-login"></span> Увійти</a>
+        <a v-if="userName" href="/logout" @click.prevent="logout()" class="login"><span class="ico ico-login"></span> Вийти</a>
       </div>
 
 
@@ -78,7 +79,8 @@
           name2: ''
         },
         searchCity: '',
-        cities: []
+        cities: [],
+        userName: false
       }
     },
     watch: { // эта функция запускается при любом изменении вопроса
@@ -93,6 +95,7 @@
       this.debouncedGetSearch = _.debounce(this.getSearch, 500);
       this.debouncedSearchCities = _.debounce(this.searchCities, 500);
       this.resultOK = false;
+      this.getUser();
     },
     mounted() {
       document.body.addEventListener('keyup', e => {
@@ -175,6 +178,35 @@
 
       closeSearch: function() {
         this.resultOK = false;
+      },
+
+      getCookie: function(name) {
+        var matches = document.cookie.match(new RegExp(
+          "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+      },
+
+      getUser: function() {
+        var token = this.getCookie('user');
+        if (!token) return false;
+        axios.get('/api/user/'+token)
+          .then(
+            (response) => {
+              this.userName = response.data.name;
+              localStorage.userId = response.data.id;
+              localStorage.userName = response.data.name;
+              localStorage.userEmail = response.data.email;
+            }
+          )
+          .catch(
+            (error) => console.log(error)
+          );
+      },
+
+      logout: function() {
+        localStorage.clear();
+        window.location.href = '/logout';
       }
     },
 

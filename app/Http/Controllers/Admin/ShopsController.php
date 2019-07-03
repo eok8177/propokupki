@@ -30,13 +30,16 @@ class ShopsController extends Controller
         $limit = $request->input('limit', 50);
         $locale = env('APP_LOCALE', 'ua');
 
-        $shops = ShopTranslate::searchShops($locale, $search, $status);
+        $shops_not_discounts = Shop::doesntHave('discounts')->pluck('id');
+        $shops = ShopTranslate::searchShops($locale, $search, $status, $shops_not_discounts);
 
         return view('backend.shops.index', [
             'shops'             => $shops->paginate($limit),
             'app_locale'        => $locale,
+            'count_all'         => count(Shop::query()->pluck('id')),
             'count_on'          => count(Shop::where('status', 1)->get()),
             'count_off'         => count(Shop::where('status', 0)->get()),
+            'not_discounts'     => count($shops_not_discounts),
             'status'            => $status,
             'limit'            => $limit,
             'search'            => $search,
@@ -69,10 +72,15 @@ class ShopsController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request->image);
         $request->validate([
             'slug' => 'required|unique:pages|max:255',
             'import_file' => 'required',
             'image' => 'required'
+        ],[
+            'slug.required' => 'введите урл магазина',
+            'import_file.required' => 'добавте файл импорта',
+            'image.required' => 'добавте картинку магазина',
         ]);
 
 
@@ -182,6 +190,8 @@ class ShopsController extends Controller
                 'slug' => 'required|max:255',
 //                'import_file' => 'required',
 //                'image' => 'required'
+            ],[
+                'slug.required' => 'введите урл магазина',
             ]);
 
             $shop->fill($request->all())->save();
@@ -304,7 +314,7 @@ class ShopsController extends Controller
         $hlml = '';
 
         foreach ($shops->get() as $shop) {
-            $hlml .= '<li><a class="shop_id" href="#" onclick="addIdShop('.$shop->parent->id.', \''. asset('/storage/'.$shop->parent->image).'\'); return false;">'. $shop->title .'</a></li>';
+            $hlml .= '<li><a class="shop_id" href="#" onclick="addIdShop('.$shop->parent->id.', \''. asset('/storage/'.$shop->parent->image).'\')">'. $shop->title .'</a></li>';
         }
         return response()->json($hlml, 200);
 

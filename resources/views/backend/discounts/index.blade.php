@@ -28,7 +28,7 @@
             <div class="filtered">
                 @foreach($shops as $shop)
                     <div class="item" data-id="{{ $shop->id }}">
-                        <button class="btn-delete" onclick="removeIdShop({{ $shop->id }}); return false;"></button>
+                        <button class="btn-delete delete-item" onclick="removeIdShop({{ $shop->id }}); return false;"></button>
                         <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
                     </div>
                 @endforeach
@@ -38,7 +38,7 @@
 
                 @forelse ($discounts as $discount)
                     <div class="action-item">
-                        <button data-href="{{ route('admin.discounts.destroy', $discount->id) }}" class="btn-delete"></button>
+                        <button data-href="{{ route('admin.discounts.destroy', $discount->id) }}" class="btn-delete delete-item"></button>
                         <a href="{{ route('admin.discounts.edit', $discount->id) }}">
                             @foreach($discount->shops as $shop)
                             <div class="image"><img src="{{ $shop->image ? asset('/storage/'.$shop->image) : asset('/storage/no_image.jpg') }}" alt=""></div>
@@ -96,7 +96,7 @@
             shops.push(idShop);
 
             let html = '<div class="item" data-id="' + idShop + '">\n' +
-                '            <button class="btn-delete" onclick="removeIdShop(' + idShop + '); return false;"></button>\n' +
+                '            <button class="btn-delete delete-item" onclick="removeIdShop(' + idShop + '); return false;"></button>\n' +
                 '            <div class="image"><img src="' + imgShop + '" alt=""></div>\n' +
                 '        </div>';
 
