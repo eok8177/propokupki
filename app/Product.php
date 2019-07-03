@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use Sluggable;
+    // use Sluggable;
 
     protected $table = 'products';
 
@@ -20,14 +20,14 @@ class Product extends Model
      *
      * @return array
      */
-    public function sluggable()
-    {
-        return [
-            'slug' => [
-                'source' => 'title'
-            ]
-        ];
-    }
+    // public function sluggable()
+    // {
+    //     return [
+    //         'slug' => [
+    //             'source' => 'title'
+    //         ]
+    //     ];
+    // }
 
     protected $fillable = ['old_price', 'price', 'discount', 'quantity', 'unit', 'image'];
 
