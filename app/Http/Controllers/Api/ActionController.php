@@ -39,27 +39,28 @@ class ActionController extends Controller
       });
 
       $dates = $request->get('dates', '');
+
       $date_now = Date::now();
 
       switch ($dates){
           case 'now':
               $results->whereHas('discounts', function ($q) use ($date_now) {
-                  $q->where('date_start', '<=', $date_now);
+                  $q->where('date_start', '<=', $date_now)->where('date_end', '>', $date_now)->where('status', 1);
               });
               break;
           case 'feature':
               $results->whereHas('discounts', function ($q) use ($date_now) {
-                  $q->where('date_start', '>', $date_now);
+                  $q->where('date_start', '>', $date_now)->where('status', 1);
               });
               break;
           case 'past':
               $results->whereHas('discounts', function ($q) use ($date_now) {
-                  $q->where('date_end', '<', $date_now);
+                  $q->where('date_end', '<', $date_now) ->where('status', 1);
               });
               break;
           default :
               $results->whereHas('discounts', function ($q) use ($date_now) {
-                  $q->where('date_end', '>', $date_now);
+                  $q->where('date_end', '>=', $date_now)->where('status', 1);
               });
       }
 
@@ -79,7 +80,7 @@ class ActionController extends Controller
               $results->orderBy('price', 'desc');
               break;
           default:
-              $results->orderBy('updated_at', 'asc');
+              $results->orderBy('updated_at', 'desc');
 
       }
 
@@ -115,11 +116,12 @@ class ActionController extends Controller
           $description = implode(' ', $result);
 
           $unit = '';
+
           if ($product->unit == 'kg'){
               $unit = 'кг';
           } elseif($product->unit == 'l'){
-              $unit = 'k';
-          } elseif($product->unit == 'st'){
+              $unit = 'л';
+          } elseif($product->unit == 'sht'){
               $unit = 'шт';
           } elseif($product->unit == 'up'){
               $unit = 'уп';
@@ -190,15 +192,23 @@ class ActionController extends Controller
             $q->whereIn('product_id', $product_arr);
         })->get();
 
-        $discount_arr = $discounts->pluck('id');
 
-        $city_id = $request->get('city');
+        $shops_get = Shop::query();
 
-        $shops = Shop::whereHas('discounts', function ($q) use ($discount_arr){
-            $q->whereIn('discount_id', $discount_arr);
-        })->whereHas('cities', function($q) use ($city_id){
-            $q->where('city_id', $city_id);
-        })->get();
+        $shops_get->when($request->get('city', 314), function ($query, $city_id) {
+            return $query->whereHas('cities', function ($q) use ($city_id){
+                    $q->where('city_id', $city_id);
+                });
+            });
+
+
+        $shops_get->when($request->get('data'), function ($query, $data) {
+            return $query->whereHas('translations', function ($q) use ($data) {
+                $q->where('title', 'LIKE', '%'.$data.'%');
+            });
+        });
+//        dd($shops_get->get());
+        $shops = $shops_get->where('status', 1)->get();
 
         $data_shops = array();
         foreach ($shops as $shop) {

@@ -94,6 +94,8 @@ class DiscountsController extends Controller
 //        dd($request->all());
         $request->validate([
             'slug' => 'required|unique:pages|max:255',
+        ],[
+            'slug.required' => 'введите урл скидки',
         ]);
 
         $discount = Discount::create($request->all());
@@ -158,15 +160,16 @@ class DiscountsController extends Controller
      */
     public function update(Request $request, $id)
     {
-//        dd($request->all());
         $discount = Discount::find($id);
         if ($discount) {
             $request->validate([
                 'slug' => Rule::unique('discounts')->ignore($discount->id),
                 'slug' => 'required|max:255',
-//                'product.*.slug' => 'required|unique:products,slug|max:255',
                 'product.*.price' => 'required',
-            ]);
+            ],[
+            'slug.required' => 'введите урл скидки',
+            'product.*.price.required' => 'добавте новую цену товара',
+        ]);
 
             $discount->fill($request->all())->save();
             $discount->shops()->sync($request->shop);
@@ -187,6 +190,7 @@ class DiscountsController extends Controller
                 $discount_translate->title = $request->$locale['title'];
                 $discount_translate->save();
             }
+
             $product_not_delete = [];
 
             if ($request->product){
@@ -203,8 +207,6 @@ class DiscountsController extends Controller
                             $product['image'] = $img->store('uploads/' . $product_save->id, 'public');
                         }
 
-                        $product_save->update($product);
-
                         $translate = [];
 
                         foreach ($languages as $lang) {
@@ -214,6 +216,20 @@ class DiscountsController extends Controller
                             $translate['title'] = $product[$locale]['title'];
                             $prod_translate->update($translate);
                         }
+
+                        $slug = Product::where('slug', $product['slug'])->where('id', '<>', $product_save->id)->get();
+
+                        while (count($slug) > 0) {
+                            $product['slug'] = $product['slug'].'-'.rand(1, 15);
+                            $product_save->slug = $product['slug'];
+                            $product_save->save();
+                            $slug2 = Product::where('slug', $product_save->slug)->where('id', '<>', $product_save->id)->get();
+                            if (count($slug2) == 0 ) {
+                                break;
+                            }
+                        }
+
+                        $product_save->update($product);
 
                     } else {
 
@@ -225,7 +241,6 @@ class DiscountsController extends Controller
                             $img = $product['image'];
                             $image = $img->store('uploads/' . $prod->id, 'public');
                             $prod->image = $image;
-                            $prod->save();
                         }
 
                         $prod->discounts()->attach($id);
@@ -238,6 +253,24 @@ class DiscountsController extends Controller
                             $prod_translate->title = $product[$locale]['title'];
                             $prod_translate->save();
                         }
+
+                        $slug = Product::where('slug', $product['slug'])->where('id', '<>', $prod->id)->get();
+
+                        if (count($slug) == 0) {
+                            $prod->slug = $product['slug'];
+                            $prod->save();
+                        } else {
+                            while (count($slug) > 0) {
+                                $product['slug'] = $product['slug'].'-'.rand(1, 15);
+                                $prod->slug = $product['slug'];
+                                $prod->save();
+                                $slug2 = Product::where('slug', $prod->slug)->where('id', '<>', $prod->id)->get();
+                                if (count($slug2) == 0 ) {
+                                    break;
+                                }
+                            }
+                        }
+
                     }
 
                 }
@@ -301,6 +334,10 @@ class DiscountsController extends Controller
         $this->validate($request, [
             'title'             => 'required|max:255',
         ]);
+
+    }
+
+    public function ajaxValidationProductSlug(){
 
     }
 

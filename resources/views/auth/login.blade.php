@@ -31,8 +31,8 @@
             </form>
             <p>Войти с помощью соцсетей</p>
             <div class="inline-btns">
-                <a href=""><i class="ico ico-gp"></i>Google</a>
-                <a href=""><i class="ico ico-fb"></i>Facebook</a>
+                <a href="{{ url('login/google') }}"><i class="ico ico-gp"></i>Google</a>
+                <a href="{{ url('login/facebook') }}"><i class="ico ico-fb"></i>Facebook</a>
             </div>
         </div>
         <div class="footer">

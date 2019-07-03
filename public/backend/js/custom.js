@@ -6,23 +6,23 @@ $(document).ready(function () {
     });
 
     //Delete record
-    // $('.btn-delete').on('click', function (e) {
-    //     if (!confirm('Are you sure you want to delete?')) return false;
-    //     e.preventDefault();
-    //     console.log($(this));
-    //     // return;
-    //     if($(this).data('href')){
-    //         $.ajax({
-    //             type: 'DELETE',  // destroy Method
-    //             url: $(this).data('href')
-    //         }).done(function (data) {
-    //             console.log(data);
-    //             location.reload(true);
-    //         });
-    //     } else {
-    //         $(this).parent('.delete-block').remove();
-    //     }
-    // });
+    $('.delete-item').on('click', function (e) {
+        if (!confirm('Are you sure you want to delete?')) return false;
+        e.preventDefault();
+        console.log($(this));
+        // return;
+        if($(this).data('href')){
+            $.ajax({
+                type: 'DELETE',  // destroy Method
+                url: $(this).data('href')
+            }).done(function (data) {
+                console.log(data);
+                location.reload(true);
+            });
+        } else {
+            $(this).parent('.delete-block').remove();
+        }
+    });
 
     //Change status of record
     $('.checkbox').on('click', function (e) {

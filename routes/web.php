@@ -12,7 +12,11 @@
 */
 
 Auth::routes();
-Route::redirect('/register', '/login'); //Block register
+// Route::redirect('/register', '/login'); //Block register
+
+// Social login
+Route::get('/login/{social}','Auth\LoginController@socialLogin')->where('social','twitter|facebook|linkedin|google|github|bitbucket');
+Route::get('/login/{social}/callback','Auth\LoginController@handleProviderCallback')->where('social','twitter|facebook|linkedin|google|github|bitbucket');
 
 Route::group([
     'as' => 'admin.',
@@ -31,6 +35,9 @@ Route::group([
     //      Discounts
     Route::resource('/discounts', 'DiscountsController');
     Route::put('discounts/status/{id}', ['as' => 'discounts.status', 'uses' => 'DiscountsController@status']);
+
+    Route::get('/profile', ['as' => 'profile.edit', 'uses' => 'ProfilesController@edit']);
+    Route::post('/profile', ['as' => 'profile.update', 'uses' => 'ProfilesController@update']);
 
 
 //      Categories
