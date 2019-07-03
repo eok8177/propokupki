@@ -217,11 +217,16 @@ class DiscountsController extends Controller
                             $prod_translate->update($translate);
                         }
 
-                        $slug = Product::where('slug', $product['slug'])->get();
+                        $slug = Product::where('slug', $product['slug'])->where('id', '<>', $product_save->id)->get();
 
-                        if (count($slug) > 0){
-                            dd($slug);
-                            $product['slug'] = '';
+                        while (count($slug) > 0) {
+                            $product['slug'] = $product['slug'].'-'.rand(1, 15);
+                            $product_save->slug = $product['slug'];
+                            $product_save->save();
+                            $slug2 = Product::where('slug', $product_save->slug)->where('id', '<>', $product_save->id)->get();
+                            if (count($slug2) == 0 ) {
+                                break;
+                            }
                         }
 
                         $product_save->update($product);
@@ -249,11 +254,16 @@ class DiscountsController extends Controller
                             $prod_translate->save();
                         }
 
-                        $slug = Product::where('slug', $product['slug'])->get();
+                        $slug = Product::where('slug', $product['slug'])->where('id', '<>', $prod->id)->get();
 
-                        if (count($slug) > 0){
-                            dd($slug);
-                            $product['slug'] = '';
+                        while (count($slug) > 0) {
+                            $product['slug'] = $product['slug'].'-'.rand(1, 15);
+                            $prod->slug = $product['slug'];
+                            $prod->save();
+                            $slug2 = Product::where('slug', $prod->slug)->where('id', '<>', $prod->id)->get();
+                            if (count($slug2) == 0 ) {
+                                break;
+                            }
                         }
 
 
