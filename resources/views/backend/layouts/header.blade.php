@@ -8,14 +8,13 @@
         </div>
 
         <div class="right-nav dropdown">
-            <a href="#" class="dropdown-toggle" id="userMenu" data-toggle="dropdown">Margarita</a>
+            <a href="#" class="dropdown-toggle" id="userMenu" data-toggle="dropdown">{{ Auth::user()->name }}</a>
             <div class="dropdown-menu" aria-labelledby="userMenu">
                 <hr>
                 <a href="#"><i class="ico ico-user"></i> Профиль</a>
-                <a href="#"
-                   onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="ico ico-logout"></i> Выйти</a>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="ico ico-logout"></i> Выйти</a>
 
-                <form id="logout-form" action="#" method="POST" style="display: none;">{{ csrf_field() }}</form>
+                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
             </div>
         </div>
 

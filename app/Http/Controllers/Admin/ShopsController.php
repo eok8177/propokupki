@@ -77,6 +77,10 @@ class ShopsController extends Controller
             'slug' => 'required|unique:pages|max:255',
             'import_file' => 'required',
             'image' => 'required'
+        ],[
+            'slug.required' => 'введите урл магазина',
+            'import_file.required' => 'добавте файл импорта',
+            'image.required' => 'добавте картинку магазина',
         ]);
 
 
@@ -186,6 +190,8 @@ class ShopsController extends Controller
                 'slug' => 'required|max:255',
 //                'import_file' => 'required',
 //                'image' => 'required'
+            ],[
+                'slug.required' => 'введите урл магазина',
             ]);
 
             $shop->fill($request->all())->save();

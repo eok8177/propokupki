@@ -29,7 +29,7 @@ class Product extends Model
         ];
     }
 
-    protected $fillable = ['slug', 'old_price', 'price', 'discount', 'quantity', 'unit', 'image'];
+    protected $fillable = ['old_price', 'price', 'discount', 'quantity', 'unit', 'image'];
 
     public function langs($status = 1)
     {

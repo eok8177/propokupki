@@ -4,34 +4,34 @@
 
     <div class="block">
         <div class="header">
-            <a href="#"><img src="{{ asset('img/logo.svg') }}"></a>
+            <a href="/"><img src="{{ asset('img/logo.svg') }}"></a>
         </div>
         <div class="body">
             <h1 class="title">Регистрация</h1>
             <form method="POST" action="{{ route('register') }}">
                 @csrf
-            <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
+            <input id="name" type="text" placeholder="Ім'я" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
 
                 @if ($errors->has('name'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('name') }}</strong>
                     </span>
                 @endif
-                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
+                <input id="email" type="email" placeholder="Email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
 
                 @if ($errors->has('email'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('email') }}</strong>
                     </span>
                 @endif
-                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                <input id="password" type="password" placeholder="Пароль" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 
                 @if ($errors->has('password'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('password') }}</strong>
                     </span>
                 @endif
-                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                <input id="password-confirm" placeholder="Повторити пароль" type="password" class="form-control" name="password_confirmation" required>
                 @if ($errors->has('password_confirmation'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('password_confirmation') }}</strong>

@@ -51,7 +51,14 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ],[
+            'name.required' => 'Ім`я обов`язкове до заповнення',
+            'email.required' => 'Email обов`язкове до заповнення',
+            'email.unique' => 'Цей email вже є у базі',
+            'password.required' => 'Пароль обов`язкове до заповнення',
+            'password.min' => 'Мінімум 6 символів',
+            'password.confirmed' => 'Паролі не співпадають',
         ]);
     }
 
