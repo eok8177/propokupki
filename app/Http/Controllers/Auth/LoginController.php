@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Laravel\Socialite\Facades\Socialite;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Cookie;
 
 class LoginController extends Controller
 {
@@ -30,6 +31,7 @@ class LoginController extends Controller
      */
     protected function redirectTo()
     {
+        Cookie::queue(Cookie::make('user', auth()->user()->remember_token, 600));
         if (auth()->user()->role == 'admin') {
             return '/admin/discounts';
         }
@@ -66,7 +68,8 @@ class LoginController extends Controller
         $userSocial = Socialite::driver($social)->user();
         $user = User::where(['email' => $userSocial->getEmail()])->first();
         if($user){
-            Auth::login($user);
+            Auth::login($user, true);
+            Cookie::queue(Cookie::make('user', auth()->user()->remember_token, 600));
             if ($user->role == 'admin') return redirect('/admin/discounts');
             return redirect('/');
         }else{
@@ -75,5 +78,11 @@ class LoginController extends Controller
                 'email' => $userSocial->getEmail()
             ]);
         }
+    }
+
+    public function logout() {
+      $cookie = Cookie::forget('user');
+      Auth::logout();
+      return redirect('/')->cookie($cookie);
     }
 }
