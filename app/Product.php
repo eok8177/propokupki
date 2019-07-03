@@ -2,17 +2,34 @@
 
 namespace App;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use Sluggable;
+
     protected $table = 'products';
 
     protected $attributes = [
         'status' => 1
     ];
 
-    protected $fillable = ['slug', 'old_price', 'price', 'discount', 'quantity', 'unit', 'image'];
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
+
+    protected $fillable = ['old_price', 'price', 'discount', 'quantity', 'unit', 'image'];
 
     public function langs($status = 1)
     {
@@ -63,14 +80,8 @@ class Product extends Model
         return $this->belongsToMany('App\Discount', 'discount_product', 'product_id', 'discount_id');
     }
 
-    public function searchProducts($locale, $search){
-
-//        return ProductTranslate::whre
-
-
+    public function getTitleAttribute() {
+        $result = ProductTranslate::where('locale', 'ua')->where('product_id', $this->id)->first();
+        return $result->title;
     }
-
-//    public function getNewPriceAttribute() {
-//        return round($this->attributes['price'] - $this->attributes['price'] * $this->attributes['discount'] / 100, 2);
-//    }
 }

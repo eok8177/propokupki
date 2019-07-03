@@ -16,16 +16,20 @@ class ShopController extends Controller
   {
 
       $city_id = $request->get('city', 314);
+      $count = $request->get('count', false);
 
       $app_locale = env('APP_LOCALE', 'ua');
 
       $shops = Shop::whereHas('cities', function($q) use($city_id){
           $q->where('city_id', $city_id);
-      })->where('status', 1)->get();
+      })->where('status', 1);
+      if ($count) {
+        $shops->take($count);
+      }
 
       $data = array();
 
-      foreach ($shops as $shop){
+      foreach ($shops->get() as $shop){
 
           $shop_id = $shop->id;
 

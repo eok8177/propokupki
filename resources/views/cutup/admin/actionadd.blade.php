@@ -23,15 +23,15 @@
 
     <div class="filtered">
       <div class="item">
-        <button class="btn-delete"></button>
+        <button class="btn-delete delete-item"></button>
         <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
       </div>
       <div class="item">
-        <button class="btn-delete"></button>
+        <button class="btn-delete delete-item"></button>
         <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
       </div>
       <div class="item">
-        <button class="btn-delete"></button>
+        <button class="btn-delete delete-item"></button>
         <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
       </div>
     </div>
@@ -60,7 +60,7 @@
 
       <div class="item row" v-for="product in products">
         <span class="gray-title">Товар @{{product.id}}</span>
-        <button class="btn-delete" v-on:click.stop.prevent="onDeleteProduct(product.id)"></button>
+        <button class="btn-delete delete-item" v-on:click.stop.prevent="onDeleteProduct(product.id)"></button>
         <div class="col-md-4 col-xl-6">
           <div class="form-group">
             <label>Фото</label>

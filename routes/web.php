@@ -36,6 +36,9 @@ Route::group([
     Route::resource('/discounts', 'DiscountsController');
     Route::put('discounts/status/{id}', ['as' => 'discounts.status', 'uses' => 'DiscountsController@status']);
 
+    Route::get('/profile', ['as' => 'profile.edit', 'uses' => 'ProfilesController@edit']);
+    Route::post('/profile', ['as' => 'profile.update', 'uses' => 'ProfilesController@update']);
+
 
 //      Categories
 //    Route::resource('/categories', 'CategoriesController');

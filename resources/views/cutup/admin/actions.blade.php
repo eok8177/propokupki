@@ -24,15 +24,15 @@
 
     <div class="filtered">
       <div class="item">
-        <button class="btn-delete"></button>
+        <button class="btn-delete delete-item"></button>
         <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
       </div>
       <div class="item">
-        <button class="btn-delete"></button>
+        <button class="btn-delete delete-item"></button>
         <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
       </div>
       <div class="item">
-        <button class="btn-delete"></button>
+        <button class="btn-delete delete-item"></button>
         <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
       </div>
     </div>
@@ -41,7 +41,7 @@
 
     @for ($i = 0; $i <= 5; $i++)
       <div class="action-item">
-        <button class="btn-delete"></button>
+        <button class="btn-delete delete-item"></button>
         <div class="image"><img src="/images/shop-1.jpg" alt=""></div>
         <div class="block">
           <span class="date">14–27 марта </span>
