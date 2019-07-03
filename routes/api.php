@@ -35,5 +35,7 @@ Route::group(['namespace' => 'Api'], function() {
     Route::get('/city',  ['uses' => 'CityController@index']);
     Route::get('/cities/{city}',  ['uses' => 'CityController@search']);
 
+    Route::get('/user/{token}',  ['uses' => 'UserController@index']);
+
 
 });

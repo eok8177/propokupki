@@ -31,7 +31,8 @@ class LoginController extends Controller
      */
     protected function redirectTo()
     {
-        Cookie::queue(Cookie::make('user', auth()->user()->remember_token, 600));
+        $config = config('session');
+        Cookie::queue(Cookie::make('user', auth()->user()->remember_token, 600, $config['path'], $config['domain'], $config['secure'], false, false, $config['same_site'] ?? null));
         if (auth()->user()->role == 'admin') {
             return '/admin/discounts';
         }
@@ -65,11 +66,12 @@ class LoginController extends Controller
 
     public function handleProviderCallback($social)
     {
+        $config = config('session');
         $userSocial = Socialite::driver($social)->user();
         $user = User::where(['email' => $userSocial->getEmail()])->first();
         if($user){
             Auth::login($user, true);
-            Cookie::queue(Cookie::make('user', auth()->user()->remember_token, 600));
+            Cookie::queue(Cookie::make('user', auth()->user()->remember_token, 600, $config['path'], $config['domain'], $config['secure'], false, false, $config['same_site'] ?? null));
             if ($user->role == 'admin') return redirect('/admin/discounts');
             return redirect('/');
         }else{
