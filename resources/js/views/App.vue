@@ -29,5 +29,7 @@ export default {
   },
   created: function() {
   },
+  methods: {
+  }
 }
 </script>

@@ -90,6 +90,10 @@ export default {
       passwordConfirm: null,
     }
   },
+  mounted() {
+    this.name = localStorage.userName;
+    this.email = localStorage.userEmail;
+  },
   methods: {
     submitForm: function (e) {
 

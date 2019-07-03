@@ -12,7 +12,7 @@
 */
 
 Auth::routes();
-// Route::redirect('/register', '/login'); //Block register
+Route::get('logout', 'Auth\LoginController@logout');
 
 // Social login
 Route::get('/login/{social}','Auth\LoginController@socialLogin')->where('social','twitter|facebook|linkedin|google|github|bitbucket');
@@ -20,9 +20,11 @@ Route::get('/login/{social}/callback','Auth\LoginController@handleProviderCallba
 
 Route::group([
     'as' => 'admin.',
-//    'middleware' => 'auth',
     'namespace' => 'Admin',
-    'prefix' => 'admin'], function() {
+    'prefix' => 'admin',
+    'middleware' => 'roles',
+    'roles' =>'admin'
+    ], function() {
 
     //      Language
     Route::resource('/language', 'LanguagesController');
