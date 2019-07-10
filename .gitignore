@@ -3,7 +3,6 @@
 /public/storage
 /storage/*.key
 /storage/app/public
-/public/storage
 /vendor
 .env
 .phpunit.result.cache
@@ -15,3 +14,7 @@ sftp-config.json
 package-lock.json
 composer.lock
 public/mix-manifest.json
+/public/js/app.js
+/public/js/admin.js
+/public/css/app.css
+/public/css/admin.css
