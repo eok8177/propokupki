@@ -9,7 +9,7 @@
           <router-link :to="{ name: 'Cabinet' }" class="nav-link">Особистий кабінет</router-link>
           <router-link :to="{ name: 'Contact' }" class="nav-link">Допомога</router-link>
         </div>
-        <div class="socials">
+        <div class="socials d-none">
           <p>Слідкуй за нами</p>
           <a href="#" class="ico ico-fb"></a>
           <a href="#" class="ico ico-gp"></a>
