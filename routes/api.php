@@ -21,6 +21,7 @@ Route::group(['namespace' => 'Api'], function() {
 
     Route::get('/shops',  ['uses' => 'ShopController@index']);
     Route::post('/shops-search',  ['uses' => 'ShopController@search']);
+    Route::get('/shop/{shop}',  ['uses' => 'ShopController@shop']);
 
     Route::get('/actions',  ['uses' => 'ActionController@index']);
     Route::post('/actions-search',  ['uses' => 'ActionController@search']);
