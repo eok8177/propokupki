@@ -80,9 +80,9 @@
                         {{ Form::label('title', 'Название') }}
                         <p>Укажите название товара </p>
                         {{ Form::textarea(
-                          'product['.$prodId.']['.$lang->locale.'][title]', 
-                          optional($content['product']->translate($lang->locale))->title, 
-                          ['class' => $errors->has('title') ? 'product-title form-control is-invalid' : 'product-title  form-control', 
+                          'product['.$prodId.']['.$lang->locale.'][title]',
+                          optional($content['product']->translate($lang->locale))->title,
+                          ['class' => $errors->has('title') ? 'product-title form-control is-invalid' : 'product-title  form-control',
                             'data-id' => $prodId]) }}
                         @if($errors->has('title'))
                             <span class="invalid-feedback">{{ $errors->first('title') }}</span>
@@ -131,7 +131,15 @@
     </div>
     <button class="btn btn-blue add-product" onclick="addProduct(); return false" type="submit">Добавить продукт</button>
 </div>
-
+@else
+<div class="container">
+    <div class="form-group">
+        <div class="submit-btns">
+            {{ Form::file('import_file_products') }}
+            {{ Form::file('import_file_images') }}
+        </div>
+    </div>
+</div>
 @endif
 {{-- Кнопки сохранения --}}
 <div class="container">
