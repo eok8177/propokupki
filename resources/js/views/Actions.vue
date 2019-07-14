@@ -37,8 +37,12 @@ export default {
   methods: {
     filtered: function(filter) {
       this.getActions(filter);
-      this.meta.title = 'Акції магазинів на сьогодні - ProPokupki';
-      this.meta.description = 'Акції та знижки всіх популярних магазинів України на сьогодні';
+      if (filter.shops.length > 1 || filter.shops.length == 0) {
+        this.meta.title = 'Акції магазинів на сьогодні - ProPokupki';
+        this.meta.description = 'Акції та знижки всіх популярних магазинів України на сьогодні';
+      } else if (filter.shops.length == 1) {
+        this.getShop(filter.shops);
+      }
     },
     getActions: function(filter) {
       axios.get('/api/actions?city='+localStorage.cityId,{params: filter})
