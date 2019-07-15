@@ -123,7 +123,7 @@ class DiscountsController extends Controller
             $i = 0;
             $city_arr = array();
 
-            while (($data = fgetcsv($filename_data, 1000, ",")) !== FALSE) {
+            while (($data = fgetcsv($filename_data, 1000, ";")) !== FALSE) {
                 if($i != 0){
 
                     $prod_data = [
@@ -131,7 +131,7 @@ class DiscountsController extends Controller
                         'old_price' => $data[3] ? $data[3] : 0,
                         'price' => $data[4] ? $data[4] : 0,
                         'discount' => $data[5] ? $data[5] : 0,
-                        'quantity' => $data[1] ? $data[1] : 0,
+                        'quantity' => !empty($data[1]) ? $data[1] : 0,
                         'unit' => $data[2] ? $data[2] : 0,
                     ];
 
