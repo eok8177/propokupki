@@ -109,4 +109,13 @@ class ShopController extends Controller
 
   }
 
+  public function shop(Shop $shop)
+  {
+    $data = [
+      'title' => $shop->title,
+      'image' => asset('/storage/'.$shop->image)
+    ];
+    return response()->json($data, 200);
+  }
+
 }

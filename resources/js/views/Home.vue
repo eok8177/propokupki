@@ -69,6 +69,10 @@ export default {
         dropDowns: {
           shops: false,
         },
+        meta: {
+          title: 'ProPokupki - Акції та знижки України',
+          description: 'Акції та знижки всіх популярних магазинів України в одному місці',
+        }
     }
   },
   created: function() {
@@ -110,6 +114,17 @@ export default {
     toggle: function(name) {
        this.dropDowns[name] = !this.dropDowns[name];
     },
-  }
+  },
+
+  metaInfo() {
+    return {
+      title: this.meta.title,
+      meta: [
+        { vmid: 'description', name: 'description', content: this.meta.description},
+        { vmid: 'og:title', property: 'og:title', content: this.meta.title},
+        { vmid: 'og:description', property: 'og:description', content: this.meta.description},
+      ]
+    }
+  },
 }
 </script>
