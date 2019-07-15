@@ -28,6 +28,7 @@ class ProductController extends Controller
     })->first();
 
     $shop = array(
+        'title' => $data_shop->title,
         'image' => asset('/storage/'.$data_shop->image),
         'dates' => $date_start->format('d M').' - '.$date_end->format('d M'),
         'discount' => $product->discount
