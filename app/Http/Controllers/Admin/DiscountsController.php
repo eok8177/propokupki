@@ -12,7 +12,9 @@ use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
+use ZipArchive;
 
 
 class DiscountsController extends Controller
@@ -91,12 +93,14 @@ class DiscountsController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all());
+       // dd(public_path('45'));
         $request->validate([
             'slug' => 'required|unique:pages|max:255',
         ],[
             'slug.required' => 'введите урл скидки',
         ]);
+
+        $local = env('APP_LOCALE', 'ua');
 
         $discount = Discount::create($request->all());
         $languages = Language::where('status', '1')->get();
@@ -111,6 +115,66 @@ class DiscountsController extends Controller
             $discount_translate->locale = $locale;
             $discount_translate->title = $request->$locale['title'];
             $discount_translate->save();
+        }
+
+        if ($request->file('import_file_products')) {
+
+            $filename_data = fopen($request->file('import_file_products'), "r");
+            $i = 0;
+            $city_arr = array();
+
+            while (($data = fgetcsv($filename_data, 1000, ";")) !== FALSE) {
+                if($i != 0){
+
+                    $prod_data = [
+                        'slug' => $this->translateToUrl($data[0], $local),
+                        'old_price' => $data[3] ? $data[3] : 0,
+                        'price' => $data[4] ? $data[4] : 0,
+                        'discount' => $data[5] ? $data[5] : 0,
+                        'quantity' => !empty($data[1]) ? $data[1] : 0,
+                        'unit' => $data[2] ? $data[2] : 0,
+                    ];
+
+                    $product = Product::create($prod_data);
+
+                    $product->image = 'uploads/'.$discount->id.'/'.$data[6];
+                    $product->slug = $this->translateToUrl($data[0], $local);
+
+                    $product->save();
+                    $product->discounts()->sync($discount->id);
+
+                    foreach ($languages as $lang) {
+
+                        $locale = $lang->locale;
+                        $products_translate = new ProductTranslate();
+                        $products_translate->product_id = $product->id;
+                        $products_translate->locale = $locale;
+                        $products_translate->title = $data[0];
+                        $products_translate->save();
+
+                    }
+                }
+                $i++;
+            }
+
+            fclose($filename_data);
+        }
+
+        if ($request->file('import_file_images')) {
+
+            $dirname = storage_path('app/public/uploads/' . $discount->id);
+
+            if (!is_dir($dirname)) {
+                Storage::disk('public')->makeDirectory('/uploads/' . $discount->id);
+            }
+
+            $zip = new ZipArchive;
+
+            if ($zip->open($request->file('import_file_images')) === TRUE) {
+                $zip->extractTo($dirname);
+                $zip->close();
+            }
+
         }
 
         return redirect()
@@ -337,8 +401,57 @@ class DiscountsController extends Controller
 
     }
 
-    public function ajaxValidationProductSlug(){
+    public function translateToUrl($str, $loc){
+        $converter = array(
+            'ß' => 'ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a',
+            'å' => 'a', 'æ' => 'ae', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e',
+            'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'd',
+            'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o',
+            'ő' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ü' => 'u',
+            'ű' => 'u', 'ý' => 'y', 'þ' => 'th', 'ÿ' => 'y', 'α' => 'a', 'β' => 'b',
+            'γ' => 'g', 'δ' => 'd', 'ε' => 'e', 'ζ' => 'z', 'η' => 'h', 'θ' => '8',
+            'ι' => 'i', 'κ' => 'k', 'λ' => 'l', 'μ' => 'm', 'ν' => 'n', 'ξ' => '3',
+            'ο' => 'o', 'π' => 'p', 'ρ' => 'r', 'σ' => 's', 'τ' => 't', 'υ' => 'y',
+            'φ' => 'f', 'χ' => 'x', 'ψ' => 'ps', 'ω' => 'w', 'ά' => 'a', 'έ' => 'e',
+            'ί' => 'i', 'ό' => 'o', 'ύ' => 'y', 'ή' => 'h', 'ώ' => 'w', 'ς' => 's',
+            'ϊ' => 'i', 'ΰ' => 'y', 'ϋ' => 'y', 'ΐ' => 'i', 'ş' => 's', 'ı' => 'i',
+            'ç' => 'c', 'ü' => 'u', 'ö' => 'o', 'ğ' => 'g', 'а' => 'a', 'б' => 'b',
+            'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'yo', 'ж' => 'zh',
+            'з' => 'z', 'и' => 'i', 'й' => 'j', 'к' => 'k', 'л' => 'l', 'м' => 'm',
+            'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't',
+            'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh',
+            'щ' => 'sh', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu',
+            'я' => 'ya', 'є' => 'ye', 'і' => 'i', 'ї' => 'yi', 'ґ' => 'g', 'č' => 'c',
+            'ď' => 'd', 'ě' => 'e', 'ň' => 'n', 'ř' => 'r', 'š' => 's', 'ť' => 't',
+            'ů' => 'u', 'ž' => 'z', 'ą' => 'a', 'ć' => 'c', 'ę' => 'e', 'ł' => 'l',
+            'ń' => 'n', 'ó' => 'o', 'ś' => 's', 'ź' => 'z', 'ż' => 'z', 'ā' => 'a',
+            'č' => 'c', 'ē' => 'e', 'ģ' => 'g', 'ī' => 'i', 'ķ' => 'k', 'ļ' => 'l',
+            'ņ' => 'n', 'š' => 's', 'ū' => 'u', 'ž' => 'z', 'ө' => 'o', 'ң' => 'n',
+            'ү' => 'u', 'ә' => 'a', 'ғ' => 'g', 'қ' => 'q', 'ұ' => 'u', 'ა' => 'a',
+            'ბ' => 'b', 'გ' => 'g', 'დ' => 'd', 'ე' => 'e', 'ვ' => 'v', 'ზ' => 'z',
+            'თ' => 'th', 'ი' => 'i', 'კ' => 'k', 'ლ' => 'l', 'მ' => 'm', 'ნ' => 'n',
+            'ო' => 'o', 'პ' => 'p', 'ჟ' => 'zh', 'რ' => 'r', 'ს' => 's', 'ტ' => 't',
+            'უ' => 'u', 'ფ' => 'ph', 'ქ' => 'q', 'ღ' => 'gh', 'ყ' => 'qh', 'შ' => 'sh',
+            'ჩ' => 'ch', 'ც' => 'ts', 'ძ' => 'dz', 'წ' => 'ts', 'ჭ' => 'tch', 'ხ' => 'kh',
+            'ჯ' => 'j', 'ჰ' => 'h'
+        );
 
+        switch($loc){
+          case'bg':
+            $converter['щ'] = 'sht';
+            $converter['ъ'] = 'a';
+              break;
+          case'ua':
+            $converter['и'] = 'y';
+              break;
+        }
+
+        $string = strtr($str, $converter);
+        $string = mb_strtolower($string);
+        $string = str_replace(' ', '-', $string);
+        $string = trim($string, "-");
+
+        return $string;
     }
 
 }

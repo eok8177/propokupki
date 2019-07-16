@@ -76,4 +76,9 @@ class Shop extends Model
     {
         return $this->hasMany(ShopTranslate::class);
     }
+
+    public function getTitleAttribute()
+    {
+        return $this->translate->title;
+    }
 }

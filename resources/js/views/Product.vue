@@ -81,6 +81,10 @@ export default {
       },
       actions: [],
       cityName: '',
+      meta: {
+        title: 'Акції магазинів на сьогодні - ProPokupki',
+        description: 'Акції та знижки всіх популярних магазинів України на сьогодні',
+      }
     }
   },
   methods: {
@@ -89,6 +93,8 @@ export default {
       .then(
         (response) => {
           this.product = response.data;
+          this.meta.title = this.product.title +' '+ this.product.desc +' '+ this.product.tara +' ('+ this.product.shop.dates + ') - '+ this.product.shop.title + ' - ProPokupki';
+          this.meta.description = 'Акції на "'+ this.product.title +' '+ this.product.desc +' '+ this.product.tara +'" в магазині '+ this.product.shop.title + ' ('+ this.product.shop.dates + ')';
         }
       )
       .catch(
@@ -118,6 +124,17 @@ export default {
       this.getContent(this.$route.params.slug);
       this.cityName = localStorage.cityName;
     })
+  },
+
+  metaInfo() {
+    return {
+      title: this.meta.title,
+      meta: [
+        { vmid: 'description', name: 'description', content: this.meta.description},
+        { vmid: 'og:title', property: 'og:title', content: this.meta.title},
+        { vmid: 'og:description', property: 'og:description', content: this.meta.description},
+      ]
+    }
   },
 }
 </script>

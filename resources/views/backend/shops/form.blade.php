@@ -62,7 +62,7 @@
             </div>
             <div>
                 <label>Города:</label>
-                <div>
+                <div style="max-height: 628px;overflow: auto;">
                     @foreach($shop->cities as $city)
                         @php ($content = $city->forAdmin())
                         <span>{{ $content['sities']['ua']->title }}</span> <br>
@@ -83,7 +83,10 @@
         <p>Импорт или экспорт адресов из csv файла</p>
         <div class="addresses-input">
             @if ($method = 'create')
-                {{ Form::file('import_file') }}
+            <div class="btn import">
+              {{ Form::file('import_file') }}
+              <span>CSV файл с адресами</span>
+            </div>
             @else
                 <div class="btn-group" role="group">
                     <button type="button" class="btn import">Импорт</button>

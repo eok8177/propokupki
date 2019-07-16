@@ -2,16 +2,37 @@
   <div class="product-page">
 
     <div class="container page-title">
-      <h1 class="title">Про нас</h1>
+      <h1 class="title">ProPokupki - Акції та знижки України</h1>
     </div>
 
     <div class="text-page">
       <div class="container">
-        <h2>О проекте</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut nesciunt illo praesentium, ab! Doloremque eius quae accusantium, quod quo cupiditate sunt, sit in magnam animi quidem facere nesciunt saepe ex.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut nesciunt illo praesentium, ab! Doloremque eius quae accusantium, quod quo cupiditate sunt, sit in magnam animi quidem facere nesciunt saepe ex.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut nesciunt illo praesentium, ab! Doloremque eius quae accusantium, quod quo cupiditate sunt, sit in magnam animi quidem facere nesciunt saepe ex.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut nesciunt illo praesentium, ab! Doloremque eius quae accusantium, quod quo cupiditate sunt, sit in magnam animi quidem facere nesciunt saepe ex.</p>
+        <p>Основна мета цього проекту – допомогти звичайним людям швидко зорієнтуватися у шаленому
+        світі акцій та знижок.</p>
+
+        <p>На сайті ми зібрали дані про знижки та акції найпопулярніших торгівельних мереж нашої країни:
+        АТБ, Сільпо, ЕКО маркет, Billa, Брусничка, Космо, Рукавичка, Фуршет, Metro та інші. Завдяки
+        зручній навігації, користувач дуже швидко знайде необхідний товар та порівняє вартість з його
+        аналогами. Усі ціни зводяться до єдиного знаменника, тобто ціна за 1 кг або 1 л. Це дозволяє за
+        одну секунду визначитися, наприклад, яка олія дорожче, а яка дешевше. Адже виробники дуже
+        полюбляють маніпулювати розміром упаковки.</p>
+
+        <p>Наш ресурс допоможе дуже оперативно відшукати вигідні пропозиції у магазинах біля Вашого
+        дому. Завдяки розумній навігації та списку адрес конкретних супермаркетів Ви зможете у будь-який
+        час знайти потрібний товар недалеко від Вашого місця знаходження.</p>
+
+        <p>Ще однією приємною опцією нашого сайту треба назвати налагоджену систему пошуку товарів
+        сайту. Це стало можливим завдяки впровадженню категорій товарів. Тепер задля Вашого
+        комфорту можливо просто ввести назву продукту в поле для пошуку та за декілька секунд
+        отримати список варіантів і місць, де його можна придбати по акційній ціні.</p>
+
+        <p>Користуючись нашим ресурсом, Ви будете завжди озброєні інформацією про найактуальніші сейли
+        у Вашому місті, причому дізнаєтесь про актуальні акції не лише через сайт, але й завдяки нашій
+        своєчасній розсилці з анонсом знижок.</p>
+
+        <p>Долучайтеся до тих, хто вже оцінив реальну вигоду від використання такого корисного веб-ресурсу,
+        та почніть життя, сповнене новими можливостями. Ми з радістю проінформуємо Вас про всі
+        актуальні розпродажі і збережемо Ваш гаманець від надмірних та зайвих витрат.</p>
       </div>
     </div>
 

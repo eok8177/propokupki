@@ -220,6 +220,7 @@ class ShopsController extends Controller
                 $shop_translate->title = $request->$locale['title'];
                 $shop_translate->save();
             }
+
             if ($request->file('import_file')) {
 
                 $old_addresses = DB::table('address_shop')->where('shop_id', $shop->id)->pluck('address_id');
