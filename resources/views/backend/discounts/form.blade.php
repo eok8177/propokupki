@@ -133,12 +133,16 @@
 </div>
 @else
 <div class="container">
-    <div class="form-group">
-        <div class="submit-btns">
-            {{ Form::file('import_file_products') }}
-            {{ Form::file('import_file_images') }}
-        </div>
+  <div class="addresses-input btn-group">
+    <div class="btn import">
+      {{ Form::file('import_file_products') }}
+      <span>CSV файл с товарами</span>
     </div>
+    <div class="btn import">
+      {{ Form::file('import_file_images') }}
+      <span>RAR файл с картинками</span>
+    </div>
+  </div>
 </div>
 @endif
 {{-- Кнопки сохранения --}}
