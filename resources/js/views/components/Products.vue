@@ -89,7 +89,7 @@ export default {
       this.firstCut = 0;
       this.pageSize = PAGE_COUNT;
       this.actions = this.paginate(newVal, this.pageSize, 1);
-      this.pageCount = newVal.length / this.pageSize;
+      this.pageCount = Math.ceil(newVal.length / this.pageSize);
     }
   },
   methods: {
@@ -99,7 +99,7 @@ export default {
     },
     clickMore: function () {
       this.pageSize += PAGE_COUNT;
-      this.pageCount = this.products.length / this.pageSize;
+      this.pageCount = Math.ceil(this.products.length / this.pageSize);
       this.actions = this.products.slice(this.firstCut, this.pageSize + this.firstCut);
     },
     paginate: function(array, page_size, page_number) {
