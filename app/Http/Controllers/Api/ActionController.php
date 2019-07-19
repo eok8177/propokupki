@@ -90,7 +90,7 @@ class ActionController extends Controller
 
       foreach ($products as $product){
 
-
+          Date::setLocale('uk');
           $date_now = Date::now();
           $date_start = Date::parse($product->discounts->first()->date_start);
           $date_end = Date::parse($product->discounts->first()->date_end);
