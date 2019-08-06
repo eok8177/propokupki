@@ -18,6 +18,12 @@ class ActionController extends Controller
 
       $results = Product::query();
 
+      $results->when($request->get('search'), function ($query, $search) {
+        return $query->whereHas('translations', function ($q) use ($search) {
+           $q->where('title', 'LIKE', '%'.$search.'%');
+        });
+      });
+
 
       if (!empty($request->get('shops', ''))){
           $shops_id = explode(',', $request->get('shops'));

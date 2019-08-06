@@ -8,7 +8,7 @@
 
       <div class="search">
         <input type="text" placeholder="Поиск по товарам и магазинам" v-model.trim="search">
-        <button type="button" class="btn btn-red">Знайти</button>
+        <button @click="searchBtn()" type="button" class="btn btn-red">Знайти</button>
       </div>
 
       <div class="righ">
@@ -202,6 +202,11 @@
           .catch(
             (error) => console.log(error)
           );
+      },
+
+      searchBtn: function() {
+        if (this.search.length > 2)
+          window.location.href = "/actions/?search="+this.search;
       },
 
       logout: function() {

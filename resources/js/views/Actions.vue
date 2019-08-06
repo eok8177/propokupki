@@ -5,7 +5,7 @@
       <h1 class="title">Акції та знижки {{cityName2}}</h1>
     </div>
 
-    <filter-top :shop="shop"></filter-top>
+    <filter-top :shop="shop" :search="search"></filter-top>
 
     <products :products="actions"></products>
 
@@ -27,6 +27,7 @@ export default {
       filter: '',
       actions: [],
       shop: '',
+      search: '',
       cityName2: '',
       meta: {
         title: 'Акції магазинів на сьогодні - ProPokupki',
@@ -76,6 +77,9 @@ export default {
     if(this.$route.query.shop) {
         this.shop = this.$route.query.shop;
         this.getShop(this.shop);
+    }
+    if(this.$route.query.search) {
+        this.search = this.$route.query.search;
     }
     this.cityName2 = localStorage.cityName2;
   },
