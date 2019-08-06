@@ -28,10 +28,10 @@ class CityController extends Controller
   {
       $app_locale = env('APP_LOCALE', 'ua');
 
-    $cities = CityTranslate::orderBy('id', 'desc')
+    $cities = CityTranslate::orderBy('title', 'asc')
         ->where('title', 'LIKE', '%'.$city.'%')
         ->where('locale', $app_locale)
-        ->take(10)->get();
+        ->take(12)->get();
 
     $data = array();
 
