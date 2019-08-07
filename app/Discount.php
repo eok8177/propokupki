@@ -11,7 +11,7 @@ class Discount extends Model
 
 //    protected $dates = ['date_start', 'date_end'];
 
-    protected $fillable = ['slug','status', 'date_start', 'date_end'];
+    protected $fillable = ['status', 'date_start', 'date_end'];
 
     public function langs($status = 1)
     {
@@ -58,7 +58,7 @@ class Discount extends Model
 
     public function setDateEndAttribute($value)
     {
-        $this->attributes['date_end'] =  Carbon::parse($value);
+        $this->attributes['date_end'] =  Carbon::parse($value.'23:59:59');
     }
 
 //    public function searchDiscounts ($search, $locale = null)

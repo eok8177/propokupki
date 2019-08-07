@@ -7,6 +7,7 @@ use App\Shop;
 use App\ProductTranslate;
 use App\Discount;
 use App\Language;
+use Validator;
 use App\DiscountTranslate;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
@@ -34,7 +35,6 @@ class DiscountsController extends Controller
             $status = 0;
         }
 
-//        $status = $request->get('status',NULL);
         $shops = $request->get('shops') ? explode(',', $request->get('shops')) : [];
         $limit = $request->get('limit', 50);
         $locale = env('APP_LOCALE', 'ua');
@@ -93,7 +93,6 @@ class DiscountsController extends Controller
      */
     public function store(Request $request)
     {
-       // dd(public_path('45'));
         $request->validate([
             'slug' => 'required|unique:pages|max:255',
         ],[
@@ -102,7 +101,12 @@ class DiscountsController extends Controller
 
         $local = env('APP_LOCALE', 'ua');
 
+        DB::beginTransaction();
+
         $discount = Discount::create($request->all());
+        $discount->slug = $this->uniqueUrl($discount->id, $request->slug, 'discounts');
+        $discount->save();
+
         $languages = Language::where('status', '1')->get();
         $discount->shops()->attach($request->shop);
 
@@ -126,32 +130,85 @@ class DiscountsController extends Controller
             while (($data = fgetcsv($filename_data, 1000, ";")) !== FALSE) {
                 if($i != 0){
 
+                    $number_str = $i + 1;
                     $prod_data = [
-                        'slug' => $this->translateToUrl($data[0], $local),
-                        'old_price' => $data[3] ? $data[3] : 0,
-                        'price' => $data[4] ? $data[4] : 0,
-                        'discount' => $data[5] ? $data[5] : 0,
-                        'quantity' => !empty($data[1]) ? $data[1] : 0,
+                        'slug' => $data[0] ? $this->translateToUrl($data[0], $local) : '',
+                        'old_price' => $data[3] ? str_replace(',', '.', trim($data[3])) : 0,
+                        'price' => $data[4] ? str_replace(',', '.', trim($data[4])) : 0,
+                        'discount' => $data[5] ? str_replace(',', '.', trim($data[5])) : 0,
+                        'quantity' => $data[1] ? str_replace(',', '.', trim($data[1])) : 0,
                         'unit' => $data[2] ? $data[2] : 0,
                     ];
 
+                    $validator = Validator::make(
+                        $prod_data,
+                        [
+                            'old_price' => 'regex:/^\d+(\.\d{1,2})?$/',
+                            'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                            'discount' => 'regex:/^\d+(\.\d{1,2})?$/',
+                            'quantity' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                            'unit' => 'string|in:kg,sht,l,up|max:255',
+                        ],
+                        [
+                            'old_price.regex' => 'Ошибка старая цена в строке: '.$number_str,
+                            'price.regex' => 'Ошибка новая цена в строке: '.$number_str,
+                            'price.required' => 'Ошибка новая цена в строке: '.$number_str,
+                            'discount' => 'Ошибка скидки в строке: '.$number_str,
+                            'quantity.regex' => 'Ошибка количества в строке: '.$number_str,
+                            'unit.in' => 'Ошибка указания еденица измерения в строке: '.$number_str,
+                        ]
+                    );
+
+                    if ($validator->fails()) {
+                        dd($validator);
+                        return redirect()->route('admin/discounts/create')
+                                    ->withErrors($validator);
+                    }
+
                     $product = Product::create($prod_data);
+                    $image = explode('/', trim($data[6]));
 
-                    $product->image = 'uploads/'.$discount->id.'/'.$data[6];
-                    $product->slug = $this->translateToUrl($data[0], $local);
+                    if (count($image) > 1) {
+                        $link = trim($data[6]);
+                        $file_name = basename(trim($link));
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $link);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+                        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
+                        $body = curl_exec($ch);
+                        // dd($body);
+                        if (!empty($body)) {
+                            $file = base64_encode ($body);
 
+                            $decodedData = base64_decode($file);
+
+                            $dirname = storage_path('app/public/uploads/' . $discount->id.'/');
+
+                            if (!is_dir($dirname)) {
+                                Storage::disk('public')->makeDirectory('/uploads/' . $discount->id);
+                            }
+
+                            if (file_put_contents($dirname.$file_name, $decodedData)){
+                                $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
+                            }
+                        }
+                    } else {
+                        $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
+                    }
+
+                    $product->slug = $this->uniqueUrl($product->id, $this->translateToUrl($data[0], $local), 'products');
                     $product->save();
                     $product->discounts()->sync($discount->id);
 
                     foreach ($languages as $lang) {
-
                         $locale = $lang->locale;
                         $products_translate = new ProductTranslate();
                         $products_translate->product_id = $product->id;
                         $products_translate->locale = $locale;
                         $products_translate->title = $data[0];
                         $products_translate->save();
-
                     }
                 }
                 $i++;
@@ -159,6 +216,8 @@ class DiscountsController extends Controller
 
             fclose($filename_data);
         }
+
+        DB::commit();
 
         if ($request->file('import_file_images')) {
 
@@ -178,7 +237,7 @@ class DiscountsController extends Controller
         }
 
         return redirect()
-            ->route('admin.discounts.edit', $discount->id)->with('success', 'Discount add' );
+            ->route('admin.discounts.edit', $discount->id)->with('success', 'Акция успешно добавлена' );
     }
 
     /**
@@ -452,6 +511,26 @@ class DiscountsController extends Controller
         $string = trim($string, "-");
 
         return $string;
+    }
+
+    public function uniqueUrl($id, $slug, $table)
+    {
+        $slugs = DB::table($table)->where('slug', $slug)->where('id', '<>', $id)->get();
+        if (count($slugs) > 0) {
+
+            while (count($slugs) > 0) {
+                $slug_new = $slug.'-'.rand(1, 15);
+                $slug2 = DB::table($table)->where('slug', $slug_new)->where('id', '<>', $id)->get();
+                if (count($slug2) == 0 ) {
+                    break;
+                }
+            }
+
+        }else {
+            $slug_new = $slug;
+        }
+
+        return $slug_new;
     }
 
 }

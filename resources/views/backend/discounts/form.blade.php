@@ -140,7 +140,7 @@
     </div>
     <div class="btn import">
       {{ Form::file('import_file_images') }}
-      <span>RAR файл с картинками</span>
+      <span>ZIP файл с картинками</span>
     </div>
   </div>
 </div>
@@ -167,7 +167,8 @@
 <script>
   $(function() {
     $('.date input').datepicker({
-      language: "ru"
+      language: "ru",
+       format: 'yyyy-mm-dd'
     });
 
     $('body').on('change', '.input-img', function(e) {
