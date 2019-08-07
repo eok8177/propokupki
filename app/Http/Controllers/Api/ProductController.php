@@ -16,6 +16,10 @@ class ProductController extends Controller
   {
     $app_locale = env('APP_LOCALE', 'ua');
     $product = Product::where('slug',$slug)->first();
+
+    if (!$product) {
+      return response()->json(['Product not found'], 404);
+    }
     Date::setLocale('uk');
     $date_now = Date::now();
     $date_start = Date::parse($product->discounts->first()->date_start);

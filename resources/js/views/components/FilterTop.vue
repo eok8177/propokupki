@@ -68,6 +68,11 @@
         <span class="btn-delete" @click="removeSort('dates')"></span>
       </span>
 
+      <span class="shop-selected" v-if="filter.search">
+        {{ filter.search }}
+        <span class="btn-delete" @click="removeSort('search')"></span>
+      </span>
+
       <button class="btn btn-red" 
         v-if="shopsSelected.length || filter.sort == 'asc' || filter.sort == 'desc' || filter.dates == 'now' || filter.dates == 'feature' || filter.dates == 'past'" 
         @click="resetFilter"
@@ -81,7 +86,7 @@
 
 export default {
   name: 'FilterTop',
-  props: ['shop'],
+  props: ['shop', 'search'],
   data() {
     return {
       shops: [],
@@ -113,6 +118,7 @@ export default {
         shops: '',
         categories: '',
         dates: 'all',
+        search: '',
       },
       shopsSelected: []
     }
@@ -164,6 +170,7 @@ export default {
             this.shopCount = Object.keys(this.shopsAll).length;
             this.search_shops = '';
             this.filter.shops = this.shop;
+            this.filter.search = this.search;
             if (this.shop && !reset) {
               this.shopsSelected = [this.shop];
             } else {
@@ -186,6 +193,9 @@ export default {
       }
       if (filter == 'dates') {
         this.filter.dates = 'all';
+      }
+      if (filter == 'search') {
+        this.filter.search = '';
       }
       this.$parent.filtered(this.filter);
     },
