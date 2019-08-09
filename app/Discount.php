@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class Discount extends Model
 {
@@ -12,7 +11,7 @@ class Discount extends Model
 
 //    protected $dates = ['date_start', 'date_end'];
 
-    protected $fillable = ['slug', 'status', 'date_start', 'date_end'];
+    protected $fillable = ['status', 'date_start', 'date_end'];
 
     public function langs($status = 1)
     {
@@ -80,21 +79,5 @@ class Discount extends Model
             ->whereIn('shop_id', $shops);
 
 
-    }
-
-    public function setSlugAttribute($value)
-    {
-        $this->attributes['slug'] = $this->makeSlug(Str::slug($value));
-    }
-
-    protected function makeSlug($value, $extra = 0)
-    {
-        $slug = $extra > 0 ? $value . '-' . $extra : $value;
-
-        if ($this->id === null && $this->where('slug', $slug)->exists()) {
-            return $this->makeSlug($value, $extra + 1);
-        }
-
-        return $slug;
     }
 }
