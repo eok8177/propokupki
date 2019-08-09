@@ -7,8 +7,10 @@
       </div>
 
       <div class="search">
-        <input type="text" placeholder="Поиск по товарам и магазинам" v-model.trim="search">
-        <button @click="searchBtn()" type="button" class="btn btn-red">Знайти</button>
+        <form action="#">
+          <input type="text" placeholder="Поиск по товарам и магазинам" v-model.trim="search">
+          <button @click.prevent="searchBtn()" type="submit" class="btn btn-red">Знайти</button>
+        </form>
       </div>
 
       <div class="righ">
