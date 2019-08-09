@@ -45,8 +45,8 @@
         {{ Form::label('slug', 'Период действия') }}
         <p>Укажите даты начала и окончания действия акции</p>
         <div class="d-md-flex">
-            <div class="date">{{ Form::text('date_start', $discount->date_start, ['class' => $errors->has('date_start') ? 'form-control is-invalid' : 'form-control']) }}</div>
-            <div class="date">{{ Form::text('date_end', $discount->date_end, ['class' => $errors->has('date_end') ? 'form-control is-invalid' : 'form-control']) }}</div>
+            <div class="date">{{ Form::text('date_start', Date::parse($discount->date_start)->format('d.m.Y'), ['class' => $errors->has('date_start') ? 'form-control is-invalid' : 'form-control']) }}</div>
+            <div class="date">{{ Form::text('date_end', Date::parse($discount->date_end)->format('d.m.Y'), ['class' => $errors->has('date_end') ? 'form-control is-invalid' : 'form-control']) }}</div>
         </div>
     </div>
     {{ Form::hidden('status', 1, []) }}

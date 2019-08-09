@@ -67,7 +67,7 @@ class ProductController extends Controller
       'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
       'price' => $product->price,
       'oldprice' => $product->old_price,
-      'count' => $date_end->diffInDays($date_now),
+      'count' => $date_end->diffInDays($date_now) + 1,
       'shop' => $shop,
     ];
 
@@ -78,6 +78,8 @@ class ProductController extends Controller
   public function related(Request $request, $slug)
   {
       if($slug){
+
+          $date_now = Date::now();
 
           $app_locale = env('APP_LOCALE', 'ua');
 
@@ -100,6 +102,17 @@ class ProductController extends Controller
               });
           });
 
+
+          $results->when($title, function ($query, $title) {
+              return $query->whereHas('translations', function ($q) use ($title) {
+                  $q->where('title', 'LIKE', '%'.$title.'%');
+              });
+          });
+
+          $results->whereHas('discounts', function ($q) use ($date_now) {
+                  $q->where('date_end', '>=', $date_now);
+              });
+
           $results->when($title, function ($query, $title) {
               return $query->whereHas('translations', function ($q) use ($title) {
                   $q->where('title', 'LIKE', '%'.$title.'%');
@@ -119,7 +132,7 @@ class ProductController extends Controller
               $date_start = Date::parse($product->discounts->first()->date_start);
               $date_end = Date::parse($product->discounts->first()->date_end);
 
-              $count = $date_end->diffInDays($date_now);
+              $count = $date_end->diffInDays($date_now) + 1 ;
 
               $discount_id = $product->discounts->first()->id;
 

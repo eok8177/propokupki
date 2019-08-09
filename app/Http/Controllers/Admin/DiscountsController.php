@@ -144,7 +144,7 @@ class DiscountsController extends Controller
                             'old_price' => 'regex:/^\d+(\.\d{1,2})?$/',
                             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
                             'discount' => 'regex:/^\d+(\.\d{1,2})?$/',
-                            'quantity' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+                            'quantity' => 'required|regex:/^\d+(\.\d{1,3})?$/',
                             'unit' => 'string|in:kg,sht,l,up|max:255',
                         ],
                         [
@@ -158,7 +158,8 @@ class DiscountsController extends Controller
                     );
 
                     if ($validator->fails()) {
-                        return redirect()->route('admin/discounts/create')
+                        DB::rollBack();
+                        return redirect()->route('admin.discounts.create')
                             ->withErrors($validator);
                     }
 
@@ -195,8 +196,6 @@ class DiscountsController extends Controller
             fclose($filename_data);
         }
 
-        DB::commit();
-
         if ($request->file('import_file_images')) {
 
             $dirname = storage_path('app/public/uploads/' . $discount->id);
@@ -213,6 +212,8 @@ class DiscountsController extends Controller
             }
 
         }
+
+        DB::commit();
 
         return redirect()
             ->route('admin.discounts.edit', $discount->id)->with('success', 'Акция успешно добавлена' );
@@ -486,6 +487,8 @@ class DiscountsController extends Controller
         $string = strtr($str, $converter);
         $string = mb_strtolower($string);
         $string = str_replace(' ', '-', $string);
+        $string = str_replace('"', '', $string);
+        $string = str_replace(',', '', $string);
         $string = trim($string, "-");
 
         return $string;

@@ -101,7 +101,7 @@ class ActionController extends Controller
           $date_start = Date::parse($product->discounts->first()->date_start);
           $date_end = Date::parse($product->discounts->first()->date_end);
 
-          $count = $date_end->diffInDays($date_now);
+          $count = $date_end->diffInDays($date_now) + 1;
 
           $discount_id = $product->discounts->first()->id;
 
