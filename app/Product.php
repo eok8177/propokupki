@@ -4,6 +4,7 @@ namespace App;
 
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -29,7 +30,7 @@ class Product extends Model
     //     ];
     // }
 
-    protected $fillable = ['old_price', 'price', 'discount', 'quantity', 'unit', 'image'];
+    protected $fillable = ['slug', 'old_price', 'price', 'discount', 'quantity', 'unit', 'image'];
 
     public function langs($status = 1)
     {
@@ -83,5 +84,21 @@ class Product extends Model
     public function getTitleAttribute() {
         $result = ProductTranslate::where('locale', 'ua')->where('product_id', $this->id)->first();
         return $result->title;
+    }
+
+    public function setSlugAttribute($value)
+    {
+        $this->attributes['slug'] = $this->makeSlug(Str::slug($value));
+    }
+
+    protected function makeSlug($value, $extra = 0)
+    {
+        $slug = $extra > 0 ? $value . '-' . $extra : $value;
+
+        if ($this->id === null && $this->where('slug', $slug)->exists()) {
+            return $this->makeSlug($value, $extra + 1);
+        }
+
+        return $slug;
     }
 }

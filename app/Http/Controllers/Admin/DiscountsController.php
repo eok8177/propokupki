@@ -104,8 +104,6 @@ class DiscountsController extends Controller
         DB::beginTransaction();
 
         $discount = Discount::create($request->all());
-        $discount->slug = $this->uniqueUrl($discount->id, $request->slug, 'discounts');
-        $discount->save();
 
         $languages = Language::where('status', '1')->get();
         $discount->shops()->attach($request->shop);
@@ -117,7 +115,7 @@ class DiscountsController extends Controller
             $discount_translate = new DiscountTranslate();
             $discount_translate->discount_id = $discount->id;
             $discount_translate->locale = $locale;
-            $discount_translate->title = $request->$locale['title'];
+            $discount_translate->title = $request->{$locale}['title'];
             $discount_translate->save();
         }
 
@@ -160,9 +158,8 @@ class DiscountsController extends Controller
                     );
 
                     if ($validator->fails()) {
-                        dd($validator);
                         return redirect()->route('admin/discounts/create')
-                                    ->withErrors($validator);
+                            ->withErrors($validator);
                     }
 
                     $product = Product::create($prod_data);
@@ -171,34 +168,15 @@ class DiscountsController extends Controller
                     if (count($image) > 1) {
                         $link = trim($data[6]);
                         $file_name = basename(trim($link));
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $link);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-                        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
-                        $body = curl_exec($ch);
-                        // dd($body);
-                        if (!empty($body)) {
-                            $file = base64_encode ($body);
 
-                            $decodedData = base64_decode($file);
+                        $dirname = 'uploads/' . $discount->id.'/';
 
-                            $dirname = storage_path('app/public/uploads/' . $discount->id.'/');
+                        Storage::disk('public')->put($dirname . $file_name, file_get_contents($link));
 
-                            if (!is_dir($dirname)) {
-                                Storage::disk('public')->makeDirectory('/uploads/' . $discount->id);
-                            }
-
-                            if (file_put_contents($dirname.$file_name, $decodedData)){
-                                $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
-                            }
-                        }
-                    } else {
-                        $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
                     }
 
-                    $product->slug = $this->uniqueUrl($product->id, $this->translateToUrl($data[0], $local), 'products');
+                    $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
+
                     $product->save();
                     $product->discounts()->sync($discount->id);
 
@@ -290,9 +268,9 @@ class DiscountsController extends Controller
                 'slug' => 'required|max:255',
                 'product.*.price' => 'required',
             ],[
-            'slug.required' => 'введите урл скидки',
-            'product.*.price.required' => 'добавте новую цену товара',
-        ]);
+                'slug.required' => 'введите урл скидки',
+                'product.*.price.required' => 'добавте новую цену товара',
+            ]);
 
             $discount->fill($request->all())->save();
             $discount->shops()->sync($request->shop);
@@ -496,13 +474,13 @@ class DiscountsController extends Controller
         );
 
         switch($loc){
-          case'bg':
-            $converter['щ'] = 'sht';
-            $converter['ъ'] = 'a';
-              break;
-          case'ua':
-            $converter['и'] = 'y';
-              break;
+            case'bg':
+                $converter['щ'] = 'sht';
+                $converter['ъ'] = 'a';
+                break;
+            case'ua':
+                $converter['и'] = 'y';
+                break;
         }
 
         $string = strtr($str, $converter);
