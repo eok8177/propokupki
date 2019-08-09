@@ -104,8 +104,6 @@ class DiscountsController extends Controller
         DB::beginTransaction();
 
         $discount = Discount::create($request->all());
-        $discount->slug = $this->uniqueUrl($discount->id, $request->slug, 'discounts');
-        $discount->save();
 
         $languages = Language::where('status', '1')->get();
         $discount->shops()->attach($request->shop);
@@ -117,7 +115,7 @@ class DiscountsController extends Controller
             $discount_translate = new DiscountTranslate();
             $discount_translate->discount_id = $discount->id;
             $discount_translate->locale = $locale;
-            $discount_translate->title = $request->$locale['title'];
+            $discount_translate->title = $request->{$locale}['title'];
             $discount_translate->save();
         }
 
@@ -160,7 +158,6 @@ class DiscountsController extends Controller
                     );
 
                     if ($validator->fails()) {
-                        dd($validator);
                         return redirect()->route('admin/discounts/create')
                                     ->withErrors($validator);
                     }
@@ -171,29 +168,35 @@ class DiscountsController extends Controller
                     if (count($image) > 1) {
                         $link = trim($data[6]);
                         $file_name = basename(trim($link));
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, $link);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
-                        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
-                        $body = curl_exec($ch);
-                        // dd($body);
-                        if (!empty($body)) {
-                            $file = base64_encode ($body);
 
-                            $decodedData = base64_decode($file);
+                        $dirname = 'uploads/' . $discount->id.'/';
 
-                            $dirname = storage_path('app/public/uploads/' . $discount->id.'/');
+                        Storage::disk('public')->put($dirname . $file_name, file_get_contents($link));
+                        $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
 
-                            if (!is_dir($dirname)) {
-                                Storage::disk('public')->makeDirectory('/uploads/' . $discount->id);
-                            }
-
-                            if (file_put_contents($dirname.$file_name, $decodedData)){
-                                $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
-                            }
-                        }
+//                        $ch = curl_init();
+//                        curl_setopt($ch, CURLOPT_URL, $link);
+//                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+//                        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+//                        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
+//                        $body = curl_exec($ch);
+//
+//                        if (!empty($body)) {
+//                            $file = base64_encode($body);
+//
+//                            $decodedData = base64_decode($file);
+//
+//                            $dirname = storage_path('app/public/uploads/' . $discount->id.'/');
+//
+//                            if (!is_dir($dirname)) {
+//                                Storage::disk('public')->makeDirectory('/uploads/' . $discount->id);
+//                            }
+//
+//                            if (file_put_contents($dirname.$file_name, $decodedData)){
+//                                $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
+//                            }
+//                        }
                     } else {
                         $product->image = 'uploads/'.$discount->id.'/'.array_pop($image);
                     }
@@ -515,22 +518,22 @@ class DiscountsController extends Controller
 
     public function uniqueUrl($id, $slug, $table)
     {
-        $slugs = DB::table($table)->where('slug', $slug)->where('id', '<>', $id)->get();
-        if (count($slugs) > 0) {
-
-            while (count($slugs) > 0) {
-                $slug_new = $slug.'-'.rand(1, 15);
-                $slug2 = DB::table($table)->where('slug', $slug_new)->where('id', '<>', $id)->get();
-                if (count($slug2) == 0 ) {
-                    break;
-                }
-            }
-
-        }else {
-            $slug_new = $slug;
-        }
-
-        return $slug_new;
+//        $slugs = DB::table($table)->where('slug', $slug)->where('id', '<>', $id)->get();
+//        if (count($slugs) > 0) {
+//
+//            while (count($slugs) > 0) {
+//                $slug_new = $slug.'-'.rand(1, 15);
+//                $slug2 = DB::table($table)->where('slug', $slug_new)->where('id', '<>', $id)->get();
+//                if (count($slug2) == 0 ) {
+//                    break;
+//                }
+//            }
+//
+//        }else {
+//            $slug_new = $slug;
+//        }
+//
+//        return $slug_new;
     }
 
 }
