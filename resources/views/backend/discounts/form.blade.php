@@ -45,8 +45,8 @@
         {{ Form::label('slug', 'Период действия') }}
         <p>Укажите даты начала и окончания действия акции</p>
         <div class="d-md-flex">
-            <div class="date">{{ Form::text('date_start', Date::parse($discount->date_start)->format('d.m.Y'), ['class' => $errors->has('date_start') ? 'form-control is-invalid' : 'form-control']) }}</div>
-            <div class="date">{{ Form::text('date_end', Date::parse($discount->date_end)->format('d.m.Y'), ['class' => $errors->has('date_end') ? 'form-control is-invalid' : 'form-control']) }}</div>
+            <div class="date">{{ Form::text('date_start', Date::parse($discount->date_start)->format('Y-m-d'), ['class' => $errors->has('date_start') ? 'form-control is-invalid' : 'form-control']) }}</div>
+            <div class="date">{{ Form::text('date_end', Date::parse($discount->date_end)->format('Y-m-d'), ['class' => $errors->has('date_end') ? 'form-control is-invalid' : 'form-control']) }}</div>
         </div>
     </div>
     {{ Form::hidden('status', 1, []) }}
@@ -61,7 +61,7 @@
         @forelse($discount->products as $product)
             @php ($content = $product->forAdmin())
         <div class="item row delete-block" id="product_{{ $prodId }}">
-            <span class="gray-title">Товар </span><button class="btn-delete product-delete"></button>
+            <span class="gray-title">Товар {{ $prodId + 1 }}</span><button class="btn-delete product-delete"></button>
             <div class="col-md-4 col-xl-6">
                 <div class="form-group">
                     <label>Фото</label>
@@ -109,13 +109,16 @@
 
                 <div class="form-group pl-0 price-input">
                     <label>Цена</label>
-                    <p>Укажите старую цену и размер скидки, новая цена посчитается автоматически</p>
+                    <p>Укажите старую цену и размер скидки</p>
                     <div class="fields">
                         {{ Form::text('product['.$prodId.'][old_price]', $product->old_price, ['class' => $errors->has('old_price') ? 'form-control price is-invalid' : 'form-control price', 'placeholder' => 'Старая цена грн']) }}
                         @if($errors->has('price'))
                             <span class="invalid-feedback">{{ $errors->first('price') }}</span>
                         @endif
                         {{ Form::text('product['.$prodId.'][discount]', $product->discount, ['class' => $errors->has('discount') ? 'form-control discount is-invalid' : 'form-control discount', 'placeholder' => 'Размер скидки %']) }}
+                        {{Form::hidden('product['.$prodId.'][of]',0)}}
+                        {{ Form::label('of', 'От: ') }}
+                        {{ Form::checkbox('product['.$prodId.'][of]', 1, $product->of) }}
                         @if($errors->has('price'))
                             <span class="invalid-feedback">{{ $errors->first('discount') }}</span>
                         @endif
@@ -189,8 +192,9 @@
   //add product
   function addProduct() {
       $('.not-product').remove();
+      var num_prod = productId + 1;
       var htmlProduct = '<div class="item row delete-block" id="prod_'+productId+'">';
-      htmlProduct += '<span class="gray-title">Товар </span><button class="btn-delete product-delete"></button>';
+      htmlProduct += '<span class="gray-title">Товар '+num_prod+'</span><button class="btn-delete product-delete"></button>';
       htmlProduct += '<div class="col-md-4 col-xl-6">';
       htmlProduct += '<div class="form-group">';
       htmlProduct += '<label>Фото</label>';
@@ -237,6 +241,9 @@
       htmlProduct += '<div class="fields">';
       htmlProduct += '<input type="text" name="product['+productId+'][old_price]"  class="form-control price" placeholder="Старая цена грн">';
       htmlProduct += '<input type="text" name="product['+productId+'][discount]"  class="form-control discount" placeholder="Размер скидки %">';
+      htmlProduct += '<input type="hidden" name="product['+productId+'][of]" value="0">';
+      htmlProduct += '<label for="of">От: </label>';
+      htmlProduct += '<input type="checkbox" name="product['+productId+'][of]">';
       htmlProduct += '<input type="text" name="product['+productId+'][price]"  class="form-control price" placeholder="Новая цена грн">';
       htmlProduct += '</div>';
       htmlProduct += '</div>';

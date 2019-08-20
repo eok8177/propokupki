@@ -49,6 +49,12 @@ class ShopController extends Controller
               'actions' => count(Discount::whereHas('shops', function($q) use($shop_id){
                   $q->where('shop_id', $shop_id);
               })->where('status', 1)->get()),
+              'products' => count(Product::whereHas('discounts', function($q) use($shop_id){
+                  $q->whereHas('shops', function($q) use($shop_id){
+                    $q->where('shop_id', $shop_id)
+                      ->where('status', 1);
+                  })->where('status', 1);
+              })->where('status', 1)->get()),
               'discount' => $discount_max['discount'],
           );
 

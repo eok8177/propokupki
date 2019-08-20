@@ -132,10 +132,11 @@ class DiscountsController extends Controller
                     $prod_data = [
                         'slug' => $data[0] ? $this->translateToUrl($data[0], $local) : '',
                         'old_price' => $data[3] ? str_replace(',', '.', trim($data[3])) : 0,
-                        'price' => $data[4] ? str_replace(',', '.', trim($data[4])) : 0,
-                        'discount' => $data[5] ? str_replace(',', '.', trim($data[5])) : 0,
+                        'price' => $data[5] ? str_replace(',', '.', trim($data[5])) : 0,
+                        'from' => $data[4] ? str_replace(',', '.', trim($data[4])) : NULL,
+                        'discount' => $data[6] ? str_replace(',', '.', trim($data[6])) : 0,
                         'quantity' => $data[1] ? str_replace(',', '.', trim($data[1])) : 0,
-                        'unit' => $data[2] ? $data[2] : 0,
+                        'unit' => $data[2] ? str_replace(',', '.', trim($data[2])) : 0,
                     ];
 
                     $validator = Validator::make(
@@ -143,14 +144,17 @@ class DiscountsController extends Controller
                         [
                             'old_price' => 'regex:/^\d+(\.\d{1,2})?$/',
                             'price' => 'required|regex:/^\d+(\.\d{1,2})?$/',
-                            'discount' => 'regex:/^\d+(\.\d{1,2})?$/',
+                            'of' => 'integer',
+                            'discount' => 'regex:/^\d+(\.\d{1,2})?$/|max:100',
                             'quantity' => 'required|regex:/^\d+(\.\d{1,3})?$/',
                             'unit' => 'string|in:kg,sht,l,up|max:255',
                         ],
                         [
                             'old_price.regex' => 'Ошибка старая цена в строке: '.$number_str,
                             'price.regex' => 'Ошибка новая цена в строке: '.$number_str,
+                            'of.integer' => 'Ошибка значения поля ОТ в строке: '.$number_str,
                             'price.required' => 'Ошибка новая цена в строке: '.$number_str,
+                            'discount.max' => 'Ошибка размера скидки в строке: '.$number_str,
                             'discount' => 'Ошибка скидки в строке: '.$number_str,
                             'quantity.regex' => 'Ошибка количества в строке: '.$number_str,
                             'unit.in' => 'Ошибка указания еденица измерения в строке: '.$number_str,
@@ -164,15 +168,15 @@ class DiscountsController extends Controller
                     }
 
                     $product = Product::create($prod_data);
-                    $image = explode('/', trim($data[6]));
+                    $image = explode('/', trim($data[7]));
 
                     if (count($image) > 1) {
-                        $link = trim($data[6]);
+                        $link = trim($data[7]);
                         $file_name = basename(trim($link));
 
                         $dirname = 'uploads/' . $discount->id.'/';
 
-                        Storage::disk('public')->put($dirname . $file_name, file_get_contents($link));
+                        Storage::disk()->put($dirname . $file_name, file_get_contents($link));
 
                     }
 
@@ -198,10 +202,10 @@ class DiscountsController extends Controller
 
         if ($request->file('import_file_images')) {
 
-            $dirname = storage_path('app/public/uploads/' . $discount->id);
+            $dirname = storage_path('app/uploads/' . $discount->id);
 
             if (!is_dir($dirname)) {
-                Storage::disk('public')->makeDirectory('/uploads/' . $discount->id);
+                mkdir($dirname);
             }
 
             $zip = new ZipArchive;
@@ -262,6 +266,7 @@ class DiscountsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $discount = Discount::find($id);
         if ($discount) {
             $request->validate([

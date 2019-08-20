@@ -144,6 +144,7 @@ class ActionController extends Controller
               'image' => asset('/storage/'.$product->image),
               'desc' => $description,
               'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
+              'of' => $product->of,
               'price' => $product->price,
               'oldprice' => $product->old_price,
               'count' => $count,
@@ -165,6 +166,11 @@ class ActionController extends Controller
 
         $results->when($request->get('city', 314), function ($query, $city_id) {
           return $query->whereHas('discounts', function ($q) use ($city_id) {
+
+
+              $q->where('date_end', '>=', Date::now());
+
+
               $q->whereHas('shops', function($q2) use ($city_id){
                   $q2->whereHas('cities', function ($q3) use ($city_id){
                       $q3->where('city_id', $city_id);

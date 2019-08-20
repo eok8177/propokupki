@@ -24,9 +24,9 @@
     <script src="{{ asset('vendor/datepicker/locales/bootstrap-datepicker.ru.min.js') }}"></script>
     <script>
         $(function() {
-            $('.date input').datepicker({
-                language: "ru"
-            });
+            // $('.date input').datepicker({
+            //     language: "ru"
+            // });
             //calculate discount
             $('body').on('change', '.price, .discount', function(){
                 var fields = $(this).parent();

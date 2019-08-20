@@ -59,12 +59,12 @@ class Discount extends Model
 
     public function setDateEndAttribute($value)
     {
-        $this->attributes['date_end'] =  Carbon::parse($value.'23:59:59');
+        $this->attributes['date_end'] =  Carbon::parse($value.' 23:59:59');
     }
 
     public function products()
     {
-        return $this->belongsToMany('App\Product');
+        return $this->belongsToMany('App\Product')->orderBy('id', 'desc');
     }
 
     public function searchDiscounts($shops)
