@@ -14,6 +14,7 @@
               {{value}}
             </li>
           </ul>
+          <div class="search-result-bg" v-if="dropDowns.sort" @click="closeDropdown('sort')"></div>
         </div>
 
         <button class="btn" @click="toggle('shops')" v-bind:class="{ active: dropDowns.shops }">Магазини <span>{{shopCount}}</span></button>
@@ -30,6 +31,7 @@
               {{value}}
             </li>
           </ul>
+          <div class="search-result-bg" v-if="dropDowns.dates" @click="closeDropdown('dates')"></div>
         </div>
 
       </div>
@@ -38,7 +40,7 @@
           <div class="inner">
             <div class="search">
               <input type="text" placeholder="Введіть назву" v-model.trim="search_shops">
-              <button class="ico ico-delete" @click="allShops(true)"></button>
+              <button class="ico ico-delete" @click="toggle('shops')"></button>
             </div>
             <ul>
               <li v-for="shop in shops" class="checkbox">
@@ -138,7 +140,14 @@ export default {
   },
   methods: {
     toggle: function(name) {
+      console.log('toggle: '+name);
        this.dropDowns[name] = !this.dropDowns[name];
+    },
+    closeDropdown: function(name) {
+      console.log('close: '+name);
+      if (this.dropDowns[name])
+        this.dropDowns[name] = false;
+      console.log(this.dropDowns[name]);
     },
     setSort: function(key, name) {
       this.filter[name] = key;
