@@ -367,19 +367,17 @@ button {
 
 .home-page {
   .slider {
-    height: 440px;
     background-color: #FFD447;
     background-image: url('../img/dekor.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     padding-top: 80px;
+    padding-bottom: 80px;
     .container {
-      // overflow-x: auto;
       padding: 0;
     }
     .wrap {
-      // width: 1224px;
       display: flex;
       justify-content: space-between;
       @media (max-width: 1199px) {
@@ -469,6 +467,25 @@ button {
       .btn {
         width: 100%;
         margin: 24px 0 0;
+      }
+    }
+
+    &.show-all-shops {
+      padding-bottom: 60px;
+      .container {
+        overflow-y: auto;
+        max-height: 420px;
+      }
+      .wrap {
+        flex-wrap: wrap;
+        justify-content: space-around;
+        .shop {
+          display: block;
+          margin-bottom: 20px;
+          @media (max-width: 400px) {
+            margin: 0 10px 20px;
+          }
+        }
       }
     }
   }

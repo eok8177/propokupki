@@ -25,7 +25,7 @@
                   <hr>
                   <div class="prices">
                     <span class="new">{{action.price}} <sup>грн</sup></span>
-                    <span class="old">{{action.oldprice}}</span> <sup class="old-price">грн</sup>
+                    <span class="old" v-if="action.oldprice > 0">{{action.oldprice}}</span> <sup class="old-price" v-if="action.oldprice > 0">грн</sup>
                   </div>
                   <div v-if="action.count > 1" class="sticker">
                     Залишилось {{action.count}} днів
@@ -46,7 +46,7 @@
         </div>
 
         <div v-if="!homePage" class="pagination-row">
-          <button v-if="(this.products.length - this.firstCut - this.actions.length) > 0" @click="clickMore()" class="btn btn-red">Загрузити</button>
+          <button v-if="(this.products.length - this.firstCut - this.actions.length) > 0" @click="clickMore()" class="btn btn-red">Завантажити</button>
 
           <paginate
             v-if="(this.products.length - this.firstCut - this.actions.length) > 0 || pageNum > 1"

@@ -8,7 +8,7 @@
 
       <div class="search">
         <form action="#">
-          <input type="text" placeholder="Поиск по товарам и магазинам" v-model.trim="search">
+          <input type="text" placeholder="Пошук по таварам та магазинам" v-model.trim="search">
           <button @click.prevent="searchBtn()" type="submit" class="btn btn-red">Знайти</button>
         </form>
       </div>

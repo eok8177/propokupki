@@ -6,7 +6,7 @@
       <p class="sub-title">{{shopCount}}+ магазинів з кращими пропозиціями</p>
     </div>
 
-    <div class="slider">
+    <div class="slider" :class="{'show-all-shops' : showAllShops}">
       <div class="container">
         <div class="wrap">
 
@@ -16,29 +16,22 @@
                 <img :src="shop.image" :alt="shop.title">
               </div>
               <p><span class="count">{{shop.shops}}</span> Магазинів</p>
-              <p><span class="count">{{shop.actions}}</span> Акцій</p>
+              <p><span class="count">{{shop.products}}</span> Акцій</p>
               <p class="discount" v-if="shop.discount > 0">Знижки до <span class="number">-{{shop.discount}}%</span></p>
             </router-link>
           </div>
 
-          <div class="shop">
+          <div class="shop" v-if="!showAllShops">
             <div class="ico ico-bag"></div>
             <p class="title">Більше {{shopCount}}</p>
             <p class="gray">Магазинів</p>
             <hr>
 
-            <div class="dropdown">
-              <button class="btn btn-red" @click="toggle('shops')" v-bind:class="{'open' : dropDowns.shops}">
+            <!-- <div class="dropdown"> -->
+              <button class="btn btn-red" @click="viewAllShops()">
                 Усі магазини
               </button>
-              <ul class="dropdown-block">
-                <li v-for="shop in shops">
-                  <router-link :to="{ name: 'Actions', query: {shop: shop.id} }">{{shop.title}}</router-link>
-                </li>
-              </ul>
-            </div>
-
-
+            <!-- </div> -->
           </div>
 
         </div>
@@ -69,6 +62,7 @@ export default {
         dropDowns: {
           shops: false,
         },
+        showAllShops: false,
         meta: {
           title: 'ProPokupki - Акції та знижки України',
           description: 'Акції та знижки всіх популярних магазинів України в одному місці',
@@ -113,6 +107,20 @@ export default {
 
     toggle: function(name) {
        this.dropDowns[name] = !this.dropDowns[name];
+    },
+
+    viewAllShops: function() {
+      axios.get('/api/shops/?city='+localStorage.cityId)
+        .then(
+          (response) => {
+            this.shops = response.data;
+            this.cityName2 = localStorage.cityName2;
+            this.showAllShops = true;
+          }
+        )
+        .catch(
+          (error) => console.log(error)
+        );
     },
   },
 
