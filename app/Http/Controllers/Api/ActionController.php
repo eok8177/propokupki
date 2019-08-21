@@ -13,8 +13,8 @@ class ActionController extends Controller
 {
   public function index(Request $request)
   {
-
       $app_locale = env('APP_LOCALE', 'ua');
+      $limit = env('LIMIT_PRODUCTS', '28');
 
       $results = Product::query();
 
@@ -92,7 +92,12 @@ class ActionController extends Controller
 
       $data = array();
 
-      $products = $results->get();
+      $products = $results->paginate($limit);
+
+      $data['current_page'] = $products->currentPage();
+      $data['last_page'] = $products->lastPage();
+      $data['per_page'] = $products->perPage();
+      $data['total'] = $products->total();
 
       foreach ($products as $product){
 
@@ -112,7 +117,8 @@ class ActionController extends Controller
           $shop = array(
               'image' => asset('/storage/'.$data_shop->image),
               'dates' => $date_start->format('d M').' - '.$date_end->format('d M'),
-              'discount' => $product->discount
+              'discount' => $product->discount,
+              'title' => $data_shop->title
           );
 
 
@@ -138,7 +144,7 @@ class ActionController extends Controller
             $taraPrice = round($product->price/$product->quantity, 2);
           }
 
-          $data[] = array(
+          $data['data'][] = array(
               'slug' => $product->slug,
               'title' => $title,
               'image' => asset('/storage/'.$product->image),
@@ -219,7 +225,6 @@ class ActionController extends Controller
                 $q->where('title', 'LIKE', '%'.$data.'%');
             });
         });
-//        dd($shops_get->get());
         $shops = $shops_get->where('status', 1)->get();
 
         $data_shops = array();

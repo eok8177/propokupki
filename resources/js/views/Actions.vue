@@ -24,7 +24,9 @@ export default {
   },
   data() {
     return {
-      filter: '',
+      filter: {
+        page: 1,
+      },
       actions: [],
       shop: '',
       search: '',
@@ -67,6 +69,17 @@ export default {
         .catch(
           (error) => console.log(error)
         );
+    },
+    moreData () {
+      axios.get('/api/actions?city='+localStorage.cityId,{params: this.filter})
+      .then(
+        (response) => {
+          this.actions.data = this.actions.data.concat(response.data.data);
+        }
+      )
+      .catch(
+        (error) => console.log(error)
+      );
     }
   },
   mounted() {

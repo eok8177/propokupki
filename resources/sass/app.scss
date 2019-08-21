@@ -5,6 +5,29 @@ $grid-gutter-width: 24px !default;
 @import '~bootstrap/scss/bootstrap-reboot';
 @import '~bootstrap/scss/bootstrap-grid';
 
+@keyframes placeHolderShimmer{
+  0%{
+    background-position: -400px 0
+  }
+  100%{
+    background-position: 400px 0
+  }
+}
+
+@mixin fb-bg {
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    background-size: 400px 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+
 @media (min-width: 1240px) {
   .container {max-width: 1224px;}
 }
@@ -733,6 +756,16 @@ button {
       .sticker {
         margin: 10px 0;
       }
+    }
+    &.loading {
+      .shop {
+        .image {
+          width: 100px;
+          height: 50px;
+          @include fb-bg;
+        }
+      }
+
     }
   }
 }

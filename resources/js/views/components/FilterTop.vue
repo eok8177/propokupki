@@ -121,6 +121,7 @@ export default {
         categories: '',
         dates: 'all',
         search: '',
+        page: 1,
       },
       shopsSelected: []
     }
@@ -131,6 +132,8 @@ export default {
     },
     shopsSelected: function (value) {
       this.filter.shops = value.toString();
+      this.filter.page = 1;
+      this.$parent.filter = this.filter;
       this.$parent.filtered(this.filter);
     }
   },
@@ -152,6 +155,8 @@ export default {
     setSort: function(key, name) {
       this.filter[name] = key;
       this.dropDowns[name] = !this.dropDowns[name];
+      this.filter.page = 1;
+      this.$parent.filter = this.filter;
       this.$parent.filtered(this.filter);
     },
     searchShops: function () {
@@ -184,6 +189,7 @@ export default {
               this.shopsSelected = [this.shop];
             } else {
               this.shopsSelected = [];
+              this.$parent.filter = this.filter;
               this.$parent.filtered(this.filter);
             }
           }
@@ -206,6 +212,8 @@ export default {
       if (filter == 'search') {
         this.filter.search = '';
       }
+      this.filter.page = 1;
+      this.$parent.filter = this.filter;
       this.$parent.filtered(this.filter);
     },
     resetFilter: function() {
@@ -222,6 +230,8 @@ export default {
         dates: false
       };
       this.shopsSelected = [];
+      this.filter.page = 1;
+      this.$parent.filter = this.filter;
       this.$parent.filtered(this.filter);
     }
   },

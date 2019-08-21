@@ -8,7 +8,7 @@
     <div class="products">
       <div class="container">
 
-        <div class="product-item">
+        <div class="product-item" :class="classProduct">
           <div class="shop">
             <div class="image">
               <img :src="product.shop.image" :alt="product.title">
@@ -79,8 +79,12 @@ export default {
           'discount': ''
         }
       },
+      classProduct: 'loading',
       actions: [],
       cityName: '',
+      filter: {
+        page: 1
+      },
       meta: {
         title: 'Акції магазинів на сьогодні - ProPokupki',
         description: 'Акції та знижки всіх популярних магазинів України на сьогодні',
@@ -93,6 +97,7 @@ export default {
       .then(
         (response) => {
           this.product = response.data;
+          this.classProduct = '';
           this.meta.title = this.product.title +' '+ this.product.desc +' '+ this.product.tara +' ('+ this.product.shop.dates + ') - '+ this.product.shop.title + ' - ProPokupki';
           this.meta.description = 'Акції на "'+ this.product.title +' '+ this.product.desc +' '+ this.product.tara +'" в магазині '+ this.product.shop.title + ' ('+ this.product.shop.dates + ')';
         }
@@ -104,6 +109,18 @@ export default {
       .then(
         (response) => {
           this.actions = response.data;
+        }
+      )
+      .catch(
+        (error) => console.log(error)
+      );
+    },
+
+    moreData () {
+      axios.get('/api/product-related/'+this.$route.params.slug+'/?city='+localStorage.cityId,{params: this.filter})
+      .then(
+        (response) => {
+          this.actions.data = this.actions.data.concat(response.data.data);
         }
       )
       .catch(

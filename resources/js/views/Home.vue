@@ -89,7 +89,7 @@ export default {
         .catch(
           (error) => console.log(error)
         );
-        axios.get('/api/actions/?city='+localStorage.cityId+'&page=home')
+        axios.get('/api/actions/?city='+localStorage.cityId)
           .then(
             (response) => {
               this.actions = response.data;

@@ -83,6 +83,7 @@ class ProductController extends Controller
           $date_now = Date::now();
 
           $app_locale = env('APP_LOCALE', 'ua');
+          $limit = env('LIMIT_PRODUCTS', '28');
 
           $get_product = ProductTranslate::whereHas('product', function ($q) use ($slug) {
               $q->where('slug', $slug);
@@ -122,9 +123,14 @@ class ProductController extends Controller
 
           $results->where('id', '<>', $get_product['product_id']);
 
-          $products = $results->get();
+          $products = $results->paginate($limit);
 
           $data = array();
+
+          $data['current_page'] = $products->currentPage();
+          $data['last_page'] = $products->lastPage();
+          $data['per_page'] = $products->perPage();
+          $data['total'] = $products->total();
 
           foreach ($products as $product){
 
@@ -144,7 +150,8 @@ class ProductController extends Controller
               $shop = array(
                   'image' => asset('/storage/'.$data_shop->image),
                   'dates' => $date_start->format('d M').' - '.$date_end->format('d M'),
-                  'discount' => $product->discount
+                  'discount' => $product->discount,
+                  'title' => $data_shop->title
               );
 
 
@@ -169,7 +176,7 @@ class ProductController extends Controller
                   $taraPrice = round($product->price/$product->quantity, 2);
               }
 
-              $data[] = array(
+              $data['data'][] = array(
                   'slug' => $product->slug,
                   'title' => $title,
                   'image' => asset('/storage/'.$product->image),

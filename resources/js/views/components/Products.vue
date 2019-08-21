@@ -2,11 +2,11 @@
     <div class="products">
       <div class="container">
         <div class="row">
-          <div class="col-sm-6 col-md-4 col-lg-3" v-for="action in actions">
+          <div class="col-sm-6 col-md-4 col-lg-3" v-for="action in actions.data">
             <div class="item">
               <div class="shop">
                 <div class="image">
-                  <img :src="action.shop.image" :alt="action.title">
+                  <img :src="action.shop.image" :alt="action.shop.title">
                 </div>
                 <div class="right">
                   <div class="discount">Знижка <span>-{{action.shop.discount}}%</span></div>
@@ -46,10 +46,10 @@
         </div>
 
         <div v-if="!homePage" class="pagination-row">
-          <button v-if="(this.products.length - this.firstCut - this.actions.length) > 0" @click="clickMore()" class="btn btn-red">Завантажити</button>
+          <button v-if="(this.pageCount - this.pageNum) > 0" @click="clickMore()" class="btn btn-red">Завантажити</button>
 
           <paginate
-            v-if="(this.products.length - this.firstCut - this.actions.length) > 0 || pageNum > 1"
+            v-if="this.pageCount > 1"
             v-model="pageNum"
             :page-count="pageCount"
             :page-range="3"
@@ -69,7 +69,6 @@
 </template>
 
 <script>
-  var PAGE_COUNT = 28; // количество товаров на странице
 import axios from 'axios';
 export default {
   name: 'Products',
@@ -78,34 +77,26 @@ export default {
     return {
       actions: [],
       pageNum: 1, // текущая страница
-      pageSize: PAGE_COUNT, // количество товаров на странице
       pageCount: 0, // количество страниц
-      firstCut: 0, // количество товаров скрытых слева
     }
   },
   watch: {
     products: function (newVal) {
-      this.pageNum = 1;
-      this.firstCut = 0;
-      this.pageSize = PAGE_COUNT;
-      this.actions = this.paginate(newVal, this.pageSize, 1);
-      this.pageCount = Math.ceil(newVal.length / this.pageSize);
+      this.pageNum = newVal.current_page;
+      this.pageCount = newVal.last_page;
+      this.actions = newVal;
     }
   },
   methods: {
     clickCallback: function (pageNum) {
-      this.firstCut = (pageNum - 1) * this.pageSize;
-      this.actions = this.paginate(this.products, this.pageSize, this.pageNum);
+      this.$parent.filter.page = pageNum;
+      this.$parent.getActions(this.$parent.filter);
     },
     clickMore: function () {
-      this.pageSize += PAGE_COUNT;
-      this.pageCount = Math.ceil(this.products.length / this.pageSize);
-      this.actions = this.products.slice(this.firstCut, this.pageSize + this.firstCut);
+      this.pageNum++;
+      this.$parent.filter.page = this.pageNum;
+      this.$parent.moreData();
     },
-    paginate: function(array, page_size, page_number) {
-      --page_number; // because pages logically start with 1, but technically with 0
-      return array.slice(page_number * page_size, (page_number + 1) * page_size);
-    }
 
   }
 }
