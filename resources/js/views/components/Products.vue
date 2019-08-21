@@ -24,7 +24,7 @@
                   <span class="tara">{{action.tara}}</span>
                   <hr>
                   <div class="prices">
-                    <span class="new">{{action.price}} <sup>грн</sup></span>
+                    <span class="new"><span v-if="action.of" style="font-size: 12px;"> від </span> {{action.price}} <sup>грн</sup></span>
                     <span class="old" v-if="action.oldprice > 0">{{action.oldprice}}</span> <sup class="old-price" v-if="action.oldprice > 0">грн</sup>
                   </div>
                   <div v-if="action.count > 1" class="sticker">
