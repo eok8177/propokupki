@@ -3,7 +3,7 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-6 col-md-4 col-lg-3" v-for="action in actions.data">
-            <div class="item">
+            <div class="item" :class="classProduct">
               <div class="shop">
                 <div class="image">
                   <img :src="action.shop.image" :alt="action.shop.title">
@@ -75,7 +75,35 @@ export default {
   props: ['products', 'homePage'],
   data() {
     return {
-      actions: [],
+      actions: {
+        data: [
+          {
+            shop: {
+              image: '',
+              title: '',
+            }
+          },
+          {
+            shop: {
+              image: '',
+              title: '',
+            }
+          },
+          {
+            shop: {
+              image: '',
+              title: '',
+            }
+          },
+          {
+            shop: {
+              image: '',
+              title: '',
+            }
+          },
+        ],
+      },
+      classProduct: 'loading',
       pageNum: 1, // текущая страница
       pageCount: 0, // количество страниц
     }
@@ -85,6 +113,7 @@ export default {
       this.pageNum = newVal.current_page;
       this.pageCount = newVal.last_page;
       this.actions = newVal;
+      this.classProduct = '';
     }
   },
   methods: {

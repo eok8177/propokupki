@@ -22,7 +22,9 @@
             <hr>
             <div class="row">
               <div class="col-sm-4">
-                <img :src="product.image" :alt="product.title">
+                <div class="big-img">
+                  <img :src="product.image" :alt="product.title">
+                </div>
               </div>
               <div class="col-sm-8">
                 <span class="title">{{product.title}}</span>
