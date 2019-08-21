@@ -15,8 +15,8 @@
               <div class="image">
                 <img :src="shop.image" :alt="shop.title">
               </div>
-              <p><span class="count">{{shop.shops}}</span> Магазинів</p>
-              <p><span class="count">{{shop.products}}</span> Акцій</p>
+              <p><span class="count">{{shop.shops}}</span> {{getNumEnding(shop.shops, ['Магазин','Магазини','Магазинів'])}} </p>
+              <p><span class="count">{{shop.products}}</span> {{getNumEnding(shop.products, ['Акція','Акції','Акцій'])}} </p>
               <p class="discount" v-if="shop.discount > 0">Знижки до <span class="number">-{{shop.discount}}%</span></p>
             </router-link>
           </div>
@@ -89,7 +89,7 @@ export default {
         .catch(
           (error) => console.log(error)
         );
-        axios.get('/api/actions/?city='+localStorage.cityId)
+        axios.get('/api/actions/?city='+localStorage.cityId+'&page=home')
           .then(
             (response) => {
               this.actions = response.data;
@@ -122,6 +122,35 @@ export default {
           (error) => console.log(error)
         );
     },
+
+    /**
+
+     * Функция возвращает окончание для множественного числа слова на основании числа и массива окончаний
+     * @param  iNumber Integer Число на основе которого нужно сформировать окончание
+     * @param  aEndings Array Массив слов или окончаний для чисел (1, 4, 5),
+     *         например ['яблоко', 'яблока', 'яблок']
+     * @return String
+     */
+    getNumEnding: function(iNumber, aEndings) {
+        var sEnding, i;
+        iNumber = iNumber % 100;
+        if (iNumber>=11 && iNumber<=19) {
+            sEnding=aEndings[2];
+        }
+        else {
+            i = iNumber % 10;
+            switch (i)
+            {
+                case (1): sEnding = aEndings[0]; break;
+                case (2):
+                case (3):
+                case (4): sEnding = aEndings[1]; break;
+                default: sEnding = aEndings[2];
+            }
+        }
+        return sEnding;
+    }
+
   },
 
   metaInfo() {
