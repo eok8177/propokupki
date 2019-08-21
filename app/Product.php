@@ -30,7 +30,7 @@ class Product extends Model
     //     ];
     // }
 
-    protected $fillable = ['slug', 'old_price', 'price', 'discount', 'quantity', 'unit', 'image'];
+    protected $fillable = ['slug', 'old_price', 'price', 'of', 'discount', 'quantity', 'unit', 'image'];
 
     public function langs($status = 1)
     {
@@ -80,6 +80,17 @@ class Product extends Model
     {
         return $this->belongsToMany('App\Discount', 'discount_product', 'product_id', 'discount_id');
     }
+
+    // public function setOfAttribute($value)
+    // {
+    //    dd($value);
+    //     $this->attributes['of'] =  !empty($value) ? 1 : NULL;
+    // }
+
+    // public function getOfAttribute($value)
+    // {
+    //     return $value == 1 ? 'true' : 'off';
+    // }
 
     public function getTitleAttribute() {
         $result = ProductTranslate::where('locale', 'ua')->where('product_id', $this->id)->first();

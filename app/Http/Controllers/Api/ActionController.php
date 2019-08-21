@@ -144,6 +144,7 @@ class ActionController extends Controller
               'image' => asset('/storage/'.$product->image),
               'desc' => $description,
               'tara' => $product->quantity .' '. $unit .' / '. $taraPrice .' грн за 1 '. $unit,
+              'of' => $product->of,
               'price' => $product->price,
               'oldprice' => $product->old_price,
               'count' => $count,
