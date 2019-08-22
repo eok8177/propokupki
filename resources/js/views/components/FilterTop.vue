@@ -76,7 +76,7 @@
       </span>
 
       <button class="btn btn-red" 
-        v-if="shopsSelected.length || filter.sort == 'asc' || filter.sort == 'desc' || filter.dates == 'now' || filter.dates == 'feature' || filter.dates == 'past'" 
+        v-if="shopsSelected.length || filter.sort == 'asc' || filter.sort == 'desc' || filter.dates == 'now' || filter.dates == 'feature' || filter.dates == 'past' || filter.search" 
         @click="resetFilter"
       >Очистити</button>
     </div>

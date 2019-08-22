@@ -32,8 +32,8 @@
                 <span class="tara">{{product.tara}}</span>
                 <hr>
                 <div class="prices">
-                  <span class="new">{{product.price}} <sup>грн</sup></span>
-                  <span class="old">{{product.oldprice}}</span> <sup class="old-price">грн</sup>
+                  <span class="new"><span v-if="product.of" style="font-size: 12px;"> від </span> {{product.price}} <sup>грн</sup></span>
+                  <span class="old" v-if="product.oldprice > 0">{{product.oldprice}}</span> <sup class="old-price" v-if="product.oldprice > 0">грн</sup>
                 </div>
                 <div v-if="product.count > 1" class="sticker">
                   Залишилось {{product.count}} днів

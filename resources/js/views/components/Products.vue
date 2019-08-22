@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div v-if="actions.length < 1" class="sorry">Акцій не знайдено</div>
+          <div v-if="empty" class="sorry">Акцій не знайдено</div>
         </div>
 
         <div v-if="homePage" class="pagination-row">
@@ -106,6 +106,7 @@ export default {
       classProduct: 'loading',
       pageNum: 1, // текущая страница
       pageCount: 0, // количество страниц
+      empty: false, // нет товаров
     }
   },
   watch: {
@@ -114,6 +115,8 @@ export default {
       this.pageCount = newVal.last_page;
       this.actions = newVal;
       this.classProduct = '';
+      if (newVal.total == 0)
+        this.empty = true;
     }
   },
   methods: {
