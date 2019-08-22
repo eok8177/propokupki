@@ -53,7 +53,7 @@ class ShopController extends Controller
                   $q->whereHas('shops', function($q) use($shop_id){
                     $q->where('shop_id', $shop_id)
                       ->where('status', 1);
-                  })->where('status', 1);
+                  })->where('status', 1)->where('date_end', '>=', date('Y-m-d'));
               })->where('status', 1)->get()),
               'discount' => $discount_max['discount'],
           );
