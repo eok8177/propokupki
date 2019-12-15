@@ -9,18 +9,22 @@
 
     <products :products="actions"></products>
 
+    <action-text :shop="shop"></action-text>
+
   </div>
 </template>
 
 <script>
 import FilterTop from '@/views/components/FilterTop';
 import Products from '@/views/components/Products';
+import ActionText from '@/views/components/ActionText';
 
 export default {
   name: 'Actions',
   components: {
     Products,
-    FilterTop
+    FilterTop,
+    ActionText
   },
   data() {
     return {
